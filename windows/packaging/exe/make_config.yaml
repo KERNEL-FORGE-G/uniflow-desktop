@@ -49,7 +49,7 @@ setup_icon_file: windows/runner/resources/app_icon.ico
 # les cas, donc deux installations sur un poste partagé.
 privileges_required: none
 
-# La application n'est qu'en français (aucun `.arb`, aucun `flutter_localizations`) ;
+# L'application n'existe qu'en français (aucun `.arb`, aucun `flutter_localizations`) ;
 # `fr` reste en tête. L'outil filtre de lui-même les `.isl` absents de
 # l'installation d'Inno et retombe sur `en`, donc cette liste ne peut pas
 # casser un build.
