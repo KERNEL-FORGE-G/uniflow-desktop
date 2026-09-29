@@ -20,6 +20,14 @@ releases:
         package:
           platform: windows
           target: exe
+      # Le paquet que le Microsoft Store accepte (politique 10.2.9) : le Store le
+      # signe gratuitement, ce que l'installateur `.exe` ci-dessus
+      # ne peut pas être sans certificat Authenticode. `windows/packaging/msix/
+      # make_config.yaml` porte l'identité, dont le Package ID du produit.
+      - name: windows-msix
+        package:
+          platform: windows
+          target: msix
       # Le maker `deb` délègue à `fpm` (Ruby) : sans lui sur la machine, cette
       # job échoue. La CI Linux installe fpm avant d'appeler l'outil ; le script
       # `tool/build-deb.sh`, lui, produit le même .deb avec dpkg-deb et sert de

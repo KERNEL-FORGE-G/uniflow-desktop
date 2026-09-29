@@ -1,0 +1,90 @@
+# Paquet Windows produit par `flutter_distributor package --platform windows
+# --targets msix`, voie retenue pour le Microsoft Store après le rejet de
+# l'installateur `.exe` sous la politique 10.2.9 (voir
+# `docs/store/rejet-10.2.9-et-voie-msix.md`).
+#
+# `msix` est un maker natif de `flutter_app_packager` 0.6.11 — donc de
+# `flutter_distributor` — qui délègue au paquet pub `msix` 3.18.0. Il ne fait
+# passer à cet outil que les clés ci-dessous, converties en arguments de
+# ligne de commande (`--snake_case` devient `--kebab-case`, `msix_version`
+# devient `--version`). Trois conséquences, toutes lues dans le code de
+# `msix-3.18.0/lib/src/configuration.dart` et non devinées :
+#
+#   1. Une clé inventée n'est pas ignorée silencieusement si l'outil ne connaît
+#      pas l'option correspondante : `ArgParser` lève une exception et le build
+#      tombe. C'est le sort de `add_execution_alias`, que le maker accepte mais
+#      que `msix` nomme `execution-alias`.
+#   2. Inversement, certaines clés sont lues **uniquement** dans le bloc
+#      `msix_config:` de `pubspec.yaml` (`languages`, `protocol_activation`,
+#      `startup_task`, `context_menu`, `toast_activator`) : les écrire ici ne
+#      change rien. Elles sont absentes de ce fichier pour cette raison.
+#   3. Tous les champs du modèle sont des `String?` : un booléen YAML non cité
+#      provoque un TypeError à l'affectation. D'où les guillemets.
+
+# `store: 'true'` est toute la décision. Dans `msix/lib/msix.dart`, les trois
+# branches de signature sont gardées par `if (signMsix && !store)` (l. 48, 125,
+# 140) : avec cette option le paquet sort **non signé** et l'installation d'un
+# certificat de test est sautée elle aussi (l. 143-147). Pour une soumission
+# MSIX, le Store le signe après certification — contrairement au `.exe`, qui est
+# la cause exacte du rejet. Rien à acheter.
+store: 'true'
+
+display_name: UniFlow
+publisher_display_name: KERNEL FORGE
+
+# `Publisher` du manifeste Appx, à recopier de Partner Center › UNIFLOW DESKTOP
+# › Détails de l'identité de l'application. Cette valeur est liée au **compte**
+# éditeur, pas au produit : c'est celle relevée le 28/09/2026 sur le produit
+# UNIFLOW WEB. À confirmer sur la page d'identité du produit desktop avant la
+# première soumission — un `CN` d'un autre compte fait rejeter le téléversement.
+publisher: 'CN=3a54a224-05dd-42aa-85bd-3f3c1478fdca'
+
+# LE CHAMP À REMPLIR. Absent volontairement : avec `store: 'true'` et
+# `identity_name` vide, l'outil échoue en citant l'écran où lire la valeur
+# (`configuration.dart` l. 214-218), ce qui vaut mieux qu'une identité inventée
+# qui passerait la compilation et se ferait rejeter au téléversement.
+#
+# Contraintes vérifiées dans le code :
+#   - `^[a-zA-Z0-9.-]{3,50}$` (l. 223) — **pas de tiret bas**. Si la valeur
+#     copiée contient un `_` (`UniFlow.Desktop_x264jm7zsyz3c`), tout ce qui suit
+#     le `_` est le *package family name* : couper au premier `_`.
+#   - sensible à la casse, espaces compris.
+#
+# Le gabarit ci-dessous est volontairement illisible par l'outil (chevrons et
+# espaces) : le décommenter tel quel fait échouer le build sur
+# « invalid identity name » plutôt que de graver une identité de
+# placeholder dans un paquet téléversable.
+# identity_name: '<Package ID de Partner Center, coupe au premier underscore>'
+
+# Pas de `msix_version` : sans valeur explicite, l'outil prend `version:` du
+# `pubspec.yaml` et le quatrième segment à `0` (`_getPubspecVersion`, l. 499) —
+# `1.0.0+1` devient `1.0.0.0`. La version du paquet suit donc les publications,
+# au lieu d'être un chiffre figé qu'on oublie de monter et que le Store refuse.
+
+# Déjà carré, 512 × 512, avec une marge transparente dessinée à la main (boîte
+# non transparente mesurée à (36, 25) → (475, 487), soit ~7 %). `trim_logo` est à
+# `'false'` pour ne pas rogner cette marge et recadrer le logo de travers : les
+# 36 px de gauche et 25 px du haut ne sont pas symétriques.
+logo_path: packaging/common/icons/uniflow-512.png
+trim_logo: 'false'
+
+# `runFullTrust` est ajouté tout seul par le maker (`appx_manifest.dart` l. 217)
+# — c'est ce qui autorise le lancement d'un `.exe` dans un paquet Appx. On ne
+# déclare donc que la capacité réseau générale : les accès caméra et microphone
+# de la visioconférence (`flutter_webrtc`) relèvent du consentement Windows d'une
+# application `runFullTrust`, pas d'une capacité Appx.
+capabilities: internetClient
+
+# Pas d'`architecture` : le maker la déduit du chemin du build
+# (`build/windows/arm64/...` → `arm64`, sinon `x64` —
+# `app_package_maker_msix.dart` l. 44-48). Le forcer à `x64` ferait mentir le
+# manifeste sur un build arm64. Valeurs admises ensuite : `x64`, `arm64`
+# (`configuration.dart` l. 290).
+
+# Pas de `build_windows` non plus : le maker le force à `'false'` (l. 42),
+# `flutter_distributor` ayant déjà conduit `flutter build windows`.
+
+# Le lanceur n'a pas besoin d'être nommé ici, contrairement à l'installateur
+# `.exe` qui exigeait `executable_name: uniflow.exe` : `msix` lit
+# `set(BINARY_NAME "uniflow")` dans `windows/CMakeLists.txt` en première
+# intention (`_getExecutableFromCMake`, l. 546-566).

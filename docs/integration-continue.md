@@ -19,9 +19,9 @@ Un seul workflow, « UniFlow Desktop », découpé en jobs chaînés. L'ancien
 |---|---|---|
 | `qualite` | ubuntu | Flutter **3.47.1** épinglé (`subosito/flutter-action`, cache), `flutter pub get`, `dart format --output=none --set-exit-if-changed lib test`, `flutter analyze`, `flutter test --coverage`. Aucun artefact : la couverture sert aux tests, pas à la distribution, et chaque artefact consomme le quota de stockage des Actions. |
 | `build-linux` | ubuntu, `needs: qualite` | Dépendances apt (clang, cmake, ninja, gtk3, liblzma, libstdc++-12, **libwebkit2gtk-4.1**, **libpulse-dev**), `.env` depuis les secrets, `flutter build linux --release`. Artefact : `uniflow-desktop-linux-x64.tar.gz`. |
-| `build-windows` | **windows-latest**, `needs: qualite` | `choco install innosetup`, puis `flutter_distributor package --platform windows --targets exe --skip-clean` (l'outil lance `flutter build windows` lui-même, engendre un script Inno Setup depuis `windows/packaging/exe/make_config.yaml`, appelle `ISCC.exe` et vérifie que le paquet est sorti). Artefact : `dist/<version>/uniflow-<version>-windows-setup.exe` — un installateur, **pas une archive** : le Store et winget n'acceptent qu'un programme d'installation capable de se poser en silence. Le job installe cet `.exe` sur la machine de build (`/VERYSILENT` + `/DIR=` d'un dossier temporaire), vérifie le binaire et la clé `HKCU:\…\Uninstall\codes.kernelforge.uniflow_is1`, le désinstalle, puis publie taille, `InstallerSha256` et commutateurs dans le résumé du run. |
+| `build-windows` | **windows-latest**, `needs: qualite` | `choco install innosetup`, puis `flutter_distributor package --platform windows --targets exe --skip-clean` (l'outil lance `flutter build windows` lui-même, engendre un script Inno Setup depuis `windows/packaging/exe/make_config.yaml`, appelle `ISCC.exe` et vérifie que le paquet est sorti). Artefact : `dist/<version>/uniflow-<version>-windows-setup.exe` — un installateur, **pas une archive** : le Store et winget n'acceptent qu'un programme d'installation capable de se poser en silence. Le job installe cet `.exe` sur la machine de build (`/VERYSILENT` + `/DIR=` d'un dossier temporaire), vérifie le binaire et la clé `HKCU:\…\Uninstall\codes.kernelforge.uniflow_is1`, le désinstalle, puis publie taille, `InstallerSha256` et commutateurs dans le résumé du run. **Après** cet archivage — pour qu'une panne MSIX ne puisse pas faire perdre le `.exe` — trois étapes produisent le paquet que le Microsoft Store accepte (politique 10.2.9, voir `docs/store/rejet-10.2.9-et-voie-msix.md`) : elles relisent l'`identity_name` de `windows/packaging/msix/make_config.yaml`, sautent proprement le build si le champ n'est pas encore rempli, et affichent l'identité réellement gravée dans l'`AppxManifest.xml` du paquet. Artefact : `uniflow-desktop-windows-msix`. |
 | `build-android-tablet` | ubuntu, `needs: qualite` | JDK 21 (zulu), `flutter build apk --release`. Artefact : `uniflow-desktop-tablette.apk`. |
-| `release` | ubuntu, `needs` des trois builds, **tag `v*` seulement** | GitHub Release (`softprops/action-gh-release@v2`) avec le bundle Linux, l'installateur Windows et l'APK, plus des notes générées. |
+| `release` | ubuntu, `needs` des trois builds, **tag `v*` seulement** | GitHub Release (`softprops/action-gh-release@v2`) avec le bundle Linux, l'installateur Windows, le `.msix` et l'APK, plus des notes générées. |
 
 Les trois artefacts de build sont purgés automatiquement au bout de
 **3 jours** (`retention-days: 3`) : le quota de stockage d'un plan privé est de
@@ -50,6 +50,10 @@ dart pub global activate flutter_distributor 0.6.10
 
 # Windows, sur un poste Windows : sort dist/1.0.0+1/uniflow-1.0.0+1-windows-setup.exe
 flutter_distributor --no-version-check package --platform windows --targets exe --skip-clean
+
+# Windows toujours : le paquet que le Store signe gratuitement (--targets msix),
+# à condition que identity_name soit rempli dans windows/packaging/msix/make_config.yaml
+flutter_distributor --no-version-check package --platform windows --targets msix --skip-clean
 ```
 
 `--skip-clean` évite un `flutter clean` complet ; l'outil lance tout de même

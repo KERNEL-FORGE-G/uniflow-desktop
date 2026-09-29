@@ -87,7 +87,7 @@ jobs:
           retention-days: 3
 
   build-windows:
-    name: Build Windows (installateur .exe)
+    name: Build Windows (installateur .exe, paquet .msix)
     needs: qualite
     runs-on: windows-latest
     steps:
@@ -261,6 +261,94 @@ jobs:
           if-no-files-found: error
           retention-days: 3
 
+      # Le paquet que le Microsoft Store accepterait. Il est traité après
+      # l'installateur `.exe`, artifact déjà rangé : une étape verte/rouge ici ne
+      # doit pas pouvoir faire perdre le paquet de la page Téléchargements.
+      - name: Identité gravée dans la configuration MSIX
+        id: identite-msix
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $config = 'windows/packaging/msix/make_config.yaml'
+          # `^\s*identity_name:` et pas une recherche libre : le fichier contient
+          # une ligne `# identity_name: '...'` qui est une consigne, pas une
+          # valeur. La compter comme saisie produirait un paquet à identité vide,
+          # téléversable en apparence et rejeté par Partner Center.
+          $ligne = Select-String -Path $config -Pattern "^\s*identity_name:\s*'([^']+)'" |
+            Select-Object -First 1
+          if (-not $ligne) {
+            @(
+              '### Paquet MSIX non produit',
+              '',
+              '`windows/packaging/msix/make_config.yaml` est sans `identity_name`.',
+              'Le lire dans Partner Center › UNIFLOW DESKTOP › Détails de',
+              'l''identité de l''application (Product management › View app identity',
+              'details), champ « Package ID », et couper au premier `_` : au-delà',
+              'c''est le package family name, et le champ refuse le tiret bas.',
+              'Voir `docs/store/rejet-10.2.9-et-voie-msix.md`.'
+            ) | Add-Content $env:GITHUB_STEP_SUMMARY
+            Write-Warning "identity_name absent : paquet MSIX non produit."
+            exit 0
+          }
+          "identity=$($ligne.Matches[0].Groups[1].Value)" |
+            Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: Paquet MSIX pour le Microsoft Store
+        id: paquet-msix
+        if: steps.identite-msix.outputs.identity != ''
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          dart pub global run flutter_distributor:main --no-version-check `
+            package --platform windows --targets msix --skip-clean
+          if ($LASTEXITCODE -ne 0) {
+            throw "flutter_distributor a rendu le code $LASTEXITCODE pour la cible msix."
+          }
+          $msix = Get-ChildItem "$($env:GITHUB_WORKSPACE)\dist" -Recurse -Filter '*.msix' |
+            Select-Object -First 1
+          if (-not $msix) { throw "Aucun .msix sous dist/ après flutter_distributor." }
+
+          # L'identité n'est pas celle qu'on a écrite dans le YAML : c'est celle
+          # que le paquet contient. `Expand-Archive` refuse l'extension `.msix`,
+          # d'où la copie en `.zip` — le paquet est un zip Appx, rien n'est
+          # transformé.
+          $extrait = Join-Path $env:RUNNER_TEMP 'msix-identite'
+          $zip = Join-Path $env:RUNNER_TEMP 'paquet.zip'
+          Copy-Item $msix.FullName $zip -Force
+          Expand-Archive -Path $zip -DestinationPath $extrait -Force
+          $manifeste = Get-Content (Join-Path $extrait 'AppxManifest.xml') -Raw
+          $identite = [regex]::Match($manifeste, '<Identity[^>]+>').Value
+          if (-not $identite) { throw "AppxManifest.xml sans <Identity>." }
+          $Familles = ([regex]::Matches($manifeste, '<TargetDeviceFamily[^>]+Name="([^"]+)"[^>]+MinVersion="([^"]+)"') |
+            ForEach-Object { "$($_.Groups[1].Value) >= $($_.Groups[2].Value)" }) -join ' · '
+
+          $sha = (Get-FileHash $msix.FullName -Algorithm SHA256).Hash.ToLower()
+          $taille = '{0:N1} Mo' -f ($msix.Length / 1MB)
+          @(
+            '### Paquet MSIX (Microsoft Store)',
+            '',
+            '| Champ | Valeur |',
+            '| --- | --- |',
+            "| Fichier | ``$($msix.Name)`` |",
+            "| Taille | ``$taille`` |",
+            "| SHA-256 | ``$sha`` |",
+            "| Identité gravée | ``$identite`` |",
+            "| Familles d'appareils | ``$Familles`` |",
+            '',
+            'Signé par le Store à la certification : le paquet est déposé non signé, ' +
+            'c''est ce que `store: true` produit et ce que la voie MSIX autorise.'
+          ) | Add-Content $env:GITHUB_STEP_SUMMARY
+          "msix=$($msix.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: Téléversement du paquet MSIX
+        if: steps.paquet-msix.outputs.msix != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: uniflow-desktop-windows-msix
+          path: ${{ steps.paquet-msix.outputs.msix }}
+          if-no-files-found: error
+          retention-days: 3
+
   build-android-tablet:
     name: Build Android (tablette)
     needs: qualite
@@ -317,5 +405,6 @@ jobs:
           files: |
             dist/uniflow-desktop-linux-x64.tar.gz
             dist/**/*-windows-setup.exe
+            dist/**/*.msix
             dist/uniflow-desktop-tablette.apk
           generate_release_notes: true
