@@ -113,16 +113,53 @@ complimentary benefits such as code signing »), et c'est elle qui est câblée.
 
 - `windows/packaging/msix/make_config.yaml` — `store: 'true'` : dans le paquet
   `msix` 3.18.0, les trois branches de signature sont gardées par
-  `if (signMsix && !store)`, donc le paquet sort non signé et aucune
-  certification n'est installée. Les autres clés et leurs pièges (valeurs obligatoirement
+  `if (signMsix && !store)`, donc le paquet sort non signé et aucun certificat
+  n'est installé. Les autres clés et leurs pièges (valeurs obligatoirement
   entre guillemets, `--add-execution-alias` inexistant, `languages` lu uniquement
   depuis `pubspec.yaml`) sont détaillées en commentaire dans le fichier.
 - `distribute_options.yaml` — job `windows-msix` à côté de `windows-setup`.
-- `.github/workflows/ci.yml` — le job Windows produit l'installateur **puis** le
-  `.msix`, et affiche dans le résumé du run l'identité réellement gravée dans
-  l'`AppxManifest.xml` du paquet, pas celle qu'on croit avoir configurée.
-- La release GitHub attache `dist/**/*.msix` : le paquet reste disponible hors du
-  Store, comme l'`.exe`.
+- `.github/workflows/ci.yml` — le job Windows produit l'installateur, **puis**
+  un `.msix`, et affiche dans le résumé du run l'identité réellement gravée dans
+  l'`AppxManifest.xml` du paquet, pas celle qu'on croit avoir configurée. Deux
+  branches exclusives, décrites ci-dessous.
+- La release GitHub attache `dist/**/*-store.msix` : le paquet reste disponible
+  hors du Store, comme l'`.exe`. Le paquet de test n'y va pas.
+
+## Les deux branches du job Windows, et pourquoi aucune ne tourne à vide
+
+`identity_name` est vide tant que le Package ID n'est pas lu dans Partner
+Center. Le premier câblage faisait alors sauter l'étape MSIX : le run restait
+vert, sans paquet — exactement ce qu'on observe quand on cherche « où est passé
+le `.msix` ». Deux suites, gardées par la condition inverse l'une de l'autre :
+
+| Étape | Quand | Ce qu'elle écrit dans `make_config.yaml` (copie du runner, jamais commise) |
+| --- | --- | --- |
+| `Paquet MSIX pour le Microsoft Store` | `identity_name` renseigné | rien : le fichier tel quel, avec `store: 'true'` |
+| `Paquet MSIX de test, signé par le certificat fourni par msix` | `identity_name` absent | retire la ligne `store:`, ajoute `identity_name: 'codes.kernelforge.uniflowtest'`, `install_certificate: 'false'`, `signtool_options: '/f … /p 1234 /fd SHA256'` |
+
+Trois détails qui ne sont pas du goût personnel, lus dans `msix` 3.18.0 :
+
+- **`store` est un drapeau** (`configuration.dart` l. 110 : `_args.wasParsed
+  ('store') || yaml['store'] == 'true'`). Écrire `store: 'false'` l'active
+  quand même — le maker transmet `--store false`, `wasParsed` devient vrai. La
+  seule façon d'obtenir `store = false` est de **supprimer la ligne**.
+- **`install_certificate` est une option**, donc `'false'` fonctionne (l. 98-101,
+  `addOption` l. 403). Sans lui, `msix.dart` l. 143-147 appelle
+  `SignTool.installCertificate()` : le certificat n'est pas dans
+  `Cert:\CurrentUser\Root` sur un runner neuf, et l'outil demande
+  `(y/N)` sur stdin (l. 166) — lecture non interactive, valeur nulle, plantage.
+- **`signtool_options` sert à couper le réseau** : par défaut
+  `getSignToolOptions()` ajoute `/tr http://timestamp.digicert.com`
+  (`sign_tool.dart` l. 240-249) ; un horodatage qui échoue fait échouer
+  `signtool`, donc le job. Une commande explicite avec `/f` rend
+  `isCustomSignCommand` vrai, et `getCertificatePublisher()` (l. 23-43) grave
+  alors le **sujet du certificat de test** dans l'`AppxManifest` — c'est ce qui
+  rend le paquet installable après import du `.pfx`.
+
+Le paquet de test **n'est pas téléversable** : signature ne chainant à aucune
+autorité du *Microsoft Trusted Root Program*, et nom de paquet inventé. Il sert
+à valider la chaîne — icônes, VCLibs, `MakeAppx`, `MakePri`, signature — avant
+d'avoir l'identité, et à prouver qu'un run vert rend bien un `.msix`.
 
 ## Ce que le MSIX change au stockage de l'app
 

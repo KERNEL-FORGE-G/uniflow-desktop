@@ -55,6 +55,16 @@ publisher: 'CN=3a54a224-05dd-42aa-85bd-3f3c1478fdca'
 # « invalid identity name » plutôt que de graver une identité de
 # placeholder dans un paquet téléversable.
 # identity_name: '<Package ID de Partner Center, coupe au premier underscore>'
+#
+# La CI ne laisse pas cette absence sans livrable : tant que la clé est absente,
+# l'étape « Paquet MSIX de test » d'`.github/workflows/ci.yml` fabrique un
+# `.msix` avec une identité de test et le certificat auto-signé du paquet `msix`,
+# après avoir **supprimé** la ligne `store:` de ce fichier dans la copie du
+# runner. Rien n'est commis : `store: 'true'` ici reste la vérité du dépôt, et le
+# fichier n'a pas à porter `install_certificate` ni `signtool_options` — ils ne
+# servent que sur cette branche. Détail des trois clés et de leur garde dans le
+# code, et raison d'être du paquet de test, dans
+# `docs/store/rejet-10.2.9-et-voie-msix.md`.
 
 # Pas de `msix_version` : sans valeur explicite, l'outil prend `version:` du
 # `pubspec.yaml` et le quatrième segment à `0` (`_getPubspecVersion`, l. 499) —

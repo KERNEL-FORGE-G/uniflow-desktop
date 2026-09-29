@@ -278,16 +278,18 @@ jobs:
             Select-Object -First 1
           if (-not $ligne) {
             @(
-              '### Paquet MSIX non produit',
+              '### Paquet MSIX téléversable non produit',
               '',
               '`windows/packaging/msix/make_config.yaml` est sans `identity_name`.',
-              'Le lire dans Partner Center › UNIFLOW DESKTOP › Détails de',
+              'Le run fabriquera donc le paquet **de test** (identité inventée, ' +
+              'certificat auto-signé) et non celui du Store.',
+              'Lire la valeur dans Partner Center › UNIFLOW DESKTOP › Détails de',
               'l''identité de l''application (Product management › View app identity',
               'details), champ « Package ID », et couper au premier `_` : au-delà',
               'c''est le package family name, et le champ refuse le tiret bas.',
               'Voir `docs/store/rejet-10.2.9-et-voie-msix.md`.'
             ) | Add-Content $env:GITHUB_STEP_SUMMARY
-            Write-Warning "identity_name absent : paquet MSIX non produit."
+            Write-Warning "identity_name absent : seul le paquet MSIX de test sera produit."
             exit 0
           }
           "identity=$($ligne.Matches[0].Groups[1].Value)" |
@@ -307,6 +309,15 @@ jobs:
           $msix = Get-ChildItem "$($env:GITHUB_WORKSPACE)\dist" -Recurse -Filter '*.msix' |
             Select-Object -First 1
           if (-not $msix) { throw "Aucun .msix sous dist/ après flutter_distributor." }
+
+          # Le nom finit par `-store.msix` : c'est le motif exact que la release
+          # GitHub attrape. Le paquet de test porte `-test.msix` et reste dans le
+          # magasin d'artefacts — les deux coexistent dans `dist/` du job de
+          # téléchargement, une extension commune ne doit pas suffire à les
+          # confondre.
+          $versStore = Join-Path $msix.Directory.FullName "$($msix.BaseName)-store.msix"
+          Move-Item -LiteralPath $msix.FullName -Destination $versStore -Force
+          $msix = Get-Item -LiteralPath $versStore
 
           # L'identité n'est pas celle qu'on a écrite dans le YAML : c'est celle
           # que le paquet contient. `Expand-Archive` refuse l'extension `.msix`,
@@ -346,6 +357,144 @@ jobs:
         with:
           name: uniflow-desktop-windows-msix
           path: ${{ steps.paquet-msix.outputs.msix }}
+          if-no-files-found: error
+          retention-days: 3
+
+      # Même chaîne de build, identité de test : le paquet ci-dessus ne peut
+      # exister qu'avec le Package ID lu dans Partner Center. En l'attendant,
+      # cette étape garantit qu'un run vert produit toujours un `.msix` —
+      # installable sur une machine où le certificat de test est approuvé, et
+      # qui prouve que `make_config.yaml`, les icônes et les VCLibs embarqués
+      # tiennent. Elle est la condition inverse de l'étape Store : les deux ne
+      # s'exécutent jamais sur le même run.
+      - name: Paquet MSIX de test, signé par le certificat fourni par msix
+        id: paquet-msix-test
+        if: steps.identite-msix.outputs.identity == ''
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $config = 'windows/packaging/msix/make_config.yaml'
+
+          # `store` est un DRAPEAU dans msix 3.18.0 : écrire `store: 'false'`
+          # l'active quand même (le YAML charge la chaîne non vide comme vrai).
+          # La seule façon d'obtenir store=false est de supprimer la ligne.
+          $avant = Get-Content $config
+          $sansDrapeau = @($avant | Where-Object { $_ -notmatch "^\s*store:" })
+          if ($sansDrapeau.Count -ge $avant.Count) {
+            throw 'Aucune ligne store: à retirer dans make_config.yaml : le drapeau est déjà absent, la signature de test ne peut pas être forcée.'
+          }
+
+          # Une fois `store` absent, msix prend la branche `signMsix && !store`
+          # (msix.dart l. 125 et 140) : il signe avec le certificat de test et
+          # écrit son propre sujet dans `publisher` avant de générer l'AppxManifest
+          # (sign_tool.dart l. 23-43). L'identité, elle, doit être syntaxiquement
+          # valide (`^[a-zA-Z0-9.-]{3,50}$`) sans ressembler à la vraie.
+          #
+          # `install_certificate: 'false'` n'est pas un détail : sans lui,
+          # `_packMsixFiles` appelle `SignTool.installCertificate()` (msix.dart
+          # l. 143-147), qui n'a pas trouvé le certificat dans
+          # `Cert:\CurrentUser\Root` — cas d'un runner neuf — et demande alors
+          # `Do you want to install the certificate … (y/N)` sur stdin
+          # (sign_tool.dart l. 166). Un stdin non interactif rend la valeur
+          # nulle et le build tombe sur une Null check. L'option est bien un
+          # `addOption` (configuration.dart l. 403) : `'false'` la désactive,
+          # contrairement au drapeau `store`.
+          #
+          # `signtool_options` est là pour la même raison : faute de valeur
+          # explicite, `getSignToolOptions()` ajoute
+          # `/tr http://timestamp.digicert.com` (sign_tool.dart l. 240-249) et
+          # un horodatage qui n'aboutit pas fait échouer `signtool`, donc le
+          # job. Avec une commande explicite contenant `/f`, `isCustomSignCommand`
+          # est vrai, l'installation du certificat est sautée (l. 143-145) et
+          # aucune requête réseau n'intervient dans la signature.
+          $racines = @(
+            (Join-Path $env:LOCALAPPDATA 'Pub\Cache\global_packages'),
+            $env:PUB_CACHE
+          ) | Where-Object { $_ -and (Test-Path $_) } | Select-Object -Unique
+          if (-not $racines) {
+            throw 'Aucun magasin pub accessible (LOCALAPPDATA\Pub\Cache ou PUB_CACHE) : le certificat de test du paquet msix est introuvable.'
+          }
+          $pfx = $null
+          foreach ($cfg in (Get-ChildItem -Path $racines -Recurse -Filter 'package_config.json' -ErrorAction SilentlyContinue)) {
+            $paquetMsix = (Get-Content $cfg.FullName -Raw | ConvertFrom-Json).packages |
+              Where-Object { $_.name -eq 'msix' } | Select-Object -First 1
+            if (-not $paquetMsix) { continue }
+            # `rootUri` est relatif (`../msix-3.18.0/`) dans un
+            # `package_config.json` global : résolu depuis le dossier du
+            # fichier, et `LocalPath` décode les `%20` au passage. Le `/` final
+            # compte : sans lui `../` remonterait d'un niveau de trop.
+            $dossier = ([Uri]::new($cfg.DirectoryName, [UriKind]::AbsoluteUri)).AbsoluteUri
+            $base = [Uri]::new($dossier.TrimEnd('/') + '/')
+            $candidat = Join-Path ([Uri]::new($base, $paquetMsix.rootUri).LocalPath) 'lib\assets\test_certificate.pfx'
+            if (Test-Path $candidat) { $pfx = Get-Item -LiteralPath $candidat; break }
+          }
+          if (-not $pfx) {
+            throw 'Certificat de test introuvable dans le paquet msix du magasin pub : la variante de test ne peut pas être signée hors horodatage réseau.'
+          }
+
+          $sansDrapeau += "identity_name: 'codes.kernelforge.uniflowtest'"
+          $sansDrapeau += "install_certificate: 'false'"
+          $sansDrapeau += "signtool_options: '/f `"$($pfx.FullName)`" /p 1234 /fd SHA256'"
+          Set-Content -Path $config -Value $sansDrapeau -Encoding utf8NoBOM
+
+          dart pub global run flutter_distributor:main --no-version-check `
+            package --platform windows --targets msix --skip-clean
+          if ($LASTEXITCODE -ne 0) {
+            throw "flutter_distributor a rendu le code $LASTEXITCODE pour la cible msix (variante de test)."
+          }
+
+          $msix = Get-ChildItem "$($env:GITHUB_WORKSPACE)\dist" -Recurse -Filter '*.msix' |
+            Select-Object -First 1
+          if (-not $msix) { throw "Aucun .msix sous dist/ après flutter_distributor." }
+
+          # Suffixe distinct : la release GitHub n'attrape que `*-store.msix`.
+          $versTest = Join-Path $msix.Directory.FullName "$($msix.BaseName)-test.msix"
+          Move-Item -LiteralPath $msix.FullName -Destination $versTest -Force
+          $msix = Get-Item -LiteralPath $versTest
+
+          $extrait = Join-Path $env:RUNNER_TEMP 'msix-test-identite'
+          $zip = Join-Path $env:RUNNER_TEMP 'paquet-test.zip'
+          Copy-Item $msix.FullName $zip -Force
+          Expand-Archive -Path $zip -DestinationPath $extrait -Force
+          $manifeste = Get-Content (Join-Path $extrait 'AppxManifest.xml') -Raw
+          $identite = [regex]::Match($manifeste, '<Identity[^>]+>').Value
+          if (-not $identite) { throw "AppxManifest.xml sans <Identity>." }
+          $editeur = [regex]::Match($manifeste, 'Publisher="([^"]+)"').Groups[1].Value
+
+          $taille = '{0:N1} Mo' -f ($msix.Length / 1MB)
+          @(
+            '### Paquet MSIX de test (non téléversable)',
+            '',
+            '`identity_name` est vide dans `make_config.yaml` : le build a été ' +
+            'conduit avec une identité de test et le certificat auto-signé ' +
+            'livré avec le paquet `msix`.',
+            '',
+            '| Champ | Valeur |',
+            '| --- | --- |',
+            "| Fichier | ``$($msix.Name)`` |",
+            "| Taille | ``$taille`` |",
+            '| Identité gravée | `' + $identite + '` |',
+            '| Éditeur (sujet du certificat de test) | `' + $editeur + '` |',
+            '',
+            '**À ne pas téléverser dans Partner Center** : la signature ne ' +
+            'chaîne à aucune autorité du *Microsoft Trusted Root Program*, et ' +
+            'le nom du paquet n''est pas celui du produit. Il disparaît dès que ' +
+            'l''étape « Paquet MSIX pour le Microsoft Store » s''exécute, c''est-à-dire ' +
+            'dès que `identity_name` est renseigné.',
+            '',
+            'Pour l''installer sur une machine : importer le certificat dans ' +
+            '« Autorités de certification racines de confiance » (mot de passe ' +
+            '`1234`), ou passer par PowerShell avec le paquet `msix` en mode test. ' +
+            'C''est la chaîne de build qui est validée ici, pas la distribution.'
+          ) | Add-Content $env:GITHUB_STEP_SUMMARY
+          "msixTest=$($msix.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: Téléversement du paquet MSIX de test
+        if: steps.paquet-msix-test.outputs.msixTest != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: uniflow-desktop-windows-msix-test
+          path: ${{ steps.paquet-msix-test.outputs.msixTest }}
           if-no-files-found: error
           retention-days: 3
 
@@ -405,6 +554,6 @@ jobs:
           files: |
             dist/uniflow-desktop-linux-x64.tar.gz
             dist/**/*-windows-setup.exe
-            dist/**/*.msix
+            dist/**/*-store.msix
             dist/uniflow-desktop-tablette.apk
           generate_release_notes: true
