@@ -385,10 +385,12 @@ jobs:
           }
 
           # Une fois `store` absent, msix prend la branche `signMsix && !store`
-          # (msix.dart l. 125 et 140) : il signe avec le certificat de test et
-          # écrit son propre sujet dans `publisher` avant de générer l'AppxManifest
-          # (sign_tool.dart l. 23-43). L'identité, elle, doit être syntaxiquement
-          # valide (`^[a-zA-Z0-9.-]{3,50}$`) sans ressembler à la vraie.
+          # (msix.dart l. 125 et 140) : il signe avec le certificat de test
+          # livré dans le paquet `msix` (sujet `CN=Msix Testing, O=Msix Testing
+          # Corporation, S=Some-State, C=US`) et écrit ce sujet dans `publisher`
+          # avant de générer l'AppxManifest (sign_tool.dart l. 23-43). L'identité,
+          # elle, doit être syntaxiquement valide (`^[a-zA-Z0-9.-]{3,50}$`) sans
+          # ressembler à la vraie.
           #
           # `install_certificate: 'false'` n'est pas un détail : sans lui,
           # `_packMsixFiles` appelle `SignTool.installCertificate()` (msix.dart
@@ -396,51 +398,61 @@ jobs:
           # `Cert:\CurrentUser\Root` — cas d'un runner neuf — et demande alors
           # `Do you want to install the certificate … (y/N)` sur stdin
           # (sign_tool.dart l. 166). Un stdin non interactif rend la valeur
-          # nulle et le build tombe sur une Null check. L'option est bien un
-          # `addOption` (configuration.dart l. 403) : `'false'` la désactive,
-          # contrairement au drapeau `store`.
+          # nulle et le build tombe. L'option est un `addOption`
+          # (configuration.dart l. 403) : `'false'` la désactive, contrairement
+          # au drapeau `store`.
           #
-          # `signtool_options` est là pour la même raison : faute de valeur
-          # explicite, `getSignToolOptions()` ajoute
-          # `/tr http://timestamp.digicert.com` (sign_tool.dart l. 240-249) et
-          # un horodatage qui n'aboutit pas fait échouer `signtool`, donc le
-          # job. Avec une commande explicite contenant `/f`, `isCustomSignCommand`
-          # est vrai, l'installation du certificat est sautée (l. 143-145) et
-          # aucune requête réseau n'intervient dans la signature.
-          $racines = @(
-            (Join-Path $env:LOCALAPPDATA 'Pub\Cache\global_packages'),
-            $env:PUB_CACHE
-          ) | Where-Object { $_ -and (Test-Path $_) } | Select-Object -Unique
-          if (-not $racines) {
-            throw 'Aucun magasin pub accessible (LOCALAPPDATA\Pub\Cache ou PUB_CACHE) : le certificat de test du paquet msix est introuvable.'
-          }
-          $pfx = $null
-          foreach ($cfg in (Get-ChildItem -Path $racines -Recurse -Filter 'package_config.json' -ErrorAction SilentlyContinue)) {
-            $paquetMsix = (Get-Content $cfg.FullName -Raw | ConvertFrom-Json).packages |
-              Where-Object { $_.name -eq 'msix' } | Select-Object -First 1
-            if (-not $paquetMsix) { continue }
-            # `rootUri` est relatif (`../msix-3.18.0/`) dans un
-            # `package_config.json` global : résolu depuis le dossier du
-            # fichier, et `LocalPath` décode les `%20` au passage. Le `/` final
-            # compte : sans lui `../` remonterait d'un niveau de trop.
-            $dossier = ([Uri]::new($cfg.DirectoryName, [UriKind]::AbsoluteUri)).AbsoluteUri
-            $base = [Uri]::new($dossier.TrimEnd('/') + '/')
-            $candidat = Join-Path ([Uri]::new($base, $paquetMsix.rootUri).LocalPath) 'lib\assets\test_certificate.pfx'
-            if (Test-Path $candidat) { $pfx = Get-Item -LiteralPath $candidat; break }
-          }
-          if (-not $pfx) {
-            throw 'Certificat de test introuvable dans le paquet msix du magasin pub : la variante de test ne peut pas être signée hors horodatage réseau.'
-          }
-
+          # Pas de `signtool_options` ici. Le run #61 en portait un
+          # (`/f "<pfx>" /p 1234 /fd SHA256`, pour éviter l'horodatage réseau) :
+          # `signtool` a échoué sur `SignerSign() … 0x8007000b`, c'est-à-dire,
+          # pour un paquet Appx, un `Publisher` du manifeste différent du sujet
+          # du certificat. La raison est dans le chemin qui mène à ce sujet :
+          # avec une commande personnalisée, `msix` relit le certificat via
+          # `_getCertificateSubjectByFile(true)`, donc par `powershell.exe` avec
+          # le **chemin tel que `CommandLineConverter` l'a rendu**, et
+          # `exitOnError()` ne regarde que le code de sortie
+          # (`method_extensions.dart` l. 74-79) — un `X509Certificate2()` qui
+          # lève en erreur non terminative sort 0 avec stdout vide, le sujet
+          # reste vide, `publisher` n'est PAS réécrit, et le manifeste part avec
+          # le `CN=3a54a224-…` de Partner Center collé à une signature
+          # « Msix Testing ». Sans `signtool_options`, le sujet vient de
+          # `_config.certificatePath`, une chaîne Dart propre, sans allers-retours
+          # de guillemets. L'horodatage par défaut n'est pas un risque mesuré :
+          # `http://timestamp.digicert.com` répond 200 et 6 008 octets en 0,5 s
+          # à une requête RFC 3161 construite en local.
           $sansDrapeau += "identity_name: 'codes.kernelforge.uniflowtest'"
           $sansDrapeau += "install_certificate: 'false'"
-          $sansDrapeau += "signtool_options: '/f `"$($pfx.FullName)`" /p 1234 /fd SHA256'"
           Set-Content -Path $config -Value $sansDrapeau -Encoding utf8NoBOM
 
-          dart pub global run flutter_distributor:main --no-version-check `
-            package --platform windows --targets msix --skip-clean
-          if ($LASTEXITCODE -ne 0) {
-            throw "flutter_distributor a rendu le code $LASTEXITCODE pour la cible msix (variante de test)."
+          try {
+            dart pub global run flutter_distributor:main --no-version-check `
+              package --platform windows --targets msix --skip-clean
+            if ($LASTEXITCODE -ne 0) {
+              throw "flutter_distributor a rendu le code $LASTEXITCODE pour la cible msix (variante de test)."
+            }
+          } catch {
+            # `MakeAppx` a terminé avant que `signtool` ne parle : le fichier
+            # sous dist/ existe, non signé. Le lire ici coûte dix secondes et
+            # évite un run de plus pour savoir quel éditeur le manifeste porte.
+            $rebut = Get-ChildItem "$($env:GITHUB_WORKSPACE)\dist" -Recurse -Filter '*.msix' |
+              Select-Object -First 1
+            if ($rebut) {
+              $zipRebut = Join-Path $env:RUNNER_TEMP 'paquet-non-signe.zip'
+              $extraitRebut = Join-Path $env:RUNNER_TEMP 'manifeste-non-signe'
+              Copy-Item $rebut.FullName $zipRebut -Force
+              Expand-Archive -Path $zipRebut -DestinationPath $extraitRebut -Force
+              $manifesteRebut = Get-Content (Join-Path $extraitRebut 'AppxManifest.xml') -Raw
+              @(
+                '### Signature du paquet MSIX de test échouée',
+                '',
+                "L`'AppxManifest du paquet non signé porte : " +
+                [regex]::Match($manifesteRebut, '<Identity[^>]+>').Value,
+                '',
+                'Sur un paquet Appx, `0x8007000b` = éditeur du manifeste différent ' +
+                'du sujet du certificat, champ pour champ.'
+              ) | Add-Content $env:GITHUB_STEP_SUMMARY
+            }
+            throw
           }
 
           $msix = Get-ChildItem "$($env:GITHUB_WORKSPACE)\dist" -Recurse -Filter '*.msix' |

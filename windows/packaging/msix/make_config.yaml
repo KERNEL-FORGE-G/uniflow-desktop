@@ -32,39 +32,16 @@ store: 'true'
 display_name: UniFlow
 publisher_display_name: KERNEL FORGE
 
-# `Publisher` du manifeste Appx, à recopier de Partner Center › UNIFLOW DESKTOP
-# › Détails de l'identité de l'application. Cette valeur est liée au **compte**
-# éditeur, pas au produit : c'est celle relevée le 28/09/2026 sur le produit
-# UNIFLOW WEB. À confirmer sur la page d'identité du produit desktop avant la
-# première soumission — un `CN` d'un autre compte fait rejeter le téléversement.
-publisher: 'CN=3a54a224-05dd-42aa-85bd-3f3c1478fdca'
+# `Publisher` du manifeste Appx — lu dans Partner Center › KERNELFORGE.Uniflowwork
+# › Product management › View app identity details, champ
+# "Package/Identity/Publisher". Lié au compte éditeur, pas au produit.
+# Relevé le 29/09/2026 : différent du produit UNIFLOW WEB (CN=3a54a224-…).
+publisher: 'CN=200A91F7-4B15-441F-9332-83F216885B09'
 
-# LE CHAMP À REMPLIR. Absent volontairement : avec `store: 'true'` et
-# `identity_name` vide, l'outil échoue en citant l'écran où lire la valeur
-# (`configuration.dart` l. 214-218), ce qui vaut mieux qu'une identité inventée
-# qui passerait la compilation et se ferait rejeter au téléversement.
-#
-# Contraintes vérifiées dans le code :
-#   - `^[a-zA-Z0-9.-]{3,50}$` (l. 223) — **pas de tiret bas**. Si la valeur
-#     copiée contient un `_` (`UniFlow.Desktop_x264jm7zsyz3c`), tout ce qui suit
-#     le `_` est le *package family name* : couper au premier `_`.
-#   - sensible à la casse, espaces compris.
-#
-# Le gabarit ci-dessous est volontairement illisible par l'outil (chevrons et
-# espaces) : le décommenter tel quel fait échouer le build sur
-# « invalid identity name » plutôt que de graver une identité de
-# placeholder dans un paquet téléversable.
-# identity_name: '<Package ID de Partner Center, coupe au premier underscore>'
-#
-# La CI ne laisse pas cette absence sans livrable : tant que la clé est absente,
-# l'étape « Paquet MSIX de test » d'`.github/workflows/ci.yml` fabrique un
-# `.msix` avec une identité de test et le certificat auto-signé du paquet `msix`,
-# après avoir **supprimé** la ligne `store:` de ce fichier dans la copie du
-# runner. Rien n'est commis : `store: 'true'` ici reste la vérité du dépôt, et le
-# fichier n'a pas à porter `install_certificate` ni `signtool_options` — ils ne
-# servent que sur cette branche. Détail des trois clés et de leur garde dans le
-# code, et raison d'être du paquet de test, dans
-# `docs/store/rejet-10.2.9-et-voie-msix.md`.
+# Package/Identity/Name lu dans Partner Center le 29/09/2026.
+# Le PFN complet est KERNELFORGE.Uniflowwork_3wyzhk1x8xr0a ; on coupe au
+# premier `_` — tout ce qui suit est le family name et le champ le refuse.
+identity_name: 'KERNELFORGE.Uniflowwork'
 
 # Pas de `msix_version` : sans valeur explicite, l'outil prend `version:` du
 # `pubspec.yaml` et le quatrième segment à `0` (`_getPubspecVersion`, l. 499) —
