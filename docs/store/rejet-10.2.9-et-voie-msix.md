@@ -122,20 +122,24 @@ complimentary benefits such as code signing »), et c'est elle qui est câblée.
   un `.msix`, et affiche dans le résumé du run l'identité réellement gravée dans
   l'`AppxManifest.xml` du paquet, pas celle qu'on croit avoir configurée. Deux
   branches exclusives, décrites ci-dessous.
-- La release GitHub attache `dist/**/*-store.msix` : le paquet reste disponible
-  hors du Store, comme l'`.exe`. Le paquet de test n'y va pas.
+- La release GitHub attache `dist/**/*-store.msix`. Avec `store: 'true'` le
+  paquet n'est **pas signé** (`msix.dart` l. 125-127 : la signature est gardée
+  par `if (signMsix && !store)`) — le Store le signe à l'ingestion, mais hors du
+  Store il ne s'installe pas. Le `.exe` reste la voie de téléchargement direct.
+  Le paquet de test, lui, n'y va pas.
 
 ## Les deux branches du job Windows, et pourquoi aucune ne tourne à vide
 
-`identity_name` est vide tant que le Package ID n'est pas lu dans Partner
-Center. Le premier câblage faisait alors sauter l'étape MSIX : le run restait
-vert, sans paquet — exactement ce qu'on observe quand on cherche « où est passé
-le `.msix` ». Deux suites, gardées par la condition inverse l'une de l'autre :
+`identity_name` a été laissé vide tant que le Package ID n'était pas lu dans
+Partner Center, et le premier câblage faisait alors sauter l'étape MSIX : le run
+restait vert, sans paquet — exactement ce qu'on observe quand on cherche « où est
+passé le `.msix` ». Deux suites, gardées par la condition inverse l'une de
+l'autre ; la seconde est le repli si l'identité vient à manquer :
 
 | Étape | Quand | Ce qu'elle écrit dans `make_config.yaml` (copie du runner, jamais commise) |
 | --- | --- | --- |
 | `Paquet MSIX pour le Microsoft Store` | `identity_name` renseigné | rien : le fichier tel quel, avec `store: 'true'` |
-| `Paquet MSIX de test, signé par le certificat fourni par msix` | `identity_name` absent | retire la ligne `store:`, ajoute `identity_name: 'codes.kernelforge.uniflowtest'`, `install_certificate: 'false'`, `signtool_options: '/f … /p 1234 /fd SHA256'` |
+| `Paquet MSIX de test, signé par le certificat fourni par msix` | `identity_name` absent | retire la ligne `store:`, ajoute `identity_name: 'codes.kernelforge.uniflowtest'` et `install_certificate: 'false'` — **rien d'autre** : pas de `signtool_options`, voir le troisième point |
 
 Trois détails qui ne sont pas du goût personnel, lus dans `msix` 3.18.0 :
 
@@ -148,13 +152,25 @@ Trois détails qui ne sont pas du goût personnel, lus dans `msix` 3.18.0 :
   `SignTool.installCertificate()` : le certificat n'est pas dans
   `Cert:\CurrentUser\Root` sur un runner neuf, et l'outil demande
   `(y/N)` sur stdin (l. 166) — lecture non interactive, valeur nulle, plantage.
-- **`signtool_options` sert à couper le réseau** : par défaut
-  `getSignToolOptions()` ajoute `/tr http://timestamp.digicert.com`
-  (`sign_tool.dart` l. 240-249) ; un horodatage qui échoue fait échouer
-  `signtool`, donc le job. Une commande explicite avec `/f` rend
-  `isCustomSignCommand` vrai, et `getCertificatePublisher()` (l. 23-43) grave
-  alors le **sujet du certificat de test** dans l'`AppxManifest` — c'est ce qui
-  rend le paquet installable après import du `.pfx`.
+- **Pas de `signtool_options`, et c'est un correctif.** Le premier câblage posait
+  une commande explicite `/f … /p 1234 /fd SHA256` pour couper le réseau : le run
+  #61 a rendu `SignerSign() failed. (-2147024885/0x8007000b)`. Lu dans
+  `sign_tool.dart` : dès qu'une commande custom est détectée
+  (`isCustomSignCommand`, l. 204-253), `getCertificatePublisher()` relit le sujet
+  du certificat en exécutant `powershell.exe` avec le chemin tel que le
+  convertisseur de ligne de commande l'a reconstruit ; l'échec n'est pas
+  terminant, `exitOnError()` (`method_extensions.dart` l. 74-79) ne regarde que
+  `exitCode`, donc un stdout vide passe inaperçu, le sujet reste vide, et
+  l'`AppxManifest` conserve le `Publisher` de `make_config.yaml` (à l'époque du
+  run `CN=3a54a224-…`) alors que le paquet est signé avec le certificat
+  « Msix Testing ». Sur un paquet Appx, `0x8007000b` veut dire exactement cela :
+  éditeur du manifeste différent du sujet du certificat, champ pour champ. Sans
+  `signtool_options`, `msix` signature via `_config.certificatePath` — une chaîne
+  Dart, jamais repassée par un shell — et lit le sujet correctement.
+- **L'horodatage n'était pas en cause** : le `/tr http://timestamp.digicert.com`
+  par défaut (`sign_tool.dart` l. 240-249) est gardé. Mesure locale, requête
+  RFC 3161 construite avec `openssl ts -query -sha256 -cert` et postée en curl :
+  HTTP 200, 6 008 octets, 0,51 s.
 
 Le paquet de test **n'est pas téléversable** : signature ne chainant à aucune
 autorité du *Microsoft Trusted Root Program*, et nom de paquet inventé. Il sert
@@ -200,20 +216,22 @@ globale `FileSystemWriteVirtualization = disabled` datant de Windows 10 1903. À
 ne pas demander au Store sans raison : une ressource non virtualisée est visible
 des autres applications et survit à la désinstallation.
 
-## La valeur qui manque : le Package ID du produit desktop
+## La valeur qui manquait : le Package ID du produit desktop
 
-`identity_name` est **vide** dans la configuration, volontairement. Sans elle,
-l'outil échoue en nommant l'écran où lire la valeur ; avec une valeur inventée,
-le build passerait et le téléversement serait rejeté. À lire dans
-Partner Center › UNIFLOW DESKTOP › *Détails de l'identité de l'application*,
-champ « Package ID » :
+Elle est gravée depuis (`identity_name: 'KERNELFORGE.Uniflowwork'`,
+`make_config.yaml` l. 44), donc la branche de test n'est plus celle qui
+s'exécute. Les deux règles de saisie qui motivaient le placeholder restent
+valables pour la prochaine fiche :
 
 - le champ Appx refuse le tiret bas (`^[a-zA-Z0-9.-]{3,50}$`) : si la valeur
   affichée contient un `_`, tout ce qui suit est le *package family name* et ne
   va pas dans `identity_name` ;
-- `publisher` (`CN=3a54a224-05dd-42aa-85bd-3f3c1478fdca`) est lié au **compte**
-  éditeur, pas au produit : c'est la valeur du produit UNIFLOW WEB, à confirmer
-  sur la page d'identité desktop.
+- `publisher` se relit **champ pour champ** sur le « Certificate Subject » de la
+  page d'identité du produit, jamais recopié d'un autre produit : le GUID du
+  desktop (`CN=200A91F7-4B15-441F-9332-83F216885B09`) diffère de celui porté
+  jusque-là (`CN=3a54a224-…`, lu sur UNIFLOW WEB). Un `Publisher` de manifeste
+  qui ne correspond pas au certificat de signature, c'est précisément ce que
+  `signtool` rend par `0x8007000b`.
 
 ## Préalable qu'on ne peut pas sauter : le produit doit être de type MSIX
 

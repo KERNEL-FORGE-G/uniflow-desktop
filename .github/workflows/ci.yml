@@ -494,9 +494,18 @@ jobs:
             'l''étape « Paquet MSIX pour le Microsoft Store » s''exécute, c''est-à-dire ' +
             'dès que `identity_name` est renseigné.',
             '',
-            'Pour l''installer sur une machine : importer le certificat dans ' +
-            '« Autorités de certification racines de confiance » (mot de passe ' +
-            '`1234`), ou passer par PowerShell avec le paquet `msix` en mode test. ' +
+            'Instalable sur une machine, en administrateur, avec le `.pfx` ' +
+            'livré dans le paquet `msix` :',
+            '',
+            '```powershell',
+            '$pfx = "$env:LOCALAPPDATA\\Pub\\Cache\\hosted\\pub.dev\\' +
+            'msix-3.18.0\\lib\\assets\\test_certificate.pfx"',
+            'Import-PfxCertificate -CertStoreLocation Cert:\\LocalMachine\\Root ' +
+            '-FilePath $pfx `',
+            '  -Password (ConvertTo-SecureString -String ''1234'' -Force -AsPlainText)',
+            'Add-AppxPackage -Path .\'' + $msix.Name + '\'',
+            '```',
+            '',
             'C''est la chaîne de build qui est validée ici, pas la distribution.'
           ) | Add-Content $env:GITHUB_STEP_SUMMARY
           "msixTest=$($msix.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
