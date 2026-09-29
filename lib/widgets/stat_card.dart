@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
+import 'animated_number.dart';
+import 'glass_card.dart';
 import 'uni_icons.dart';
 
 /// Carte affichant une métrique clé (ex: "Étudiants : 1 248, +12%").
@@ -39,13 +41,16 @@ class StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SlideFadeIn(
+      delay: Duration(milliseconds: 60 * index),
+      child: _buildCard(context),
+    );
+  }
+
+  Widget _buildCard(BuildContext context) {
+    return GlassCard(
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: AppColors.cardWhite,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.inputBorder),
-      ),
+      accentColor: iconBackground,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -67,19 +72,20 @@ class StatCard extends StatelessWidget {
             style: AppTextStyles.body.copyWith(fontSize: 13),
           ),
           const SizedBox(height: 6),
-          // La valeur est en `FittedBox` plutôt qu'en `Text` nu : « 1 248 »
-          // en 22 px gras déborde d'une carte étroite, et une taille qui
-          // s'ajuste est préférable à des points de suspension sur un chiffre.
+          // La valeur est animée de 0 → valeur au chargement, et en `FittedBox`
+          // pour gérer les fenêtres étroites.
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
-            child: Text(
-              value,
-              maxLines: 1,
-              style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.textPrimary),
+            child: AnimatedNumber(
+              value: value,
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFFF8FAFC)
+                    : AppColors.textPrimary,
+              ),
             ),
           ),
           if (delta != null) ...[
