@@ -112,6 +112,27 @@ class AuthRepository {
     );
   }
 
+  /// Déclenche le flux OAuth2 Google via Appwrite.
+  ///
+  /// Appwrite redirige vers l'URL `success` ou `failure` après
+  /// l'authentification Google. Sur desktop, on utilise un deep link
+  /// `uniflow://auth/oauth2/success` ; le `url_launcher` ouvre le navigateur
+  /// système, et `app_links` (ou le protocole URI enregistré) ramène la main
+  /// à l'app. Appwrite crée la session côté serveur — au retour il suffit
+  /// d'appeler `getCurrentUser()` pour lire la session active.
+  Future<void> loginWithGoogle() async {
+    try {
+      await _account.deleteSession(sessionId: 'current');
+    } catch (_) {}
+    await _account.createOAuth2Session(
+      provider: 'google',
+      success:
+          'uniflow://auth/oauth2/success',
+      failure:
+          'uniflow://auth/oauth2/failure',
+    );
+  }
+
   Future<void> logout() async {
     await _account.deleteSession(sessionId: 'current');
   }

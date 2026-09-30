@@ -42,6 +42,11 @@ enum HostState {
   /// Le binaire est introuvable sur la machine.
   unavailable('Binaire absent'),
 
+  /// Mode cloud : un serveur LiveKit distant (LiveKit Cloud ou auto-hébergé)
+  /// remplace le binaire local. Utilisé automatiquement sur Windows quand
+  /// livekit-server.exe est absent.
+  cloudMode('Mode cloud'),
+
   /// Le lancement ou l'exécution a échoué.
   failed('Échec');
 

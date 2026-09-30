@@ -274,9 +274,118 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           height: scale.field - 4,
           onPressed: _isLoading ? null : _openRegister,
         ),
+        const SizedBox(height: 16),
+        Row(children: [
+          const Expanded(child: Divider(color: AppColors.inputBorder)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Text('ou', style: AppTextStyles.body.copyWith(fontSize: 12.5)),
+          ),
+          const Expanded(child: Divider(color: AppColors.inputBorder)),
+        ]),
+        const SizedBox(height: 14),
+        _GoogleSignInButton(
+          isLoading: _isLoading,
+          onPressed: _isLoading ? null : _handleGoogleLogin,
+        ),
       ],
     );
   }
+
+  Future<void> _handleGoogleLogin() async {
+    setState(() { _isLoading = true; _errorMessage = null; _notice = null; });
+    try {
+      final authRepo = ref.read(authRepositoryProvider);
+      await authRepo.loginWithGoogle();
+      final user = await authRepo.getCurrentUser();
+      if (!mounted) return;
+      if (user == null) {
+        setState(() {
+          _isLoading = false;
+          _errorMessage = 'Connexion Google réussie, mais le compte n\'a pas pu être relu. '
+              'Vérifiez la connexion réseau et réessayez.';
+        });
+        return;
+      }
+      // Un compte universitaire sans programme : on entre quand même,
+      // le dashboard affichera une bannière pour compléter le profil.
+      ref.read(currentUserProvider.notifier).state = user;
+      ref.read(currentDestinationProvider.notifier).state = null;
+      unawaited(ref.read(authRepositoryProvider).retryAcademicProvisioning(user));
+      setState(() => _isLoading = false);
+      showFeedback(context, message: 'Bienvenue, ${user.name}.', detail: user.userRole.scope);
+      Navigator.of(context).pushReplacement(softRoute(const MainShell()));
+    } on AppwriteException catch (e) {
+      if (!mounted) return;
+      setState(() { _isLoading = false; _errorMessage = readableAuthError(e); });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() { _isLoading = false; _errorMessage = 'Connexion Google impossible : $e'; });
+    }
+  }
+}
+
+/// Bouton "Continuer avec Google" adapté au thème desktop UniFlow.
+class _GoogleSignInButton extends StatelessWidget {
+  final bool isLoading;
+  final VoidCallback? onPressed;
+  const _GoogleSignInButton({required this.isLoading, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 44,
+      child: OutlinedButton(
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          side: const BorderSide(color: AppColors.inputBorder),
+          backgroundColor: AppColors.surface,
+          foregroundColor: AppColors.textPrimary,
+        ),
+        child: isLoading
+            ? const SizedBox(width: 18, height: 18,
+                child: CircularProgressIndicator(strokeWidth: 2))
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 20, height: 20,
+                    child: CustomPaint(painter: _GoogleLogoPainter()),
+                  ),
+                  const SizedBox(width: 10),
+                  const Text('Continuer avec Google',
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                ],
+              ),
+      ),
+    );
+  }
+}
+
+class _GoogleLogoPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size s) {
+    final c = Offset(s.width / 2, s.height / 2);
+    final r = s.width / 2;
+    final p = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = r * 0.35
+      ..strokeCap = StrokeCap.round;
+    p.color = const Color(0xFF4285F4);
+    canvas.drawArc(Rect.fromCircle(center: c, radius: r * 0.65), -0.30, 1.55, false, p);
+    p.color = const Color(0xFFEA4335);
+    canvas.drawArc(Rect.fromCircle(center: c, radius: r * 0.65), -1.90, 1.00, false, p);
+    p.color = const Color(0xFFFBBC05);
+    canvas.drawArc(Rect.fromCircle(center: c, radius: r * 0.65),  2.10, 0.90, false, p);
+    p.color = const Color(0xFF34A853);
+    canvas.drawArc(Rect.fromCircle(center: c, radius: r * 0.65),  3.00, 0.45, false, p);
+    p..style = PaintingStyle.fill..color = const Color(0xFF4285F4);
+    canvas.drawRect(Rect.fromLTWH(c.dx, c.dy - r * 0.12, r * 0.65, r * 0.24), p);
+  }
+  @override
+  bool shouldRepaint(covariant CustomPainter old) => false;
 }
 
 /// Traduit les codes d'erreur Appwrite en messages compréhensibles.

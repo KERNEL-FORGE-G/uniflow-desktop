@@ -29,6 +29,10 @@ class ConferenceHostState {
   /// Explication à montrer quand le binaire du serveur média est absent.
   final String? binaryHint;
 
+  /// URL du serveur LiveKit cloud configuré (mode cloud uniquement).
+  /// Exemple : wss://my-project.livekit.cloud
+  final String? cloudUrl;
+
   const ConferenceHostState({
     this.status = HostState.stopped,
     this.conference,
@@ -38,6 +42,7 @@ class ConferenceHostState {
     this.error,
     this.published = false,
     this.binaryHint,
+    this.cloudUrl,
   });
 
   /// Vrai quand le service accepte des participants.
@@ -72,6 +77,7 @@ class ConferenceHostState {
     String? error,
     bool? published,
     String? binaryHint,
+    String? cloudUrl,
     bool clearError = false,
     bool clearConference = false,
   }) {
@@ -84,6 +90,7 @@ class ConferenceHostState {
       error: clearError ? null : (error ?? this.error),
       published: published ?? this.published,
       binaryHint: binaryHint ?? this.binaryHint,
+      cloudUrl: cloudUrl ?? this.cloudUrl,
     );
   }
 
