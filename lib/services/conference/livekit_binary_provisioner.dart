@@ -34,7 +34,7 @@ class LiveKitBinaryProvisioner {
   /// Renvoie `null` si la plateforme n'est pas supportée.
   static String? _archiveUrl() {
     final String os;
-    final String arch;
+    late String arch;
     if (Platform.isWindows) {
       os = 'windows';
     } else if (Platform.isLinux) {

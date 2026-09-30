@@ -7,6 +7,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:appwrite/appwrite.dart';
+import 'package:appwrite/enums.dart';
 import 'package:appwrite/models.dart' as models;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -125,7 +126,7 @@ class AuthRepository {
       await _account.deleteSession(sessionId: 'current');
     } catch (_) {}
     await _account.createOAuth2Session(
-      provider: 'google',
+      provider: OAuthProvider.google,
       success:
           'uniflow://auth/oauth2/success',
       failure:

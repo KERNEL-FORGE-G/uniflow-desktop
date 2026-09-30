@@ -94,3 +94,30 @@ flutter:
           weight: 700
         - asset: assets/fonts/Inter-ExtraBold.ttf
           weight: 800
+
+# ── Configuration MSIX / Microsoft Store ────────────────────────────────────
+# Ces clés sont lues UNIQUEMENT depuis pubspec.yaml (pas depuis
+# windows/packaging/msix/make_config.yaml) par msix 3.18.0 :
+# `languages`, `protocol_activation`, `startup_task`, `context_menu`,
+# `toast_activator`.
+# Les autres champs d'identité (publisher, identity_name, display_name,
+# publisher_display_name, store, logo_path, capabilities) vivent dans
+# make_config.yaml pour éviter la duplication.
+# Identité Partner Center : KERNELFORGE.Uniflowwork (relevé 29/09/2026)
+# PFN : KERNELFORGE.Uniflowwork_3wyzhk1x8xr0a
+msix_config:
+  # Langues déclarées dans le manifeste Appx.
+  # Le Store les utilise pour le ciblage géographique des acquisitions.
+  # fr-CM = Français (Cameroun), fr-FR = Français (France), en-US = anglais.
+  languages: 'fr-CM, fr-FR, en-US'
+
+  # Redirection de protocole : uniflow:// ouvre l'app depuis le navigateur
+  # (liens d'invitation à une visioconférence, liens de réinitialisation).
+  # Le Store exige que le protocole soit déclaré ici pour les apps Store.
+  protocol_activation: 'uniflow'
+
+  # Tâche de démarrage Windows : permet le démarrage automatique au login
+  # (optionnel, désactivé par défaut, l'utilisateur peut l'activer
+  # dans Paramètres Windows › Applications de démarrage).
+  startup_task: 'false'
+

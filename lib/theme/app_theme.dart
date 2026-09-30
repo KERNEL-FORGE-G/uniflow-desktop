@@ -134,9 +134,10 @@ class AppColors {
     end: Alignment.bottomRight,
   );
 
-  /// Dégradé des en-têtes (`admin-header-gradient` du web).
+  /// Dégradé des en-têtes -- dark premium (aligné mobile + ref Pinterest).
+  /// Violet deep → navy → noir, cohérent sur les 3 plateformes.
   static const LinearGradient headerGradient = LinearGradient(
-    colors: [primaryBlue, deepBlue, Color(0xFF0D1F4F)],
+    colors: [Color(0xFF0D0F1E), Color(0xFF111827), Color(0xFF0A0A14)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
