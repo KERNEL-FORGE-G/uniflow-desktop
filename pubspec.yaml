@@ -74,6 +74,9 @@ flutter:
     - assets/assistant/
     - assets/logos/
     - assets/onboarding/
+    # Médailles des badges étudiants (même images que le mobile) : embarquées
+    # pour s'afficher hors ligne dans la section Badges du tableau de bord.
+    - assets/badges/
     - .env
   # Inter (SIL OFL 1.1, licence dans assets/fonts/) : la police du web.
   # Le thème la nommait sans l'embarquer et Flutter retombait sur la police

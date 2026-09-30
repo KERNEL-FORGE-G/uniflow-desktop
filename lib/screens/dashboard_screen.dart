@@ -9,6 +9,7 @@ import '../models/dashboard_overview.dart';
 import '../models/user_role.dart';
 import '../providers/analytics_provider.dart';
 import '../providers/auth_provider.dart';
+import '../providers/badges_provider.dart';
 import '../providers/directory_provider.dart';
 import '../providers/navigation_provider.dart';
 import '../repositories/academic_repository.dart';
@@ -16,6 +17,7 @@ import '../router/route_guard.dart';
 import '../theme/app_theme.dart';
 import '../utils/french_date.dart';
 import '../widgets/app_top_bar.dart';
+import '../widgets/dashboard_badges_section.dart';
 import '../widgets/data_state_view.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/uni_icons.dart';
@@ -158,6 +160,11 @@ class DashboardScreen extends ConsumerWidget {
                 if (actions.isNotEmpty) ...[
                   const SizedBox(height: AppSpacing.lg),
                   _QuickActions(destinations: actions),
+                ],
+                // Badges : uniquement pour les apprenants (étudiants et délégués).
+                if (!role.isAdmin) ...[
+                  const SizedBox(height: AppSpacing.lg),
+                  const _BadgesSection(),
                 ],
                 if (role.isAdmin) ...[
                   const SizedBox(height: AppSpacing.lg),
@@ -1115,6 +1122,25 @@ class _ActivityRow extends StatelessWidget {
                   const TextStyle(fontSize: 12.5, color: AppColors.textMuted)),
         ],
       ),
+    );
+  }
+}
+
+/// Section badges de l'apprenant : affichée sous les accès rapides, masquée
+/// pour les administrateurs (qui n'ont pas de progression personnelle à suivre).
+class _BadgesSection extends ConsumerWidget {
+  const _BadgesSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final badgesAsync = ref.watch(studentBadgesProvider);
+    return badgesAsync.when(
+      data: (badges) {
+        if (badges.isEmpty) return const SizedBox.shrink();
+        return DashboardBadgesSection(badges: badges);
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
     );
   }
 }
