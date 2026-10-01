@@ -30,6 +30,32 @@ Flutter pour Linux, Windows, macOS et tablette Android ; il parle directement
 | Statistiques | Assiduité, réussite, flux de présence |
 | Visioconférence | Salles hébergées par le poste lui-même, voir ci-dessous |
 
+### Design
+
+Thème **UniFlow bleu premium** : fond `#F0F7FF` (blanc-bleu pâle), header
+dégradé `#1E3A8A → #0D9488` (bleu → teal), cards arrondies avec ombres
+douces bleues, typographie `Inter` en poids large. La connexion affiche un
+panneau split (illustration à gauche, formulaire à droite) sur les grandes
+fenêtres, et un formulaire seul sur les petites.
+
+### Microsoft Store
+
+Le projet est enregistré sous l'identité **KERNELFORGE.Uniflowwork** :
+
+| Champ | Valeur |
+| --- | --- |
+| `identity_name` | `KERNELFORGE.Uniflowwork` |
+| Store ID | `9NLBC7RC553Q` |
+| Publisher | `CN=200A91F7-4B15-441F-9332-83F216885B09` |
+| Nom affiché | `Uniflow work` |
+| Langues | `fr-CM`, `fr-FR`, `en-US` |
+| Protocol activation | `uniflow` |
+
+Build du paquet (sur Windows) :
+```
+flutter pub run flutter_msix:create
+```
+
 ## Visioconférence embarquée
 
 Le desktop embarque son propre serveur de visioconférence : il pilote un
