@@ -32,11 +32,14 @@ Flutter pour Linux, Windows, macOS et tablette Android ; il parle directement
 
 ### Design
 
-Thème **UniFlow bleu premium** : fond `#F0F7FF` (blanc-bleu pâle), header
-dégradé `#1E3A8A → #0D9488` (bleu → teal), cards arrondies avec ombres
-douces bleues, typographie `Inter` en poids large. La connexion affiche un
-panneau split (illustration à gauche, formulaire à droite) sur les grandes
-fenêtres, et un formulaire seul sur les petites.
+Thème **UniFlow bleu premium** (refonte 2026-10) :
+
+- **Palette** : fond `#F0F7FF` (blanc-bleu pâle), header dégradé `#1E3A8A → #0D9488`
+- **Cartes** : arrondies `16 px`, ombres bleues douces
+- **Typographie** : Inter, titres bold, corps 14–16 px
+- **Connexion** : panneau split (illustration mascotte à gauche, formulaire à droite) sur grandes fenêtres ; formulaire seul sur petites
+- **Splash** : fond dégradé bleu→teal avec logo et spinner animé
+- **Onboarding** : écran de bienvenue plein-bleed avec illustration 3D UniFlow
 
 ### Microsoft Store
 
