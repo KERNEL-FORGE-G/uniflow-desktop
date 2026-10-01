@@ -134,10 +134,10 @@ class AppColors {
     end: Alignment.bottomRight,
   );
 
-  /// Dégradé des en-têtes -- dark premium (aligné mobile + ref Pinterest).
-  /// Violet deep → navy → noir, cohérent sur les 3 plateformes.
+  /// Dégradé des en-têtes -- bleu UniFlow premium.
+  /// Bleu profond → bleu moyen → teal, cohérent sur les 3 plateformes.
   static const LinearGradient headerGradient = LinearGradient(
-    colors: [Color(0xFF0D0F1E), Color(0xFF111827), Color(0xFF0A0A14)],
+    colors: [Color(0xFF1E3A8A), Color(0xFF2D4FA8), Color(0xFF0D9488)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
