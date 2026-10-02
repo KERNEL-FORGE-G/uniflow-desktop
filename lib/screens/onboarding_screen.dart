@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../widgets/uni/uni_mascot.dart';
 
-/// Écran d'onboarding affiché uniquement au premier lancement.
+import '../widgets/uni/uni_mascot.dart';
+import '../widgets/uni/archlord_mascot.dart';
+import '../widgets/uni/mascot_dialogue.dart';
+
+/// Écran d'onboarding affiché uniquement au premier lancement (desktop).
 ///
-/// 3 pages : Bienvenue, Fonctionnalités clés, Prêt à démarrer.
-/// Sauvegarde `prefs.onboardingDone = true` à la fin pour ne plus l'afficher.
+/// 3 pages — chacune avec Archlord + Uni en bas qui échangent des répliques
+/// contextuelles. Le dialogue avance automatiquement toutes les 3,5 s et
+/// au clic.
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -24,25 +28,43 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
     _OnboardPage(
       title: 'Bienvenue sur UniFlow',
       subtitle:
-          "La plateforme universitaire tout-en-un pour gérer votre campus \u2014 cours, présences, notes et communication en un seul endroit.",
-      pose: UniPose.wave,
-      bubbleText: "Salut ! Moi c'est Uni. Je suis là pour vous guider !",
+          'La plateforme universitaire tout-en-un — cours, présences, notes '
+          'et communication en un seul endroit.',
+      uniPose: UniPose.wave,
+      archlordPose: ArchlordPose.wave,
+      dialogue: [
+        DialogueLine.archlord('UniFlow est né dans notre propre fac. On a résolu nos propres problèmes.'),
+        DialogueLine.uni('Salut ! Moi c\'est Uni. Je suis là pour vous guider tout au long de l\'aventure !'),
+        DialogueLine.archlord('On vous prépare un espace de travail sur mesure. Bienvenue !'),
+      ],
       gradient: [Color(0xFF1E3A8A), Color(0xFF2563EB), Color(0xFF1D4ED8)],
     ),
     _OnboardPage(
       title: 'Tout ce dont vous avez besoin',
       subtitle:
-          "Gestion des étudiants, des enseignants, des programmes et des salles. Présences QR code, devoirs, notes et bulletins automatisés.",
-      pose: UniPose.celebrate,
-      bubbleText: "Multi-rôles, offline-first, et toujours synchronisé !",
+          'Étudiants, enseignants, programmes et salles. Présences QR code, '
+          'devoirs, notes et bulletins automatisés.',
+      uniPose: UniPose.celebrate,
+      archlordPose: ArchlordPose.explain,
+      dialogue: [
+        DialogueLine.uni('Multi-rôles, offline-first, et toujours synchronisé !'),
+        DialogueLine.archlord('Gestion de présences en QR code, notes en temps réel, bulletins auto…'),
+        DialogueLine.uni('Et tout fonctionne même sans Internet — on a pensé à tout !'),
+      ],
       gradient: [Color(0xFF1D4ED8), Color(0xFF0891B2), Color(0xFF0D9488)],
     ),
     _OnboardPage(
       title: 'Prêt à transformer votre campus ?',
       subtitle:
-          "Connectez-vous avec votre compte universitaire ou créez un espace indépendant. UniFlow fonctionne même sans Internet.",
-      pose: UniPose.pointing,
-      bubbleText: "Cliquez sur Commencer \u2014 je serai toujours là !",
+          'Connectez-vous avec votre compte universitaire ou créez un espace '
+          'indépendant. UniFlow fonctionne même sans Internet.',
+      uniPose: UniPose.pointing,
+      archlordPose: ArchlordPose.thumbs,
+      dialogue: [
+        DialogueLine.archlord('KERNEL FORGE — UniFlow est notre premier produit, pas le dernier.'),
+        DialogueLine.uni('Cliquez sur Commencer — je serai toujours là si vous avez besoin !'),
+        DialogueLine.archlord('Vos retours font le produit. On construit ça ensemble.'),
+      ],
       gradient: [Color(0xFF0D9488), Color(0xFF0F766E), Color(0xFF134E4A)],
     ),
   ];
@@ -98,13 +120,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
         ),
         child: Stack(
           children: [
-            // Cercle décoratif fond
+            // Cercles décoratifs fond
             Positioned(
-              top: -100,
-              right: -100,
+              top: -120,
+              right: -120,
               child: Container(
-                width: 400,
-                height: 400,
+                width: 450,
+                height: 450,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white.withValues(alpha: 0.06),
@@ -115,8 +137,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
               bottom: -80,
               left: -80,
               child: Container(
-                width: 300,
-                height: 300,
+                width: 320,
+                height: 320,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white.withValues(alpha: 0.05),
@@ -223,6 +245,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  PAGE CONTENT
+// ─────────────────────────────────────────────────────────────────────────────
+
 class _PageContent extends StatelessWidget {
   const _PageContent({required this.page});
   final _OnboardPage page;
@@ -234,24 +260,12 @@ class _PageContent extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Mascotte
-          UniMascot(
-            pose: page.pose,
-            size: 180,
-            bubble: Text(
-              page.bubbleText,
-              style: const TextStyle(fontSize: 13),
-            ),
-            bubbleSide: UniBubbleSide.right,
-          ),
-          const SizedBox(height: 40),
-
           // Titre
           Text(
             page.title,
             textAlign: TextAlign.center,
             style: const TextStyle(
-              fontSize: 32,
+              fontSize: 34,
               fontWeight: FontWeight.w900,
               color: Colors.white,
               letterSpacing: -0.5,
@@ -271,24 +285,41 @@ class _PageContent extends StatelessWidget {
               height: 1.6,
             ),
           ),
+          const SizedBox(height: 36),
+
+          // ── Dialogue Archlord + Uni ──────────────────────────────────
+          if (page.dialogue.isNotEmpty)
+            MascotDialogue(
+              lines: page.dialogue,
+              uniPose: page.uniPose,
+              archlordPose: page.archlordPose,
+              figureHeight: 140,
+              interval: const Duration(milliseconds: 3500),
+            ),
         ],
       ),
     );
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  MODÈLE
+// ─────────────────────────────────────────────────────────────────────────────
+
 class _OnboardPage {
   final String title;
   final String subtitle;
-  final UniPose pose;
-  final String bubbleText;
+  final UniPose uniPose;
+  final ArchlordPose archlordPose;
+  final List<DialogueLine> dialogue;
   final List<Color> gradient;
 
   const _OnboardPage({
     required this.title,
     required this.subtitle,
-    required this.pose,
-    required this.bubbleText,
+    required this.uniPose,
+    required this.archlordPose,
+    required this.dialogue,
     required this.gradient,
   });
 }

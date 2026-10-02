@@ -16,6 +16,7 @@ import 'accounts_screen.dart';
 import 'attendance_screen.dart';
 import 'classrooms_screen.dart';
 import 'dashboard_screen.dart';
+import 'gamification_screens.dart';
 import 'management_screens.dart';
 import 'messaging_screen.dart';
 import 'notifications_screen.dart';
@@ -172,6 +173,10 @@ Widget _buildDestination(AppDestination destination) {
       return const LibraryManagementScreen();
     case AppDestination.conferences:
       return const ConferencesScreen();
+    case AppDestination.badges:
+      return const BadgesDesktopScreen();
+    case AppDestination.quests:
+      return const QuestsDesktopScreen();
     case AppDestination.sentinelle:
       return const SentinelleManagementScreen();
     case AppDestination.teams:

@@ -159,6 +159,20 @@ enum AppDestination {
     NavSection.campus,
     _everyone,
   ),
+  badges(
+    'badges',
+    'Badges',
+    UniIcons.badges,
+    NavSection.campus,
+    _everyone,
+  ),
+  quests(
+    'quetes',
+    'Quêtes',
+    UniIcons.tasks,
+    NavSection.campus,
+    _everyone,
+  ),
   messaging(
     'messagerie',
     'Messagerie',
