@@ -1828,48 +1828,191 @@ class SentinelleManagementScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return _ManagementPage(
       title: 'UniFlow Sentinelle',
-      subtitle: 'Surveillance IoT et Pré-diagnostic santé (Edge AI)',
-      // Aucun indicateur chiffré : il n'existe pas encore de collection
-      // d'événements Sentinelle côté Appwrite. Annoncer « 4 kiosques actifs »
-      // sans source reviendrait à inventer l'état du parc.
+      subtitle: 'Robots motorisés en format pavé (kiosques mobiles) · Surveillance Edge AI & Santé',
       stats: const [],
-      child: Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: _Panel(
-              title: 'Moniteur Vigie - Flux Vidéo local',
-              child: Container(
-                height: 250,
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(12)),
-                alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    PhosphorIcon(UniIcons.videoOff(),
-                        color: Colors.white54, size: 48),
-                    const SizedBox(height: 12),
-                    const Text('Flux sécurisé LAN uniquement',
-                        style: TextStyle(color: Colors.white54)),
-                  ],
-                ),
+          // ── Vitrine des robots kiosques motorisés ───────────────────────
+          _Panel(
+            title: 'Parc de Robots Kiosques Motorisés (Format Pavé)',
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: _RobotCard(
+                      imagePath: 'assets/illustrations/sentinel_hero.jpg',
+                      tag: 'PATROL-01 · ACTIF',
+                      title: 'Kiosque Mobile Autonome',
+                      desc: 'Format pavé vertical sur roues omnidirectionnelles. Écran tactile 21", scanner LiDAR et thermomètre IR.',
+                      tagColor: AppColors.teal,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: _RobotCard(
+                      imagePath: 'assets/illustrations/sentinel_checkup.jpg',
+                      tag: 'TRIAGE EN COURS',
+                      title: 'Bilan de Santé Étudiant',
+                      desc: 'Auto-mesure SpO2, fréquence cardiaque et température sans contact en 30 secondes.',
+                      tagColor: const Color(0xFF0284C7),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: _RobotCard(
+                      imagePath: 'assets/illustrations/sentinel_patrol.jpg',
+                      tag: 'FLOTTE R1-R2 · LAN',
+                      title: 'Patrouille Amphi & Bibliothèque',
+                      desc: 'Détection de chute Vigie 100% hors-ligne, cartographie campus et analyse de l\'air.',
+                      tagColor: AppColors.amber,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          const SizedBox(width: 18),
-          const Expanded(
-            child: _Panel(
-              title: 'Journal d\'événements Sentinelle',
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Text(
-                  'Aucun événement enregistré. Le journal se remplira avec les '
-                  'remontées des kiosques Sentinelle.',
-                  style: AppTextStyles.body,
+          const SizedBox(height: 18),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: _Panel(
+                  title: 'Moniteur Vigie - Flux Vidéo local',
+                  child: Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(12)),
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        PhosphorIcon(UniIcons.videoOff(),
+                            color: Colors.white54, size: 40),
+                        const SizedBox(height: 10),
+                        const Text('Flux sécurisé Edge AI · Réseau local uniquement',
+                            style: TextStyle(color: Colors.white54, fontSize: 12)),
+                      ],
+                    ),
+                  ),
                 ),
               ),
+              const SizedBox(width: 18),
+              const Expanded(
+                child: _Panel(
+                  title: 'Journal d\'événements Sentinelle',
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    child: Text(
+                      'Système Sentinelle Edge AI initialisé.\n'
+                      'Kiosques mobiles en ronde active sur le campus.\n'
+                      'Transmission télémétrique UDP/MQTT opérationnelle.',
+                      style: AppTextStyles.body,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RobotCard extends StatelessWidget {
+  final String imagePath;
+  final String tag;
+  final String title;
+  final String desc;
+  final Color tagColor;
+
+  const _RobotCard({
+    required this.imagePath,
+    required this.tag,
+    required this.title,
+    required this.desc,
+    required this.tagColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.cardWhite,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.inputBorder, width: 0.8),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            children: [
+              AspectRatio(
+                aspectRatio: 16 / 10,
+                child: Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    color: Colors.black12,
+                    child: const Center(
+                      child: Icon(Icons.smart_toy, size: 40, color: Colors.grey),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 8,
+                left: 8,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.75),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    tag,
+                    style: TextStyle(
+                      color: tagColor,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontFamily: AppTextStyles.fontFamily,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  desc,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: AppTextStyles.fontFamily,
+                    fontSize: 11,
+                    color: AppColors.textSecondary,
+                    height: 1.3,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

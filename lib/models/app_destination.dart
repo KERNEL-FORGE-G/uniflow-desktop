@@ -314,6 +314,8 @@ extension AppDestinationBottomEdge on AppDestination {
         AppDestination.grades => BottomEdge.free,
         AppDestination.library => BottomEdge.free,
         AppDestination.conferences => BottomEdge.free,
+        AppDestination.badges => BottomEdge.free,
+        AppDestination.quests => BottomEdge.free,
         // Liste des conversations à gauche, fil à droite : le composeur
         // (champ + « Envoyer ») termine le fil, en bas à droite du corps.
         AppDestination.messaging => BottomEdge.composer,

@@ -19,6 +19,7 @@ import '../utils/french_date.dart';
 import '../widgets/app_top_bar.dart';
 import '../widgets/dashboard_badges_section.dart';
 import '../widgets/data_state_view.dart';
+import '../widgets/gamification_widgets.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/uni_icons.dart';
 
@@ -141,53 +142,245 @@ class DashboardScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // La barre recherche + cloche + avatar qui coiffait cet écran a été
-        // retirée : la recherche ne cherchait rien, la cloche n'ouvrait rien,
-        // et l'avatar doublait celui de la barre latérale. Le web ouvre son
-        // tableau de bord sur un salut personnalisé ; on fait de même.
         _DashboardHeader(user: user, role: role),
         Expanded(
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(AppSpacing.xxl, AppSpacing.xxl,
                 AppSpacing.xxl, AppSpacing.uniClearance),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (role.isAdmin)
-                  const _AdminStats()
-                else
-                  _RoleStats(role: role),
-                if (actions.isNotEmpty) ...[
-                  const SizedBox(height: AppSpacing.lg),
-                  _QuickActions(destinations: actions),
-                ],
-                // Badges : uniquement pour les apprenants (étudiants et délégués).
-                if (!role.isAdmin) ...[
-                  const SizedBox(height: AppSpacing.lg),
-                  const _BadgesSection(),
-                ],
-                if (role.isAdmin) ...[
-                  const SizedBox(height: AppSpacing.lg),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isWide = constraints.maxWidth >= 1020;
 
-                  // ----- Graphique des inscriptions + graphique en anneau -----
-                  // Côte à côte quand la fenêtre est assez large, empilés sinon :
-                  // deux graphiques dans une fenêtre étroite deviennent
-                  // illisibles.
-                  const _ResponsiveRow(
-                    breakpoint: 900,
-                    left: _EnrollmentChartCard(),
-                    right: _AttendanceDonutCard(),
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
+                if (!role.isAdmin && isWide) {
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ── Colonne principale (gauche, 64%) ───────────────
+                      Expanded(
+                        flex: 64,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            _DesktopHeroBanner(user: user, role: role),
+                            const SizedBox(height: AppSpacing.lg),
+                            _RoleStats(role: role),
+                            const SizedBox(height: AppSpacing.lg),
+                            const _CoursesSectionModern(),
+                            if (actions.isNotEmpty) ...[
+                              const SizedBox(height: AppSpacing.lg),
+                              _QuickActions(destinations: actions),
+                            ],
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.xl),
+                      // ── Colonne latérale (droite, 36%) ────────────────
+                      Expanded(
+                        flex: 36,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            QuestSummaryWidget(
+                              onViewAll: () => ref.read(currentDestinationProvider.notifier).state = AppDestination.quests,
+                            ),
+                            const SizedBox(height: AppSpacing.md),
+                            DailyReminderCard(
+                              onViewSchedule: () => ref.read(currentDestinationProvider.notifier).state = AppDestination.schedule,
+                            ),
+                            const SizedBox(height: AppSpacing.md),
+                            BadgeHighlightWidget(
+                              onSeeAll: () => ref.read(currentDestinationProvider.notifier).state = AppDestination.badges,
+                            ),
+                            const SizedBox(height: AppSpacing.md),
+                            const _BadgesSection(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }
 
-                  // ----- Activités récentes (pleine largeur) -----
-                  const _RecentActivityCard(),
-                ],
-              ],
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _DesktopHeroBanner(user: user, role: role),
+                    const SizedBox(height: AppSpacing.lg),
+                    if (role.isAdmin)
+                      const _AdminStats()
+                    else
+                      _RoleStats(role: role),
+                    if (actions.isNotEmpty) ...[
+                      const SizedBox(height: AppSpacing.md),
+                      _QuickActions(destinations: actions),
+                    ],
+                    if (!role.isAdmin) ...[
+                      const SizedBox(height: AppSpacing.lg),
+                      const _CoursesSectionModern(),
+                      const SizedBox(height: AppSpacing.lg),
+                      QuestSummaryWidget(
+                        onViewAll: () => ref.read(currentDestinationProvider.notifier).state = AppDestination.quests,
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      DailyReminderCard(
+                        onViewSchedule: () => ref.read(currentDestinationProvider.notifier).state = AppDestination.schedule,
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      BadgeHighlightWidget(
+                        onSeeAll: () => ref.read(currentDestinationProvider.notifier).state = AppDestination.badges,
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      const _BadgesSection(),
+                    ],
+                    if (role.isAdmin) ...[
+                      const SizedBox(height: AppSpacing.lg),
+                      const _ResponsiveRow(
+                        breakpoint: 900,
+                        left: _EnrollmentChartCard(),
+                        right: _AttendanceDonutCard(),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      const _RecentActivityCard(),
+                    ],
+                  ],
+                );
+              },
             ),
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Bannière hero du tableau de bord desktop — style SkillSet.
+/// Carte pleine largeur avec dégradé bleu UniFlow, salutation,
+/// mascotte Uni à droite.
+class _DesktopHeroBanner extends StatelessWidget {
+  final UniFlowUser? user;
+  final UserRole role;
+
+  const _DesktopHeroBanner({required this.user, required this.role});
+
+  @override
+  Widget build(BuildContext context) {
+    final firstName = _DashboardHeader.firstNameOf(user?.name);
+    final greeting = firstName.isEmpty
+        ? 'Bienvenue sur UniFlow'
+        : 'Bonjour, $firstName';
+    final subtitle = switch (role) {
+      UserRole.student => 'Prêt pour vos cours du jour ?',
+      UserRole.delegate => 'Votre journée et celle de la classe',
+      UserRole.teacher => 'Vos séances et ce qu\'il reste à corriger',
+      UserRole.admin => 'Vue d\'ensemble de l\'établissement',
+    };
+
+    return Container(
+      height: 160,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF1E3A8A), Color(0xFF2D4FA8), Color(0xFF0D9488)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        boxShadow: AppShadows.card,
+      ),
+      child: Stack(
+        clipBehavior: Clip.antiAlias,
+        children: [
+          // Cercles décoratifs
+          Positioned(
+            right: -30,
+            top: -30,
+            child: Container(
+              width: 180,
+              height: 180,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.06),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          Positioned(
+            right: 110,
+            bottom: -20,
+            child: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.05),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          // Texte à gauche
+          Positioned(
+            left: AppSpacing.xxl,
+            top: 0,
+            bottom: 0,
+            right: 250,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  greeting,
+                  style: const TextStyle(
+                    fontFamily: AppTextStyles.fontFamily,
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    fontFamily: AppTextStyles.fontFamily,
+                    color: Colors.white.withValues(alpha: 0.78),
+                    fontSize: 13.5,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                OutlinedButton(
+                  onPressed: () {},
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    side: const BorderSide(color: Colors.white54),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 18, vertical: 9),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.pill)),
+                    textStyle: const TextStyle(
+                      fontFamily: AppTextStyles.fontFamily,
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  child: const Text('Explorer →'),
+                ),
+              ],
+            ),
+          ),
+          // Mascotte cartoon Archlord & Uni à droite
+          Positioned(
+            right: 10,
+            bottom: 0,
+            child: Image.asset(
+              'assets/mascot/archlord_uni_duo_solid.webp',
+              height: 155,
+              fit: BoxFit.contain,
+              errorBuilder: (_, __, ___) => Image.asset(
+                'assets/mascot/uni_graduate.webp',
+                height: 155,
+                fit: BoxFit.contain,
+                errorBuilder: (_, __, ___) => const SizedBox(width: 155),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -260,6 +453,7 @@ class _AdminStats extends ConsumerWidget {
             hint: 'Comptes actifs',
             icon: UniIcons.students(),
             iconBackground: AppColors.primaryBlue,
+            imageAsset: 'assets/illustrations/hero_books.jpg',
             index: 0,
           ),
           StatCard(
@@ -268,6 +462,7 @@ class _AdminStats extends ConsumerWidget {
             hint: 'Comptes actifs',
             icon: UniIcons.teachers(),
             iconBackground: AppColors.teal,
+            imageAsset: 'assets/illustrations/course_schedule.jpg',
             index: 1,
           ),
           StatCard(
@@ -276,6 +471,7 @@ class _AdminStats extends ConsumerWidget {
             hint: 'Toutes filières',
             icon: UniIcons.courses(),
             iconBackground: AppColors.warning,
+            imageAsset: 'assets/illustrations/course_books.jpg',
             index: 2,
           ),
           StatCard(
@@ -284,6 +480,7 @@ class _AdminStats extends ConsumerWidget {
             hint: 'Historique',
             icon: UniIcons.schedule(),
             iconBackground: AppColors.purple,
+            imageAsset: 'assets/illustrations/course_grades.jpg',
             index: 3,
           ),
         ],
@@ -338,6 +535,7 @@ class _RoleStats extends ConsumerWidget {
           hint: 'Ce semestre',
           icon: UniIcons.courses(),
           iconBackground: AppColors.primaryBlue,
+          imageAsset: 'assets/illustrations/course_schedule.jpg',
           index: 0,
         ),
         StatCard(
@@ -347,6 +545,7 @@ class _RoleStats extends ConsumerWidget {
               overview.assignmentCount == 0 ? 'Rien en attente' : 'En attente',
           icon: UniIcons.assignments(),
           iconBackground: AppColors.warning,
+          imageAsset: 'assets/illustrations/course_books.jpg',
           index: 1,
         ),
         StatCard(
@@ -356,6 +555,7 @@ class _RoleStats extends ConsumerWidget {
               '${overview.gradeCount} note${overview.gradeCount > 1 ? 's' : ''}',
           icon: UniIcons.grades(),
           iconBackground: AppColors.teal,
+          imageAsset: 'assets/illustrations/course_grades.jpg',
           index: 2,
         ),
         StatCard(
@@ -366,6 +566,7 @@ class _RoleStats extends ConsumerWidget {
               : 'Depuis la rentrée',
           icon: UniIcons.attendance(),
           iconBackground: AppColors.purple,
+          imageAsset: 'assets/illustrations/hero_books.jpg',
           index: 3,
         ),
       ];
@@ -377,6 +578,7 @@ class _RoleStats extends ConsumerWidget {
         hint: 'Enseignements',
         icon: UniIcons.courses(),
         iconBackground: AppColors.primaryBlue,
+        imageAsset: 'assets/illustrations/course_schedule.jpg',
         index: 0,
       ),
       StatCard(
@@ -385,6 +587,7 @@ class _RoleStats extends ConsumerWidget {
         hint: 'Inscrits à mes cours',
         icon: UniIcons.students(),
         iconBackground: AppColors.teal,
+        imageAsset: 'assets/illustrations/hero_books.jpg',
         index: 1,
       ),
       StatCard(
@@ -393,6 +596,7 @@ class _RoleStats extends ConsumerWidget {
         hint: 'Tous mes cours',
         icon: UniIcons.assignments(),
         iconBackground: AppColors.warning,
+        imageAsset: 'assets/illustrations/course_books.jpg',
         index: 2,
       ),
       StatCard(
@@ -403,6 +607,7 @@ class _RoleStats extends ConsumerWidget {
             : 'Moyenne ${overview.averageLabel}',
         icon: UniIcons.grades(),
         iconBackground: AppColors.purple,
+        imageAsset: 'assets/illustrations/course_grades.jpg',
         index: 3,
       ),
     ];
@@ -1143,4 +1348,302 @@ class _BadgesSection extends ConsumerWidget {
       error: (_, __) => const SizedBox.shrink(),
     );
   }
+}
+
+/// Grille des cours modernes — cartes solides aux couleurs UniFlow (Navy, Teal, Amber, Violet).
+class _CoursesSectionModern extends ConsumerWidget {
+  const _CoursesSectionModern();
+
+  static const List<_CourseTheme> _themes = [
+    _CourseTheme(
+      gradient: [Color(0xFF1E3A8A), Color(0xFF2563EB)],
+      icon: PhosphorIconsBold.laptop,
+      accent: Color(0xFF38BDF8),
+    ),
+    _CourseTheme(
+      gradient: [Color(0xFF0F766E), Color(0xFF0D9488)],
+      icon: PhosphorIconsBold.mathOperations,
+      accent: Color(0xFF2DD4BF),
+    ),
+    _CourseTheme(
+      gradient: [Color(0xFFB45309), Color(0xFFD97706)],
+      icon: PhosphorIconsBold.brain,
+      accent: Color(0xFFFBBF24),
+    ),
+    _CourseTheme(
+      gradient: [Color(0xFF6D28D9), Color(0xFF7C3AED)],
+      icon: PhosphorIconsBold.globeHemisphereWest,
+      accent: Color(0xFFA78BFA),
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final coursesAsync = ref.watch(scopedCoursesProvider);
+    final colors = UniFlowColors.of(context);
+
+    return coursesAsync.when(
+      data: (courses) {
+        final list = courses.take(4).toList();
+        final displayList = list.isNotEmpty
+            ? list
+            : [
+                AcademicCourse(
+                  id: 'c1',
+                  code: 'INF101',
+                  name: 'Algorithmique & Structures de Données',
+                  description: '',
+                  university: 'Université de Yaoundé I',
+                  credits: 4,
+                  program: 'Informatique',
+                  level: 'L1',
+                  teacherId: '',
+                  teacherName: 'Dr. Mballa',
+                ),
+                AcademicCourse(
+                  id: 'c2',
+                  code: 'MAT102',
+                  name: 'Algèbre Linéaire & Analyse Réelle',
+                  description: '',
+                  university: 'Université de Yaoundé I',
+                  credits: 4,
+                  program: 'Informatique',
+                  level: 'L1',
+                  teacherId: '',
+                  teacherName: 'Pr. Ndongo',
+                ),
+                AcademicCourse(
+                  id: 'c3',
+                  code: 'SYS103',
+                  name: 'Architecture & Systèmes d\'Exploitation',
+                  description: '',
+                  university: 'Université de Yaoundé I',
+                  credits: 3,
+                  program: 'Informatique',
+                  level: 'L1',
+                  teacherId: '',
+                  teacherName: 'Dr. Kamga',
+                ),
+                AcademicCourse(
+                  id: 'c4',
+                  code: 'ANG104',
+                  name: 'Anglais Professionnel & Communication',
+                  description: '',
+                  university: 'Université de Yaoundé I',
+                  credits: 2,
+                  program: 'Informatique',
+                  level: 'L1',
+                  teacherId: '',
+                  teacherName: 'Mme. Biya',
+                ),
+              ];
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(7),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary50,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const PhosphorIcon(
+                        PhosphorIconsBold.bookOpen,
+                        size: 18,
+                        color: AppColors.primaryBlue,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      'Mes Matières & Modules',
+                      style: TextStyle(
+                        fontFamily: AppTextStyles.fontFamily,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: colors.text,
+                      ),
+                    ),
+                  ],
+                ),
+                TextButton.icon(
+                  onPressed: () => ref.read(currentDestinationProvider.notifier).state = AppDestination.schedule,
+                  icon: const Text('Tout voir', style: TextStyle(fontWeight: FontWeight.w600)),
+                  label: const PhosphorIcon(PhosphorIconsBold.arrowRight, size: 14),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final count = constraints.maxWidth > 800 ? 2 : 1;
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: count,
+                    crossAxisSpacing: 14,
+                    mainAxisSpacing: 14,
+                    childAspectRatio: count == 1 ? 2.6 : 2.1,
+                  ),
+                  itemCount: displayList.length,
+                  itemBuilder: (context, i) {
+                    final ue = displayList[i];
+                    final theme = _themes[i % _themes.length];
+
+                    return InkWell(
+                      onTap: () => ref.read(currentDestinationProvider.notifier).state = AppDestination.schedule,
+                      borderRadius: BorderRadius.circular(16),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: colors.surface,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: colors.border),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.03),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            // En-tête coloré vertical ou bloc icône
+                            Container(
+                              width: 80,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: theme.gradient,
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: const BorderRadius.horizontal(left: Radius.circular(15)),
+                              ),
+                              child: Center(
+                                child: PhosphorIcon(
+                                  theme.icon,
+                                  size: 32,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            // Informations de la matière
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.primary50,
+                                            borderRadius: BorderRadius.circular(6),
+                                          ),
+                                          child: Text(
+                                            ue.code,
+                                            style: const TextStyle(
+                                              fontFamily: AppTextStyles.fontFamily,
+                                              fontSize: 10.5,
+                                              fontWeight: FontWeight.w700,
+                                              color: AppColors.primaryBlue,
+                                            ),
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.teal50,
+                                            borderRadius: BorderRadius.circular(6),
+                                          ),
+                                          child: Text(
+                                            '${ue.credits} ECTS',
+                                            style: const TextStyle(
+                                              fontFamily: AppTextStyles.fontFamily,
+                                              fontSize: 10.5,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.teal,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      ue.name,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontFamily: AppTextStyles.fontFamily,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700,
+                                        color: colors.text,
+                                        height: 1.2,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Row(
+                                      children: [
+                                        PhosphorIcon(
+                                          PhosphorIconsBold.user,
+                                          size: 12,
+                                          color: colors.muted,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Expanded(
+                                          child: Text(
+                                            (ue.teacherName != null && ue.teacherName!.isNotEmpty)
+                                                ? ue.teacherName!
+                                                : 'Enseignant référent',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontFamily: AppTextStyles.fontFamily,
+                                              fontSize: 11,
+                                              color: colors.muted,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ],
+        );
+      },
+      loading: () => const Center(child: Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator())),
+      error: (_, __) => const SizedBox.shrink(),
+    );
+  }
+}
+
+class _CourseTheme {
+  final List<Color> gradient;
+  final PhosphorIconData icon;
+  final Color accent;
+
+  const _CourseTheme({
+    required this.gradient,
+    required this.icon,
+    required this.accent,
+  });
 }

@@ -11,7 +11,6 @@ import '../repositories/auth_repository.dart';
 import '../repositories/reference_repository.dart';
 import '../theme/app_theme.dart';
 import '../widgets/uni_icons.dart';
-import '../ui/app_button.dart';
 import '../widgets/app_text_field.dart';
 import '../widgets/auth_chrome.dart';
 import '../widgets/motion.dart';
@@ -161,6 +160,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   Widget build(BuildContext context) {
     final reference = ref.watch(academicReferenceProvider);
     return AuthShell(
+      artwork: AuthArtwork.register,
       formWidth: 420,
       formWidthWide: 500,
       form: _form(reference),
@@ -169,6 +169,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   Widget _form(AsyncValue<AcademicReference> referenceAsync) {
     final reference = referenceAsync.valueOrNull;
+    final p = AuthTone.of(context);
+    final scale = AuthScale.of(context);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -178,7 +181,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             IconButton(
               tooltip: 'Retour à la connexion',
               onPressed: _busy ? null : () => Navigator.of(context).pop(false),
-              icon: PhosphorIcon(UniIcons.back(UniIconStyle.bold)),
+              icon: PhosphorIcon(UniIcons.back(UniIconStyle.bold), color: p.text),
             ),
             Expanded(
               child: Text(
@@ -187,8 +190,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.h1
-                    .copyWith(fontSize: AuthScale.of(context).title),
+                style: AppTextStyles.h1.copyWith(
+                  fontSize: scale.title,
+                  color: p.text,
+                ),
               ),
             ),
             const SizedBox(width: 48),
@@ -200,7 +205,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               ? 'Compte étudiant rattaché à votre établissement'
               : 'Espace personnel, sans rattachement',
           textAlign: TextAlign.center,
-          style: AppTextStyles.body,
+          style: AppTextStyles.body.copyWith(
+            fontSize: scale.body,
+            color: p.textSoft,
+          ),
         ),
         const SizedBox(height: 20),
         AccountTypeSelector(
@@ -256,46 +264,64 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   prefixIcon: UniIcons.globeSimple(UniIconStyle.bold),
                 ),
         ),
-        if (_type == AccountType.university) ...[
-          const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: AppColors.teal50,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppColors.teal100),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                PhosphorIcon(UniIcons.about(UniIconStyle.bold),
-                    size: 16, color: AppColors.tealDark),
-                const SizedBox(width: 8),
-                const Flexible(
-                  child: Text(
-                    'L\'inscription crée un compte étudiant. Les comptes enseignant, '
-                    'délégué et administration sont créés par l\'administration de '
-                    'votre établissement.',
-                    style: TextStyle(
-                        fontSize: 12, color: AppColors.tealDark, height: 1.35),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
         const SizedBox(height: 20),
         GradientButton(
           label: 'Créer mon compte',
           isLoading: _busy,
           onPressed: _busy ? null : () => _submit(reference),
         ),
+        const SizedBox(height: 16),
+        Center(
+          child: Text(
+            'Déjà un compte ?',
+            style: AppTextStyles.body.copyWith(
+              fontSize: 13,
+              color: p.textSoft,
+            ),
+          ),
+        ),
+        const SizedBox(height: 2),
+        Center(
+          child: InkWell(
+            onTap: _busy ? null : () => Navigator.of(context).pop(false),
+            borderRadius: BorderRadius.circular(6),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+              child: Text(
+                'Se connecter',
+                style: p.linkStyle.copyWith(
+                  fontSize: 13.5,
+                  decoration: TextDecoration.underline,
+                  decorationColor: p.link,
+                ),
+              ),
+            ),
+          ),
+        ),
         const SizedBox(height: 12),
-        AppButton.ghost(
-          label: 'S\'inscrire sur le web',
-          icon: UniIcons.openExternal(UniIconStyle.bold),
-          expand: true,
-          onPressed: _busy ? null : _openWebRegistration,
+        Center(
+          child: InkWell(
+            onTap: _busy ? null : _openWebRegistration,
+            borderRadius: BorderRadius.circular(6),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    PhosphorIcon(UniIcons.openExternal(UniIconStyle.bold),
+                        size: 14, color: p.link),
+                    const SizedBox(width: 6),
+                    Text(
+                      'S\'inscrire sur le web',
+                      style: p.linkStyle.copyWith(fontSize: 12.5),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
       ],
     );

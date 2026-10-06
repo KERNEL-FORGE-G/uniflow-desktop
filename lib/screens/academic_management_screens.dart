@@ -1185,24 +1185,211 @@ final libraryProvider = FutureProvider<List<LibraryItem>>((ref) async {
   }).toList();
 });
 
-/// Bibliothèque numérique : documents de `academic_library`, fichiers dans
+///// Bibliothèque numérique : documents de `academic_library`, fichiers dans
 /// le bucket `uniflow_assets`. Enseignants et administration téléversent.
-class LibraryManagementScreen extends ConsumerWidget {
+/// Modèle d'ouvrage académique issu du service /open-library (Uni Book).
+class DesktopUniBookItem {
+  final String id;
+  final String title;
+  final List<String> authors;
+  final String category;
+  final String? coverUrl;
+  final String? downloadUrl;
+  final String format;
+  final String source;
+  final int? year;
+  final String? description;
+  final int downloadsCount;
+
+  const DesktopUniBookItem({
+    required this.id,
+    required this.title,
+    required this.authors,
+    required this.category,
+    this.coverUrl,
+    this.downloadUrl,
+    this.format = 'PDF',
+    this.source = 'Uni Book',
+    this.year,
+    this.description,
+    this.downloadsCount = 100,
+  });
+
+  factory DesktopUniBookItem.fromJson(Map<String, dynamic> json) {
+    return DesktopUniBookItem(
+      id: (json['id'] ?? '').toString(),
+      title: (json['title'] ?? 'Livre').toString(),
+      authors: (json['authors'] as List?)?.map((e) => e.toString()).toList() ?? const [],
+      category: (json['category'] ?? 'Général').toString(),
+      coverUrl: json['coverUrl'] as String?,
+      downloadUrl: json['downloadUrl'] as String?,
+      format: (json['format'] ?? 'PDF').toString(),
+      source: (json['source'] ?? 'Uni Book').toString(),
+      year: json['year'] is int ? json['year'] as int : null,
+      description: json['description'] as String?,
+      downloadsCount: (json['downloadsCount'] as num?)?.toInt() ?? 100,
+    );
+  }
+}
+
+class LibraryManagementScreen extends ConsumerStatefulWidget {
   const LibraryManagementScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LibraryManagementScreen> createState() =>
+      _LibraryManagementScreenState();
+}
+
+class _LibraryManagementScreenState
+    extends ConsumerState<LibraryManagementScreen> {
+  String _selectedCategory = 'Tous';
+  String _searchQuery = '';
+
+  // ── Mode Uni Book ──────────────────────────────────────────────────────────
+  int _selectedMode = 0; // 0 = Supports de cours, 1 = Uni Book (Recherche libre)
+  final _uniBookSearchCtrl = TextEditingController();
+  String _selectedUniBookCategory = 'Tous';
+  bool _isLoadingUniBook = false;
+  String? _uniBookError;
+  List<DesktopUniBookItem> _uniBookResults = const [];
+
+  static const _categories = [
+    'Tous',
+    'Supports de cours',
+    'Informatique & IA',
+    'Mathématiques & Data',
+    'Physique & Sciences',
+    'Droit & Sciences Po',
+    'Économie & Gestion',
+    'Médecine & Santé',
+    'Travaux dirigés (TD)',
+    'Travaux pratiques (TP)',
+    'Annales d\'examens',
+    'Fiches de révision',
+  ];
+
+  static const _uniBookCategories = [
+    'Tous',
+    'Informatique',
+    'Mathématiques',
+    'Physique',
+    'Chimie',
+    'Biologie',
+    'Économie',
+    'Sciences',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _searchUniBook('sciences');
+    });
+  }
+
+  @override
+  void dispose() {
+    _uniBookSearchCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _searchUniBook(String query, {String? category}) async {
+    final effectiveCat = category ?? _selectedUniBookCategory;
+    final catQuery = effectiveCat == 'Tous' ? '' : effectiveCat;
+    final fullQuery = [query.trim(), catQuery].where((s) => s.isNotEmpty).join(' ');
+    final searchTerm = fullQuery.isEmpty ? 'informatique mathematiques' : fullQuery;
+
+    setState(() {
+      _isLoadingUniBook = true;
+      _uniBookError = null;
+    });
+
+    try {
+      final res = await ref.read(uniflowApiProvider).call(
+        ApiPaths.openLibrary,
+        {
+          'action': 'search',
+          'query': searchTerm,
+          'limit': 35,
+        },
+      );
+
+      if (mounted) {
+        if (res['ok'] == true && res['books'] is List) {
+          final books = (res['books'] as List)
+              .whereType<Map>()
+              .map((m) => DesktopUniBookItem.fromJson(Map<String, dynamic>.from(m)))
+              .toList();
+          setState(() {
+            _uniBookResults = books;
+            _isLoadingUniBook = false;
+          });
+        } else {
+          setState(() {
+            _uniBookError = res['error']?.toString() ?? 'Erreur lors de la recherche Uni Book';
+            _isLoadingUniBook = false;
+          });
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _uniBookError = e.toString();
+          _isLoadingUniBook = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final items = ref.watch(libraryProvider);
     final role = ref.watch(currentRoleProvider);
     final canUpload = role == UserRole.teacher || role == UserRole.admin;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AppTopBar(
           title: 'Bibliothèque',
-          subtitle: 'Supports de cours et ressources partagées',
+          subtitle: _selectedMode == 0
+              ? 'Supports de cours et ressources partagées'
+              : 'Uni Book — Accès universel aux manuels et ouvrages académiques libres',
           actions: [
-            if (canUpload)
+            // ── Sélecteur de mode (Supports vs Uni Book) ──
+            Container(
+              height: 38,
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                color: AppColors.primary50,
+                borderRadius: BorderRadius.circular(999),
+                border: Border.all(color: AppColors.primary100),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _ModePill(
+                    label: 'Supports de cours',
+                    icon: Icons.school_rounded,
+                    selected: _selectedMode == 0,
+                    onTap: () => setState(() => _selectedMode = 0),
+                  ),
+                  _ModePill(
+                    label: 'Uni Book · Libre',
+                    icon: Icons.auto_stories_rounded,
+                    selected: _selectedMode == 1,
+                    onTap: () {
+                      setState(() => _selectedMode = 1);
+                      if (_uniBookResults.isEmpty && !_isLoadingUniBook) {
+                        _searchUniBook('sciences');
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            if (_selectedMode == 0 && canUpload)
               AppButton(
                 label: 'Téléverser',
                 icon: UniIcons.upload(UniIconStyle.bold),
@@ -1211,44 +1398,203 @@ class LibraryManagementScreen extends ConsumerWidget {
           ],
         ),
         Expanded(
-          child: items.when(
-            loading: () =>
-                const DataLoadingView(label: 'Chargement de la bibliothèque…'),
-            error: (e, _) => DataErrorView(
-                error: e, onRetry: () => ref.invalidate(libraryProvider)),
-            data: (list) {
-              if (list.isEmpty) {
-                return DataEmptyView(
-                    icon: UniIcons.library(),
-                    message: 'Aucune ressource pour l\'instant.');
-              }
-              return SingleChildScrollView(
-                padding: AppSpacing.pageScroll,
-                child: Wrap(
-                  spacing: 16,
-                  runSpacing: 16,
-                  children: [
-                    for (var i = 0; i < list.length; i++)
-                      CascadeIn(
-                        index: i,
-                        child: _LibraryCard(
-                          item: list[i],
-                          onOpen: list[i].fileId.isEmpty
-                              ? null
-                              : () => launchUrl(Uri.parse(ref
-                                  .read(appwriteServiceProvider)
-                                  .fileViewUrl(list[i].fileId))),
-                        ),
+          child: _selectedMode == 0
+              ? items.when(
+                  loading: () => const DataLoadingView(
+                      label: 'Chargement de la bibliothèque…'),
+                  error: (e, _) => DataErrorView(
+                      error: e, onRetry: () => ref.invalidate(libraryProvider)),
+                  data: (list) {
+                    final query = _searchQuery.trim().toLowerCase();
+                    final filtered = list.where((item) {
+                      final matchCat = _selectedCategory == 'Tous' ||
+                          item.category
+                              .toLowerCase()
+                              .contains(_selectedCategory.toLowerCase()) ||
+                          (_selectedCategory == 'Supports de cours' &&
+                              (item.category.isEmpty ||
+                                  item.category
+                                      .toLowerCase()
+                                      .contains('cours'))) ||
+                          (_selectedCategory == 'Travaux dirigés (TD)' &&
+                              item.category.toLowerCase().contains('td')) ||
+                          (_selectedCategory == 'Travaux pratiques (TP)' &&
+                              item.category.toLowerCase().contains('tp')) ||
+                          (_selectedCategory == 'Annales d\'examens' &&
+                              item.category.toLowerCase().contains('annale')) ||
+                          (_selectedCategory == 'Fiches de révision' &&
+                              item.category.toLowerCase().contains('fiche'));
+
+                      final matchQuery = query.isEmpty ||
+                          item.title.toLowerCase().contains(query) ||
+                          item.course.toLowerCase().contains(query) ||
+                          item.type.toLowerCase().contains(query) ||
+                          item.description.toLowerCase().contains(query);
+
+                      return matchCat && matchQuery;
+                    }).toList();
+
+                    return SingleChildScrollView(
+                      padding: AppSpacing.pageScroll,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _LibraryHeroBanner(totalCount: list.length),
+                          const SizedBox(height: AppSpacing.xl),
+                          _LibraryFilterBar(
+                            categories: _categories,
+                            selectedCategory: _selectedCategory,
+                            onCategorySelected: (cat) =>
+                                setState(() => _selectedCategory = cat),
+                            onSearchChanged: (q) =>
+                                setState(() => _searchQuery = q),
+                          ),
+                          const SizedBox(height: AppSpacing.xl),
+                          if (filtered.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 40),
+                              child: Center(
+                                child: DataEmptyView(
+                                  icon: UniIcons.library(),
+                                  message: list.isEmpty
+                                      ? 'Aucune ressource pour l\'instant.'
+                                      : 'Aucun document ne correspond à votre recherche.',
+                                ),
+                              ),
+                            )
+                          else
+                            Wrap(
+                              spacing: 20,
+                              runSpacing: 20,
+                              children: [
+                                for (var i = 0; i < filtered.length; i++)
+                                  CascadeIn(
+                                    index: i,
+                                    child: _LibraryCard(
+                                      item: filtered[i],
+                                      onOpen: filtered[i].fileId.isEmpty
+                                          ? null
+                                          : () => launchUrl(Uri.parse(ref
+                                              .read(appwriteServiceProvider)
+                                              .fileViewUrl(
+                                                  filtered[i].fileId))),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                        ],
                       ),
-                  ],
-                ),
-              );
-            },
-          ),
+                    );
+                  },
+                )
+              : _buildUniBookView(),
         ),
       ],
     );
   }
+
+  Widget _buildUniBookView() {
+    return SingleChildScrollView(
+      padding: AppSpacing.pageScroll,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ── Bannière Uni Book ──
+          const _UniBookHeroBanner(),
+          const SizedBox(height: AppSpacing.xl),
+
+          // ── Barre de recherche Uni Book + Catégories ──
+          _UniBookFilterBar(
+            controller: _uniBookSearchCtrl,
+            categories: _uniBookCategories,
+            selectedCategory: _selectedUniBookCategory,
+            onSubmitted: (q) => _searchUniBook(q),
+            onCategorySelected: (cat) {
+              setState(() => _selectedUniBookCategory = cat);
+              _searchUniBook(_uniBookSearchCtrl.text, category: cat);
+            },
+          ),
+          const SizedBox(height: AppSpacing.xl),
+
+          // ── Contenu Uni Book ──
+          if (_isLoadingUniBook)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 60),
+              child: Center(
+                child: DataLoadingView(
+                  label: 'Recherche Uni Book en cours (indexation mondiale)…',
+                ),
+              ),
+            )
+          else if (_uniBookError != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 40),
+              child: Center(
+                child: DataErrorView(
+                  error: _uniBookError!,
+                  onRetry: () => _searchUniBook(_uniBookSearchCtrl.text),
+                ),
+              ),
+            )
+          else if (_uniBookResults.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 40),
+              child: Center(
+                child: DataEmptyView(
+                  icon: Icons.menu_book_rounded,
+                  message: 'Aucun ouvrage trouvé pour cette recherche.',
+                ),
+              ),
+            )
+          else ...[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Row(
+                children: [
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF0D9488),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '${_uniBookResults.length} ouvrages académiques disponibles en accès libre',
+                    style: const TextStyle(
+                      fontFamily: AppTextStyles.fontFamily,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Wrap(
+              spacing: 20,
+              runSpacing: 20,
+              children: [
+                for (var i = 0; i < _uniBookResults.length; i++)
+                  CascadeIn(
+                    index: i,
+                    child: _UniBookDesktopCard(
+                      book: _uniBookResults[i],
+                      onDownload: _uniBookResults[i].downloadUrl != null
+                          ? () => launchUrl(
+                              Uri.parse(_uniBookResults[i].downloadUrl!))
+                          : null,
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
 
   Future<void> _upload(BuildContext context, WidgetRef ref) async {
     final file = await openFile(
@@ -1381,6 +1727,191 @@ class LibraryManagementScreen extends ConsumerWidget {
   }
 }
 
+class _LibraryHeroBanner extends StatelessWidget {
+  final int totalCount;
+  const _LibraryHeroBanner({required this.totalCount});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 156,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF1E3A8A), Color(0xFF1D4ED8), Color(0xFF0D9488)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        boxShadow: AppShadows.card,
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: 320,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(AppRadius.lg),
+                bottomRight: Radius.circular(AppRadius.lg),
+              ),
+              child: ShaderMask(
+                shaderCallback: (rect) => const LinearGradient(
+                  begin: Alignment.centerRight,
+                  end: Alignment.centerLeft,
+                  colors: [Colors.black, Colors.transparent],
+                ).createShader(rect),
+                blendMode: BlendMode.dstIn,
+                child: Image.asset(
+                  'assets/illustrations/hero_books.jpg',
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => const SizedBox(),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.18),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.menu_book_rounded, color: Colors.white, size: 14),
+                          const SizedBox(width: 6),
+                          Text(
+                            '$totalCount ressources disponibles',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  'Bibliothèque Numérique Campus',
+                  style: TextStyle(
+                    fontFamily: AppTextStyles.fontFamily,
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.4,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Accédez à tous les cours, fascicules de TD/TP, annales d\'examens et ressources.',
+                  style: TextStyle(
+                    fontFamily: AppTextStyles.fontFamily,
+                    color: Colors.white.withValues(alpha: 0.85),
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LibraryFilterBar extends StatelessWidget {
+  final List<String> categories;
+  final String selectedCategory;
+  final ValueChanged<String> onCategorySelected;
+  final ValueChanged<String> onSearchChanged;
+
+  const _LibraryFilterBar({
+    required this.categories,
+    required this.selectedCategory,
+    required this.onCategorySelected,
+    required this.onSearchChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                height: 44,
+                decoration: BoxDecoration(
+                  color: AppColors.cardWhite,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.inputBorder),
+                ),
+                child: TextField(
+                  onChanged: onSearchChanged,
+                  decoration: const InputDecoration(
+                    hintText: 'Rechercher un cours, un titre, un mot-clé ou un format…',
+                    hintStyle: TextStyle(color: AppColors.textMuted, fontSize: 13),
+                    prefixIcon: Icon(Icons.search_rounded, color: AppColors.textSecondary, size: 20),
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              for (final cat in categories)
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: ChoiceChip(
+                    label: Text(cat),
+                    selected: selectedCategory == cat,
+                    onSelected: (val) {
+                      if (val) onCategorySelected(cat);
+                    },
+                    selectedColor: AppColors.primaryBlue,
+                    backgroundColor: AppColors.cardWhite,
+                    labelStyle: TextStyle(
+                      fontSize: 12,
+                      fontWeight: selectedCategory == cat ? FontWeight.w700 : FontWeight.w500,
+                      color: selectedCategory == cat ? Colors.white : AppColors.textSecondary,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(999),
+                      side: BorderSide(
+                        color: selectedCategory == cat ? AppColors.primaryBlue : AppColors.inputBorder,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _LibraryCard extends StatelessWidget {
   final LibraryItem item;
   final VoidCallback? onOpen;
@@ -1398,92 +1929,622 @@ class _LibraryCard extends StatelessWidget {
     };
   }
 
-  /// Couleur de la ressource : celle de son cours quand il est renseigné,
-  /// pour que la bibliothèque reprenne le code couleur des autres écrans.
   Color get _tint =>
       item.course.isEmpty ? AppColors.primaryBlue : subjectColor(item.course);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onOpen,
-      borderRadius: BorderRadius.circular(14),
-      child: Container(
-        width: 280,
-        padding: const EdgeInsets.all(18),
-        decoration: BoxDecoration(
-          color: AppColors.cardWhite,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.inputBorder),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                IconTile(
-                  icon: _icon,
-                  color: _tint,
-                  size: 44,
-                  variant: IconTileVariant.soft,
-                  semanticLabel: item.type.isEmpty ? 'Document' : item.type,
-                ),
-                const Spacer(),
-                if (item.type.isNotEmpty)
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                        color: AppColors.inputFill,
-                        borderRadius: BorderRadius.circular(999)),
-                    child: Text(item.type.toUpperCase(),
-                        style: const TextStyle(
-                            fontSize: 10.5,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.textSecondary)),
+    return Container(
+      width: 270,
+      decoration: BoxDecoration(
+        color: AppColors.cardWhite,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.inputBorder),
+        boxShadow: AppShadows.card,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ── Couverture avec illustration livre réelle ──
+          Stack(
+            children: [
+              Container(
+                height: 120,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [_tint.withValues(alpha: 0.85), _tint],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(item.title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.h3),
-            const SizedBox(height: 4),
-            Text(
-              [
-                if (item.course.isNotEmpty) item.course,
-                if (item.size.isNotEmpty) item.size
-              ].join('  ·  '),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.bodySmall,
-            ),
-            if (item.description.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              Text(item.description,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.body),
-            ],
-            if (onOpen != null) ...[
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  PhosphorIcon(UniIcons.openExternal(UniIconStyle.bold),
-                      size: 14, color: AppColors.primaryBlue),
-                  const SizedBox(width: 6),
-                  const Text('Ouvrir',
-                      style: TextStyle(
-                          fontSize: 12.5,
-                          color: AppColors.primaryBlue,
-                          fontWeight: FontWeight.w600)),
-                ],
+                ),
+                child: Image.asset(
+                  'assets/illustrations/course_books.jpg',
+                  fit: BoxFit.cover,
+                  color: Colors.black.withValues(alpha: 0.15),
+                  colorBlendMode: BlendMode.darken,
+                  errorBuilder: (_, __, ___) => Center(
+                    child: Icon(_icon, size: 48, color: Colors.white.withValues(alpha: 0.6)),
+                  ),
+                ),
+              ),
+              if (item.type.isNotEmpty)
+                Positioned(
+                  top: 10,
+                  left: 10,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.65),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      item.type.toUpperCase(),
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ),
+                ),
+              Positioned(
+                bottom: 10,
+                left: 10,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.95),
+                    borderRadius: BorderRadius.circular(999),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 4,
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    item.category.isEmpty ? 'Document' : item.category,
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: _tint,
+                    ),
+                  ),
+                ),
               ),
             ],
+          ),
+
+          // ── Informations du document ──
+          Padding(
+            padding: const EdgeInsets.all(14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontFamily: AppTextStyles.fontFamily,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    height: 1.3,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    if (item.course.isNotEmpty)
+                      Expanded(
+                        child: Text(
+                          item.course,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 11.5,
+                            fontWeight: FontWeight.w600,
+                            color: _tint,
+                          ),
+                        ),
+                      ),
+                    if (item.size.isNotEmpty)
+                      Text(
+                        item.size,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: AppColors.textMuted,
+                        ),
+                      ),
+                  ],
+                ),
+                if (item.description.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  Text(
+                    item.description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 11.5,
+                      color: AppColors.textSecondary,
+                      height: 1.3,
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: onOpen,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary50,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: AppColors.primary100),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              PhosphorIcon(
+                                UniIcons.openExternal(UniIconStyle.bold),
+                                size: 14,
+                                color: AppColors.primaryBlue,
+                              ),
+                              const SizedBox(width: 6),
+                              const Text(
+                                'Consulter',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.primaryBlue,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ModePill extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _ModePill({
+    required this.label,
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(999),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        decoration: BoxDecoration(
+          color: selected ? AppColors.primaryBlue : Colors.transparent,
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 15,
+              color: selected ? Colors.white : AppColors.textSecondary,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12.5,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+                color: selected ? Colors.white : AppColors.textSecondary,
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
+
+class _UniBookHeroBanner extends StatelessWidget {
+  const _UniBookHeroBanner();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 160,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF0F172A), Color(0xFF1E3A8A), Color(0xFF0D9488)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        boxShadow: AppShadows.card,
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            right: -20,
+            top: -20,
+            child: Container(
+              width: 160,
+              height: 160,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.05),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: 300,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(AppRadius.lg),
+                bottomRight: Radius.circular(AppRadius.lg),
+              ),
+              child: ShaderMask(
+                shaderCallback: (rect) => const LinearGradient(
+                  begin: Alignment.centerRight,
+                  end: Alignment.centerLeft,
+                  colors: [Colors.black, Colors.transparent],
+                ).createShader(rect),
+                blendMode: BlendMode.dstIn,
+                child: Image.asset(
+                  'assets/illustrations/hero_books.jpg',
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => const SizedBox(),
+                ),
+              ),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 28, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Uni Book · Recherche Libre & Gratuite',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Uni Book — Bibliothèque Académique Mondiale',
+                  style: TextStyle(
+                    fontFamily: AppTextStyles.fontFamily,
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.4,
+                  ),
+                ),
+                SizedBox(height: 6),
+                Text(
+                  'Manuels universitaires, livres de cours, articles scientifiques et ouvrages de référence en accès direct.',
+                  style: TextStyle(
+                    fontFamily: AppTextStyles.fontFamily,
+                    color: Colors.white,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _UniBookFilterBar extends StatelessWidget {
+  final TextEditingController controller;
+  final List<String> categories;
+  final String selectedCategory;
+  final ValueChanged<String> onSubmitted;
+  final ValueChanged<String> onCategorySelected;
+
+  const _UniBookFilterBar({
+    required this.controller,
+    required this.categories,
+    required this.selectedCategory,
+    required this.onSubmitted,
+    required this.onCategorySelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                height: 48,
+                decoration: BoxDecoration(
+                  color: AppColors.cardWhite,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: AppColors.inputBorder),
+                  boxShadow: AppShadows.card,
+                ),
+                child: TextField(
+                  controller: controller,
+                  onSubmitted: onSubmitted,
+                  style: const TextStyle(fontSize: 14, color: AppColors.textPrimary),
+                  decoration: InputDecoration(
+                    hintText: 'Rechercher un livre, un manuel, un auteur (ex: Python, Algorithmique, Analyse)…',
+                    hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+                    prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFF0D9488), size: 22),
+                    suffixIcon: controller.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear_rounded, size: 18),
+                            onPressed: () {
+                              controller.clear();
+                              onSubmitted('');
+                            },
+                          )
+                        : null,
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            AppButton(
+              label: 'Rechercher',
+              icon: Icons.search_rounded,
+              onPressed: () => onSubmitted(controller.text),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              for (final cat in categories)
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: ChoiceChip(
+                    label: Text(cat),
+                    selected: selectedCategory == cat,
+                    onSelected: (val) {
+                      if (val) onCategorySelected(cat);
+                    },
+                    selectedColor: const Color(0xFF0D9488),
+                    backgroundColor: AppColors.cardWhite,
+                    labelStyle: TextStyle(
+                      fontSize: 12,
+                      fontWeight: selectedCategory == cat ? FontWeight.w700 : FontWeight.w500,
+                      color: selectedCategory == cat ? Colors.white : AppColors.textSecondary,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(999),
+                      side: BorderSide(
+                        color: selectedCategory == cat ? const Color(0xFF0D9488) : AppColors.inputBorder,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _UniBookDesktopCard extends StatelessWidget {
+  final DesktopUniBookItem book;
+  final VoidCallback? onDownload;
+
+  const _UniBookDesktopCard({
+    required this.book,
+    this.onDownload,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 270,
+      decoration: BoxDecoration(
+        color: AppColors.cardWhite,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.inputBorder),
+        boxShadow: AppShadows.card,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            children: [
+              Container(
+                height: 140,
+                width: double.infinity,
+                color: const Color(0xFF0F172A),
+                child: book.coverUrl != null && book.coverUrl!.isNotEmpty
+                    ? Image.network(
+                        book.coverUrl!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => _buildFallbackCover(),
+                      )
+                    : _buildFallbackCover(),
+              ),
+              Positioned(
+                top: 10,
+                left: 10,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.75),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    book.format.toUpperCase(),
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+              ),
+              if (book.year != null)
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF0D9488),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      '${book.year}',
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              Positioned(
+                bottom: 10,
+                left: 10,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.95),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: const Text(
+                    'Uni Book · Libre',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF0D9488),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  book.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontFamily: AppTextStyles.fontFamily,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    height: 1.3,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  book.authors.isNotEmpty ? book.authors.join(', ') : 'Auteur universitaire',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontStyle: FontStyle.italic,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: 14),
+                SizedBox(
+                  width: double.infinity,
+                  child: AppButton(
+                    label: 'Consulter / Télécharger',
+                    icon: Icons.download_rounded,
+                    onPressed: onDownload,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFallbackCover() {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF1E3A8A), Color(0xFF0D9488)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.auto_stories_rounded, size: 40, color: Colors.white70),
+            const SizedBox(height: 6),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Text(
+                book.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+

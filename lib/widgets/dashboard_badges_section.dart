@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import '../models/badges.dart';
@@ -111,47 +109,25 @@ class _GlassWrapper extends StatelessWidget {
     const padding = EdgeInsets.all(20);
     const radius = 16.0;
 
-    if (!isDark) {
-      return Container(
-        padding: padding,
-        decoration: BoxDecoration(
-          color: AppColors.cardWhite,
-          borderRadius: BorderRadius.circular(radius),
-          border: Border.all(color: AppColors.inputBorder),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primaryBlue.withValues(alpha: 0.04),
-              blurRadius: 18,
-              offset: const Offset(0, 6),
-            ),
-          ],
+    return Container(
+      padding: padding,
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF172033) : AppColors.cardWhite,
+        borderRadius: BorderRadius.circular(radius),
+        border: Border.all(
+          color: isDark ? const Color(0xFF2E3E5D) : AppColors.inputBorder,
         ),
-        child: child,
-      );
-    }
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(radius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-        child: Container(
-          padding: padding,
-          decoration: BoxDecoration(
-            color: AppColors.primaryBlue.withAlpha(20),
-            borderRadius: BorderRadius.circular(radius),
-            border: Border.all(color: AppColors.primaryBlue.withAlpha(50)),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AppColors.primaryBlue.withAlpha(25),
-                Colors.transparent,
-              ],
-            ),
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.25)
+                : AppColors.primaryBlue.withValues(alpha: 0.04),
+            blurRadius: 18,
+            offset: const Offset(0, 6),
           ),
-          child: child,
-        ),
+        ],
       ),
+      child: child,
     );
   }
 }

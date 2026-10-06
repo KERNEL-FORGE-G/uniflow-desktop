@@ -257,7 +257,7 @@ void main() {
     await tester.pump();
     selected.value = AppDestination.dashboard;
     await tester.pump();
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
     final backRight = tester.getRect(find.byType(UniLauncher));
     expect(backRight.right, closeTo(body.right - UniDock.edgeInset, 0.5));
   });

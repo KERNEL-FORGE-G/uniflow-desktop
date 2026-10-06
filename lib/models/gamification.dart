@@ -27,6 +27,7 @@ enum BadgeCategory {
 /// Rareté d'un badge — détermine la couleur de l'anneau et le poids XP.
 enum BadgeRarity {
   common,   // bronze
+  uncommon, // vert
   rare,     // argent
   epic,     // or
   legendary, // arc-en-ciel
@@ -380,6 +381,8 @@ class XpLevel {
   });
 
   double get progress => xpForNextLevel == 0 ? 1.0 : (xpInLevel / xpForNextLevel).clamp(0.0, 1.0);
+  int get xpForNext => xpForNextLevel;
+  double get progressPercent => progress * 100;
 
   factory XpLevel.fromXp(int xp) {
     // Chaque niveau demande 100 * niveau XP (niveau 1 → 100 XP, niveau 2 → 200 XP…)

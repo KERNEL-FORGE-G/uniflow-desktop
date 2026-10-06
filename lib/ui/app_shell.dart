@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/app_destination.dart';
 import '../offline/sync_state.dart';
 import '../providers/auth_provider.dart';
+import '../providers/preferences_provider.dart';
 import '../router/route_guard.dart';
 import '../screens/notifications_screen.dart';
 import '../screens/session_flow.dart';
@@ -254,8 +255,52 @@ class _AppHeaderState extends ConsumerState<AppHeader> {
                 ),
                 const SizedBox(width: AppSpacing.lg),
               ],
-              SyncIndicator(state: sync, compact: !roomy),
+              // Badge « Live » style SkillSet
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEF4444).withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(AppRadius.pill),
+                  border: Border.all(
+                    color: const Color(0xFFEF4444).withValues(alpha: 0.25),
+                  ),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.circle, size: 7, color: Color(0xFFEF4444)),
+                    SizedBox(width: 5),
+                    Text(
+                      'Live',
+                      style: TextStyle(
+                        fontFamily: AppTextStyles.fontFamily,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFFEF4444),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(width: AppSpacing.sm),
+              // Bouton bascule jour/nuit (lune) — style SkillSet
+              Consumer(
+                builder: (context, ref, _) {
+                  final prefs = ref.watch(preferencesProvider);
+                  return _HeaderIconButton(
+                    icon: prefs.darkMode
+                        ? PhosphorIconsFill.sun
+                        : PhosphorIconsBold.moon,
+                    tooltip: prefs.darkMode ? 'Mode clair' : 'Mode sombre',
+                    onTap: () => ref
+                        .read(preferencesProvider.notifier)
+                        .setDarkMode(!prefs.darkMode),
+                  );
+                },
+              ),
+              const SizedBox(width: AppSpacing.xs),
+              SyncIndicator(state: sync, compact: !roomy),
+              const SizedBox(width: AppSpacing.xs),
               _HeaderIconButton(
                 icon: UniIcons.notifications(UniIconStyle.bold),
                 tooltip: 'Notifications',

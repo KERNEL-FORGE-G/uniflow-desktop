@@ -9,12 +9,12 @@ import '../providers/auth_provider.dart';
 import '../repositories/auth_repository.dart';
 import '../theme/app_theme.dart';
 import '../widgets/uni_icons.dart';
-import '../ui/app_button.dart';
 import '../widgets/app_text_field.dart';
 import '../widgets/auth_chrome.dart';
 import '../widgets/motion.dart';
 import 'forgot_password_dialog.dart';
 import 'main_shell.dart';
+import 'onboarding_screen.dart';
 import 'register_screen.dart';
 
 /// Écran de connexion.
@@ -144,6 +144,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget _formBody(AuthScale scale) {
+    return Builder(builder: (context) => _formContent(context, scale));
+  }
+
+  Widget _formContent(BuildContext context, AuthScale scale) {
+    final p = AuthTone.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -154,13 +159,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           textAlign: TextAlign.center,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: AppTextStyles.h1.copyWith(fontSize: scale.title),
+          style: AppTextStyles.h1.copyWith(
+              fontSize: scale.title,
+              color: p.text,
+              fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: 6),
         Text(
           'Connectez-vous à votre compte UniFlow',
           textAlign: TextAlign.center,
-          style: AppTextStyles.body.copyWith(fontSize: scale.body),
+          style:
+              AppTextStyles.body.copyWith(fontSize: scale.body, color: p.textSoft),
         ),
         const SizedBox(height: 22),
         AccountTypeSelector(
@@ -217,13 +226,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    const Flexible(
+                    Flexible(
                       child: Text(
                         'Rester connecté',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 13, color: AppColors.textSecondary),
+                        style: TextStyle(fontSize: 13, color: p.textSoft),
                       ),
                     ),
                   ],
@@ -239,9 +247,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 initialEmail: _emailController.text,
               ),
               borderRadius: BorderRadius.circular(6),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-                child: Text('Mot de passe oublié ?', style: AppTextStyles.link),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                child: Text('Mot de passe oublié ?', style: p.linkStyle),
               ),
             ),
           ],
@@ -252,41 +260,66 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           isLoading: _isLoading,
           onPressed: _isLoading ? null : _handleLogin,
         ),
-        const SizedBox(height: 20),
-        Row(
-          children: [
-            const Expanded(child: Divider(color: AppColors.inputBorder)),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Text('Pas encore de compte ?',
-                  style: AppTextStyles.body.copyWith(fontSize: 12.5)),
-            ),
-            const Expanded(child: Divider(color: AppColors.inputBorder)),
-          ],
+        const SizedBox(height: 18),
+        // « Pas encore de compte ? Créer un compte » — comme la maquette.
+        Center(
+          child: Text('Pas encore de compte ?',
+              style: AppTextStyles.body.copyWith(
+                  fontSize: 13, color: p.textSoft)),
         ),
-        const SizedBox(height: 14),
-        AppButton.secondary(
-          label: _accountType == AccountType.university
-              ? 'Créer un compte étudiant'
-              : 'Créer un compte indépendant',
-          icon: UniIcons.addPerson(UniIconStyle.bold),
-          expand: true,
-          height: scale.field - 4,
-          onPressed: _isLoading ? null : _openRegister,
+        const SizedBox(height: 2),
+        Center(
+          child: InkWell(
+            key: const Key('login-open-register'),
+            onTap: _isLoading ? null : _openRegister,
+            borderRadius: BorderRadius.circular(6),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+              child: Text(
+                'Créer un compte',
+                style: p.linkStyle.copyWith(
+                  fontSize: 13.5,
+                  decoration: TextDecoration.underline,
+                  decorationColor: p.link,
+                ),
+              ),
+            ),
+          ),
         ),
         const SizedBox(height: 16),
         Row(children: [
-          const Expanded(child: Divider(color: AppColors.inputBorder)),
+          Expanded(child: Divider(color: p.divider)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Text('ou', style: AppTextStyles.body.copyWith(fontSize: 12.5)),
+            child: Text('ou',
+                style: AppTextStyles.body
+                    .copyWith(fontSize: 12.5, color: p.muted)),
           ),
-          const Expanded(child: Divider(color: AppColors.inputBorder)),
+          Expanded(child: Divider(color: p.divider)),
         ]),
         const SizedBox(height: 14),
         _GoogleSignInButton(
           isLoading: _isLoading,
           onPressed: _isLoading ? null : _handleGoogleLogin,
+        ),
+        const SizedBox(height: 12),
+        Center(
+          child: TextButton.icon(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+              );
+            },
+            icon: Icon(Icons.auto_awesome_rounded, size: 16, color: p.link),
+            label: Text(
+              'Découvrir UniFlow (visite guidée)',
+              style: TextStyle(
+                fontSize: 12.5,
+                color: p.link,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
         ),
       ],
     );
@@ -333,31 +366,37 @@ class _GoogleSignInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = AuthTone.of(context).dark;
     return SizedBox(
       width: double.infinity,
       height: 44,
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          side: const BorderSide(color: AppColors.inputBorder),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(dark ? 999 : 10)),
+          side: BorderSide(
+              color: dark ? Colors.transparent : AppColors.inputBorder),
           backgroundColor: AppColors.cardWhite,
           foregroundColor: AppColors.textPrimary,
         ),
         child: isLoading
             ? const SizedBox(width: 18, height: 18,
                 child: CircularProgressIndicator(strokeWidth: 2))
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 20, height: 20,
-                    child: CustomPaint(painter: _GoogleLogoPainter()),
-                  ),
-                  const SizedBox(width: 10),
-                  const Text('Continuer avec Google',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-                ],
+            : FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 20, height: 20,
+                      child: CustomPaint(painter: _GoogleLogoPainter()),
+                    ),
+                    const SizedBox(width: 10),
+                    const Text('Continuer avec Google',
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                  ],
+                ),
               ),
       ),
     );

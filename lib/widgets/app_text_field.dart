@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
+import 'auth_tone.dart';
 import 'uni_icons.dart';
 
 /// Champ de saisie custom réutilisé sur tous les formulaires de l'app
@@ -40,29 +40,32 @@ class _AppTextFieldState extends State<AppTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final p = AuthTone.of(context);
+    OutlineInputBorder border(Color color, [double width = 1]) =>
+        OutlineInputBorder(
+          borderRadius: BorderRadius.circular(p.fieldRadius),
+          borderSide: BorderSide(color: color, width: width),
+        );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Label au-dessus du champ (ex: "Mot de passe")
-        Text(widget.label, style: AppTextStyles.label),
+        Text(widget.label, style: p.label),
         const SizedBox(height: 8),
         TextField(
           controller: widget.controller,
           obscureText: _obscure,
           keyboardType: widget.keyboardType,
-          style: const TextStyle(fontSize: 14, color: AppColors.textPrimary),
+          cursorColor: p.focus,
+          style: TextStyle(fontSize: 14, color: p.text),
           decoration: InputDecoration(
             hintText: widget.hint,
-            hintStyle: const TextStyle(
-              fontSize: 14,
-              color: AppColors.textMuted,
-            ),
+            hintStyle: TextStyle(fontSize: 14, color: p.muted),
             filled: true,
-            fillColor: AppColors.inputFill, // fond gris clair du champ
+            fillColor: p.fill, // fond du champ (gris clair ou bleu nuit)
             // icône à gauche (ex: enveloppe pour l'email, cadenas pour le mot de passe)
             prefixIcon: widget.prefixIcon != null
-                ? PhosphorIcon(widget.prefixIcon!,
-                    size: 20, color: AppColors.textMuted)
+                ? PhosphorIcon(widget.prefixIcon!, size: 20, color: p.muted)
                 : null,
             // bouton "œil" affiché uniquement si c'est un champ mot de passe,
             // permet de basculer entre texte masqué / visible
@@ -73,7 +76,7 @@ class _AppTextFieldState extends State<AppTextField> {
                           ? UniIcons.eyeOff(UniIconStyle.bold)
                           : UniIcons.eye(UniIconStyle.bold),
                       size: 20,
-                      color: AppColors.textMuted,
+                      color: p.muted,
                     ),
                     onPressed: () => setState(() => _obscure = !_obscure),
                   )
@@ -81,24 +84,10 @@ class _AppTextFieldState extends State<AppTextField> {
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
             // Bordure par défaut (état neutre, ni focus ni erreur)
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.inputBorder),
-            ),
-            // Bordure quand le champ n'est pas sélectionné (même style que "border" ici)
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.inputBorder),
-            ),
-            // Bordure bleue et légèrement plus épaisse quand l'utilisateur
-            // clique/sélectionne le champ, pour un feedback visuel clair
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
-                color: AppColors.primaryBlue,
-                width: 1.5,
-              ),
-            ),
+            border: border(p.border),
+            enabledBorder: border(p.border),
+            // Bordure d'accent plus épaisse au focus, pour un feedback clair
+            focusedBorder: border(p.focus, 1.5),
           ),
         ),
       ],

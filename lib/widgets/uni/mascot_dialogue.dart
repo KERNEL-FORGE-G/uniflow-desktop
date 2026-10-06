@@ -19,6 +19,9 @@ class MascotLine {
   const MascotLine.uni(this.text) : who = MascotSpeaker.uni;
 }
 
+/// Alias pour la rétrocompatibilité
+typedef DialogueLine = MascotLine;
+
 /// Cadence par défaut : assez lente pour lire une phrase, assez rapide pour
 /// qu'un écran de connexion ne semble pas figé.
 const Duration kMascotDialogueInterval = Duration(milliseconds: 3500);
@@ -50,13 +53,14 @@ class MascotDialogue extends StatefulWidget {
   const MascotDialogue({
     super.key,
     required this.lines,
-    this.size = 140,
+    double? size,
+    double? figureHeight,
     this.interval = kMascotDialogueInterval,
     this.autoAdvance = true,
     this.archlordPose = ArchlordPose.explain,
     this.uniPose = UniPose.wave,
     this.textStyle,
-  });
+  }) : size = figureHeight ?? size ?? 140;
 
   @override
   State<MascotDialogue> createState() => _MascotDialogueState();

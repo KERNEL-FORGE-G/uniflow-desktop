@@ -12,6 +12,7 @@ import '../utils/avatar.dart';
 import 'uni_icons.dart';
 import 'uniflow_logo.dart';
 import 'user_avatar.dart';
+import '../screens/subscription_dialog.dart';
 
 /// Largeur de fenêtre sous laquelle la barre se replie en rail d'icônes.
 ///
@@ -249,6 +250,7 @@ class _AppSidebarState extends ConsumerState<AppSidebar>
                         controller: _entrance,
                         index: lineIndex++,
                         child: _SidebarTile(
+                          key: ValueKey('tile-${destination.id}'),
                           destination: destination,
                           collapsed: collapsed,
                           palette: palette,
@@ -260,8 +262,20 @@ class _AppSidebarState extends ConsumerState<AppSidebar>
                 ],
               ),
             ),
+            // ── Bouton « Passer Pro » en bas — style SkillSet ──────────────────
+            if (!collapsed)
+              Padding(
+                key: const ValueKey('sidebar-upgrade-padding'),
+                padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.md, 0, AppSpacing.md, AppSpacing.sm),
+                child: _UpgradeCard(
+                  key: const ValueKey('sidebar-upgrade-card'),
+                  palette: palette,
+                ),
+              ),
             if (user != null)
               Padding(
+                key: const ValueKey('sidebar-signout-padding'),
                 padding: EdgeInsets.fromLTRB(
                     collapsed ? 0 : AppSpacing.md,
                     AppSpacing.xs,
@@ -269,11 +283,17 @@ class _AppSidebarState extends ConsumerState<AppSidebar>
                     AppSpacing.md),
                 child: collapsed
                     ? Center(
+                        key: const ValueKey('sidebar-signout-center'),
                         child: SignOutButton(
-                            compact: true, color: palette.signOut))
+                            key: const ValueKey('sidebar-signout-btn-compact'),
+                            compact: true,
+                            color: palette.signOut))
                     : Align(
+                        key: const ValueKey('sidebar-signout-align'),
                         alignment: Alignment.centerLeft,
-                        child: SignOutButton(color: palette.signOut),
+                        child: SignOutButton(
+                            key: const ValueKey('sidebar-signout-btn-full'),
+                            color: palette.signOut),
                       ),
               ),
           ],
@@ -292,26 +312,34 @@ class _Brand extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(collapsed ? 0 : AppSpacing.xl,
-          AppSpacing.xxl, collapsed ? 0 : AppSpacing.xl, 18),
+      padding: EdgeInsets.fromLTRB(
+        collapsed ? 0 : AppSpacing.xl,
+        AppSpacing.xxl,
+        collapsed ? 0 : AppSpacing.xl,
+        18,
+      ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment:
             collapsed ? MainAxisAlignment.center : MainAxisAlignment.start,
         children: [
-          const UniFlowIcon(size: 34),
+          Image.asset(
+            'assets/brand/uniflow_marque.png',
+            height: 32,
+            width: 32,
+            fit: BoxFit.contain,
+            filterQuality: FilterQuality.high,
+            errorBuilder: (_, __, ___) => const UniFlowIcon(size: 32),
+          ),
           if (!collapsed) ...[
             const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                'UniFlow',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: AppTextStyles.fontFamily,
-                  color: palette.brand,
-                  fontSize: 19,
-                  fontWeight: FontWeight.w800,
-                ),
+            Text(
+              'UniFlow',
+              style: TextStyle(
+                fontFamily: AppTextStyles.fontFamily,
+                color: palette.brand,
+                fontSize: 19,
+                fontWeight: FontWeight.w800,
               ),
             ),
           ],
@@ -342,7 +370,7 @@ class _Profile extends StatelessWidget {
     final user = this.user;
     final username = user?.username;
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: collapsed ? 0 : AppSpacing.xl),
+      padding: EdgeInsets.symmetric(horizontal: collapsed ? 0 : AppSpacing.md),
       child: Row(
         mainAxisAlignment:
             collapsed ? MainAxisAlignment.center : MainAxisAlignment.start,
@@ -420,16 +448,20 @@ class _RoleBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadius.pill),
         border: Border.all(color: palette.roleBorder),
       ),
-      child: Text(
-        label,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          fontFamily: AppTextStyles.fontFamily,
-          color: palette.roleForeground,
-          fontSize: 10.5,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0.3,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 140),
+        child: Text(
+          label,
+          maxLines: 1,
+          softWrap: false,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontFamily: AppTextStyles.fontFamily,
+            color: palette.roleForeground,
+            fontSize: 10.5,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.3,
+          ),
         ),
       ),
     );
@@ -482,6 +514,7 @@ class _SidebarTile extends StatefulWidget {
   final VoidCallback onTap;
 
   const _SidebarTile({
+    super.key,
     required this.destination,
     required this.isActive,
     required this.collapsed,
@@ -611,6 +644,84 @@ class _SidebarTileState extends State<_SidebarTile> {
               child: tile,
             )
           : tile,
+    );
+  }
+}
+
+/// Carte « Passer Pro » en bas de la sidebar — inspirée de SkillSet.
+/// Présente un accès rapide au support ou à des fonctionnalités premium.
+class _UpgradeCard extends StatelessWidget {
+  final SidebarPalette palette;
+  const _UpgradeCard({super.key, required this.palette});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: palette.isDark
+            ? const Color(0xFF1E3A8A).withValues(alpha: 0.25)
+            : AppColors.primary50,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: palette.isDark
+              ? const Color(0xFF2D5BE3).withValues(alpha: 0.3)
+              : AppColors.primary100,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Accès complet',
+            style: TextStyle(
+              fontFamily: AppTextStyles.fontFamily,
+              color: palette.text,
+              fontSize: 12.5,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            'Toutes les fonctionnalités UniFlow',
+            style: TextStyle(
+              fontFamily: AppTextStyles.fontFamily,
+              color: palette.textMuted,
+              fontSize: 11,
+            ),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: Material(
+              color: AppColors.primaryBlue,
+              borderRadius: BorderRadius.circular(10),
+              child: InkWell(
+                onTap: () => showDialog(
+                  context: context,
+                  builder: (_) => const SubscriptionDialog(),
+                ),
+                borderRadius: BorderRadius.circular(10),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 9),
+                  child: Center(
+                    child: Text(
+                      'Passer Pro →',
+                      style: TextStyle(
+                        fontFamily: AppTextStyles.fontFamily,
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

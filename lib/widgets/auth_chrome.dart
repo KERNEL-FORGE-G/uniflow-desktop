@@ -4,9 +4,9 @@ import '../models/user_role.dart';
 import '../theme/app_theme.dart';
 import 'uni_icons.dart';
 import 'motion.dart';
-import 'uni/archlord_mascot.dart';
-import 'uni/mascot_dialogue.dart';
-import 'uni/uni_mascot.dart';
+import 'auth_tone.dart';
+
+export 'auth_tone.dart';
 
 /// Habillage commun des écrans d'authentification (connexion, inscription) :
 /// fond « mesh », carte blanche, panneau visuel à gauche et formulaire à
@@ -109,6 +109,9 @@ class _AuthScaleScope extends InheritedWidget {
 class AuthShell extends StatelessWidget {
   final Widget form;
 
+  /// Illustration du volet blanc (connexion ou inscription).
+  final AuthArtwork artwork;
+
   /// Conservés pour compatibilité des appelants ; la largeur est désormais
   /// calculée depuis la fenêtre ([AuthScale.formWidth]).
   final double formWidth;
@@ -117,6 +120,7 @@ class AuthShell extends StatelessWidget {
   const AuthShell({
     super.key,
     required this.form,
+    this.artwork = AuthArtwork.login,
     this.formWidth = 380,
     this.formWidthWide = 460,
   });
@@ -124,7 +128,7 @@ class AuthShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: _kPortalNight,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final width = constraints.maxWidth;
@@ -141,31 +145,47 @@ class AuthShell extends StatelessWidget {
     );
   }
 
+  /// Maquette « portail universitaire » : une carte flottante aux coins très
+  /// arrondis sur un fond bleu nuit parsemé de bulles. Dans la carte, un volet
+  /// blanc à bord ondulé (logo, illustration Archlord + Uni, mentions) déborde
+  /// sur le panneau bleu qui porte le formulaire en texte clair.
   Widget _twoColumns(
       BuildContext context, BoxConstraints constraints, AuthScale scale) {
-    final heroWidth = constraints.maxWidth * 0.45;
-    final formColumn = constraints.maxWidth - heroWidth;
-    return Row(
-      children: [
-        SizedBox(
-          width: heroWidth,
-          height: constraints.maxHeight,
-          child: CascadeIn(
-            index: 0,
-            offset: const Offset(-0.04, 0),
-            child: AuthHeroPanel(scale: scale),
-          ),
+    final margin = (constraints.maxWidth * 0.045).clamp(20.0, 72.0);
+    final vMargin = (constraints.maxHeight * 0.06).clamp(16.0, 64.0);
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF0A1A44), _kPortalNight, Color(0xFF0B3A4A)],
+          stops: [0.0, 0.55, 1.0],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-        Expanded(
-          child: _FormColumn(
-            form: form,
-            scale: scale,
-            columnWidth: formColumn,
-            windowWidth: constraints.maxWidth,
-            minHeight: constraints.maxHeight,
+      ),
+      child: Stack(
+        children: [
+          const Positioned.fill(child: _PortalBubbles()),
+          Center(
+            child: Padding(
+              padding:
+                  EdgeInsets.symmetric(horizontal: margin, vertical: vMargin),
+              child: ConstrainedBox(
+                constraints:
+                    const BoxConstraints(maxWidth: 1360, maxHeight: 880),
+                child: CascadeIn(
+                  index: 0,
+                  offset: const Offset(0, 0.03),
+                  child: _PortalCard(
+                    form: form,
+                    scale: scale,
+                    artwork: artwork,
+                  ),
+                ),
+              ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -200,10 +220,336 @@ class AuthShell extends StatelessWidget {
   }
 }
 
-/// Colonne claire qui centre le formulaire, le borne en largeur et le fait
+/// Illustration affichée dans le volet blanc des écrans d'authentification.
+enum AuthArtwork { login, register }
+
+/// Fond de page des écrans d'authentification (bleu nuit UniFlow).
+const Color _kPortalNight = Color(0xFF0F2557);
+
+/// Panneau bleu de la carte, derrière le formulaire.
+const LinearGradient _kPortalPanel = LinearGradient(
+  colors: [Color(0xFF1E3A8A), Color(0xFF172F72), Color(0xFF123B66)],
+  stops: [0.0, 0.6, 1.0],
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+);
+
+/// Bulles translucides du fond de page, placées en fractions de la fenêtre
+/// pour suivre le redimensionnement.
+class _PortalBubbles extends StatelessWidget {
+  const _PortalBubbles();
+
+  static const _bubbles = <(double, double, double, double)>[
+    // (x, y, diamètre, opacité)
+    (0.04, 0.10, 46, 0.07),
+    (0.16, 0.03, 90, 0.05),
+    (0.30, 0.90, 70, 0.06),
+    (0.62, 0.04, 34, 0.08),
+    (0.86, 0.12, 120, 0.04),
+    (0.93, 0.78, 84, 0.06),
+    (0.72, 0.95, 40, 0.08),
+    (0.02, 0.70, 140, 0.04),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, c) {
+      return Stack(
+        children: [
+          for (final (x, y, d, o) in _bubbles)
+            Positioned(
+              left: c.maxWidth * x - d / 2,
+              top: c.maxHeight * y - d / 2,
+              child: Container(
+                width: d,
+                height: d,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withValues(alpha: o),
+                ),
+              ),
+            ),
+        ],
+      );
+    });
+  }
+}
+
+/// La carte : panneau bleu (formulaire, à droite) et volet blanc ondulé
+/// (illustration, à gauche) qui le chevauche.
+class _PortalCard extends StatelessWidget {
+  final Widget form;
+  final AuthScale scale;
+  final AuthArtwork artwork;
+
+  const _PortalCard({
+    required this.form,
+    required this.scale,
+    required this.artwork,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        gradient: _kPortalPanel,
+        borderRadius: BorderRadius.circular(32),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.35),
+            blurRadius: 60,
+            offset: const Offset(0, 24),
+          ),
+        ],
+      ),
+      child: LayoutBuilder(builder: (context, c) {
+        final w = c.maxWidth;
+        final h = c.maxHeight;
+        final whiteWidth = w * 0.58;
+        final formWidth = w * 0.42;
+        return Stack(
+          children: [
+            // Halos discrets sur le panneau bleu.
+            Positioned(
+              right: -60,
+              top: -60,
+              child: _Blob(
+                  size: 220, color: Colors.white.withValues(alpha: 0.05)),
+            ),
+            Positioned(
+              right: formWidth * 0.55,
+              bottom: -40,
+              child: _Blob(
+                  size: 120, color: AppColors.tealLight.withValues(alpha: 0.10)),
+            ),
+            // ── Formulaire ────────────────────────────────────────────────
+            Positioned(
+              right: 0,
+              top: 0,
+              bottom: 0,
+              width: formWidth,
+              child: _FormColumn(
+                form: form,
+                scale: scale,
+                columnWidth: formWidth,
+                windowWidth: w,
+                minHeight: h,
+                dark: true,
+              ),
+            ),
+            Positioned(
+              right: 28,
+              bottom: 18,
+              child: Text(
+                'Besoin d’aide ? Contactez votre établissement.',
+                style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.white.withValues(alpha: 0.55),
+                ),
+              ),
+            ),
+            // ── Volet blanc ondulé ────────────────────────────────────────
+            Positioned(
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: whiteWidth,
+              child: ClipPath(
+                clipper: const _PortalWaveClipper(),
+                child: ColoredBox(
+                  color: Colors.white,
+                  child: _ArtworkPanel(
+                    artwork: artwork,
+                    contentWidth: whiteWidth * 0.78,
+                    showMascots: h >= 560,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+}
+
+/// Bord droit ondulé du volet blanc : il rentre en haut, bombe vers le
+/// formulaire au milieu, puis se retire en bas — comme sur la maquette.
+class _PortalWaveClipper extends CustomClipper<Path> {
+  const _PortalWaveClipper();
+
+  @override
+  Path getClip(Size size) {
+    final w = size.width;
+    final h = size.height;
+    return Path()
+      ..moveTo(0, 0)
+      ..lineTo(w * 0.74, 0)
+      ..cubicTo(w * 0.88, h * 0.06, w * 0.80, h * 0.28, w * 0.91, h * 0.44)
+      ..cubicTo(w * 1.02, h * 0.60, w * 0.99, h * 0.82, w * 0.82, h * 0.92)
+      ..cubicTo(w * 0.74, h * 0.97, w * 0.68, h, w * 0.62, h)
+      ..lineTo(0, h)
+      ..close();
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
+}
+
+/// Contenu du volet blanc : logo, illustration sur taches teal, mentions.
+class _ArtworkPanel extends StatelessWidget {
+  final AuthArtwork artwork;
+  final double contentWidth;
+  final bool showMascots;
+
+  const _ArtworkPanel({
+    required this.artwork,
+    required this.contentWidth,
+    this.showMascots = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isLogin = artwork == AuthArtwork.login;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(36, 30, 24, 22),
+      child: SizedBox(
+        width: contentWidth,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.asset(
+              'assets/brand/uniflow_logo_horizontal.png',
+              height: 34,
+              fit: BoxFit.contain,
+              filterQuality: FilterQuality.high,
+              errorBuilder: (_, __, ___) => Image.asset(
+                'assets/brand/uniflow-wordmark.png',
+                height: 34,
+                errorBuilder: (_, __, ___) => const Text(
+                  'UniFlow',
+                  style: TextStyle(
+                    color: AppColors.primaryBlue,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ),
+            if (showMascots)
+              Expanded(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: _ArtworkScene(isLogin: isLogin),
+                  ),
+                ),
+              )
+            else
+              const Spacer(),
+            Text(
+              isLogin
+                  ? 'Archlord et Uni vous attendent sur votre campus.'
+                  : 'Rejoignez Archlord et Uni sur UniFlow.',
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primaryBlue,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              '© ${DateTime.now().year} UniFlow · KERNEL FORGE\n'
+              'Plateforme universitaire, même hors ligne.',
+              style: const TextStyle(
+                fontSize: 10.5,
+                height: 1.45,
+                color: AppColors.textMuted,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Scène d'accueil : Archlord et Uni font un fistbump, sur fond de bulles pastel,
+/// exactement comme sur la maquette officielle.
+class _ArtworkScene extends StatelessWidget {
+  final bool isLogin;
+  const _ArtworkScene({required this.isLogin});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        // Bulles pastel décoratives en arrière-plan comme sur la capture
+        Positioned(
+          top: 10,
+          right: 24,
+          child: Container(
+            width: 76,
+            height: 76,
+            decoration: BoxDecoration(
+              color: const Color(0xFFE0F2FE).withValues(alpha: 0.65),
+              borderRadius: BorderRadius.circular(24),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 24,
+          left: 14,
+          child: Container(
+            width: 84,
+            height: 84,
+            decoration: BoxDecoration(
+              color: const Color(0xFFE2E8F0).withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(28),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 16,
+          right: 36,
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: const Color(0xFFDBEAFE).withValues(alpha: 0.7),
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+        ),
+        // Illustration officielle exacte : Archlord et Uni font un fistbump
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Image.asset(
+              'assets/mascot/archlord_uni_fistbump.webp',
+              fit: BoxFit.contain,
+              filterQuality: FilterQuality.high,
+              errorBuilder: (_, __, ___) => Image.asset(
+                'assets/illustrations/archlord_uni_duo_solid.webp',
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Colonne qui centre le formulaire, le borne en largeur et le fait
 /// défiler. Le texte du formulaire est mis à l'échelle du palier courant via
 /// `MediaQuery.textScaler`, de sorte que titres, libellés et boutons
 /// grandissent ensemble sans toucher chaque widget.
+///
+/// `dark` : le formulaire est posé sur le panneau bleu de la carte ; les
+/// champs passent en palette sombre via [AuthTone].
 class _FormColumn extends StatelessWidget {
   final Widget form;
   final AuthScale scale;
@@ -211,6 +557,7 @@ class _FormColumn extends StatelessWidget {
   final double windowWidth;
   final double minHeight;
   final bool scrollable;
+  final bool dark;
 
   const _FormColumn({
     required this.form,
@@ -219,17 +566,24 @@ class _FormColumn extends StatelessWidget {
     required this.windowWidth,
     required this.minHeight,
     this.scrollable = true,
+    this.dark = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context);
-    final width = AuthScale.formWidth(windowWidth, columnWidth);
+    final width = dark
+        ? (columnWidth * 0.78).clamp(280.0, 420.0)
+        : AuthScale.formWidth(windowWidth, columnWidth);
+    final palette = dark ? AuthPalette.darkPanel : AuthPalette.light;
     final content = ConstrainedBox(
       constraints: BoxConstraints(minHeight: minHeight),
       child: Center(
         child: Padding(
-          padding: EdgeInsets.all(scale.padding),
+          padding: EdgeInsets.symmetric(
+            horizontal: dark ? 24 : scale.padding,
+            vertical: dark ? 40 : scale.padding,
+          ),
           child: SizedBox(
             key: const Key('auth-form'),
             width: width,
@@ -255,8 +609,23 @@ class _FormColumn extends StatelessWidget {
                                     ((scale.field - 20) / 2).clamp(12.0, 20.0),
                               ),
                             ),
+                    checkboxTheme: dark
+                        ? CheckboxThemeData(
+                            side: BorderSide(color: palette.muted, width: 1.4),
+                            fillColor: WidgetStateProperty.resolveWith(
+                              (states) => states.contains(WidgetState.selected)
+                                  ? AppColors.tealLight
+                                  : Colors.transparent,
+                            ),
+                          )
+                        : null,
+                    dividerColor: palette.divider,
                   ),
-                  child: Material(type: MaterialType.transparency, child: form),
+                  child: AuthTone(
+                    palette: palette,
+                    child:
+                        Material(type: MaterialType.transparency, child: form),
+                  ),
                 ),
               ),
             ),
@@ -264,6 +633,8 @@ class _FormColumn extends StatelessWidget {
         ),
       ),
     );
+    final body = scrollable ? SingleChildScrollView(child: content) : content;
+    if (dark) return body;
     return DecoratedBox(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -272,7 +643,7 @@ class _FormColumn extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
       ),
-      child: scrollable ? SingleChildScrollView(child: content) : content,
+      child: body,
     );
   }
 }
@@ -304,23 +675,13 @@ final List<({IconData icon, String title, String desc, Color color})>
   ),
 ];
 
-/// Échange d'accueil entre Archlord et Uni sur le panneau de marque : court,
-/// parce que la bulle tient entre les deux personnages dans 45 % d'une fenêtre
-/// de 900 px, soit ~140 px de large.
-const List<MascotLine> kAuthMascotDialogue = [
-  MascotLine.archlord(
-      'Bienvenue ! UniFlow, c’est l’université dans une seule application.'),
-  MascotLine.uni('Cours, devoirs, notes, emploi du temps : tout est là.'),
-  MascotLine.archlord('Et ça marche même sans Internet.'),
-  MascotLine.uni('Connecte-toi, je te guide !'),
-];
-
-/// Panneau de marque : dégradé indigo `#1e3a8a` → `#2d4fa8` → teal `#0d9488`
-/// (celui du web), halos, logo, accroche, trois arguments, illustration.
+/// Panneau de marque — style référence : fond dégradé navy → teal avec blob
+/// blanc organique contenant mascotte + logo. Inspiré du design université
+/// avec forme blob blanche flottant sur fond sombre.
 ///
-/// L'ancienne photo `login.jpg` (322×620) étirée en `BoxFit.cover` sur tout
-/// le panneau sortait floue : elle est remplacée par le logotype du web
-/// (1200 px) sur une plaque blanche, net à toute taille.
+/// Deux variantes :
+/// - `compact: false` (défaut) : deux colonnes — blob central plein écran
+/// - `compact: true` : bandeau horizontal étroit (vue < 900 px)
 class AuthHeroPanel extends StatelessWidget {
   final bool compact;
   final AuthScale scale;
@@ -329,29 +690,40 @@ class AuthHeroPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dpr = MediaQuery.devicePixelRatioOf(context);
-    final logoWidth = compact ? 150.0 : (scale.title * 7.2).clamp(200.0, 320.0);
     return DecoratedBox(
       decoration: const BoxDecoration(gradient: AppColors.authHeroGradient),
       child: ClipRect(
         child: Stack(
           children: [
+            // Halos décoratifs arrière-plan
             Positioned(
                 top: -80,
                 left: -60,
                 child: _Blob(
                     size: compact ? 200 : 360,
-                    color: Colors.white.withValues(alpha: 0.10))),
+                    color: Colors.white.withValues(alpha: 0.07))),
             Positioned(
                 bottom: -100,
                 right: -80,
                 child: _Blob(
                     size: compact ? 220 : 320,
-                    color: Colors.white.withValues(alpha: 0.08))),
+                    color: Colors.white.withValues(alpha: 0.05))),
+            // Petits cercles décoratifs
+            if (!compact) ...[
+              Positioned(
+                  top: 60, right: 30,
+                  child: _Blob(size: 40, color: Colors.white.withValues(alpha: 0.12))),
+              Positioned(
+                  bottom: 80, left: 20,
+                  child: _Blob(size: 24, color: Colors.white.withValues(alpha: 0.15))),
+              Positioned(
+                  top: 200, left: 10,
+                  child: _Blob(size: 16, color: Colors.white.withValues(alpha: 0.20))),
+            ],
             Positioned.fill(
               child: compact
-                  ? _compactBanner(logoWidth, dpr)
-                  : _fullPanel(context, logoWidth, dpr),
+                  ? _compactBanner()
+                  : _fullPanel(context),
             ),
           ],
         ),
@@ -359,33 +731,38 @@ class AuthHeroPanel extends StatelessWidget {
     );
   }
 
-  Widget _logoPlaque(double logoWidth, double dpr) => Container(
-        padding: EdgeInsets.symmetric(
-            horizontal: logoWidth * 0.08, vertical: logoWidth * 0.05),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withValues(alpha: 0.18),
-                blurRadius: 24,
-                offset: const Offset(0, 10)),
-          ],
-        ),
-        child: Image.asset(
-          'assets/brand/uniflow-wordmark.png',
-          width: logoWidth,
-          cacheWidth: (logoWidth * dpr).round(),
-          filterQuality: FilterQuality.high,
-          fit: BoxFit.contain,
-        ),
-      );
-
-  Widget _compactBanner(double logoWidth, double dpr) => Padding(
+  Widget _compactBanner() => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: Row(
           children: [
-            _logoPlaque(logoWidth, dpr),
+            // Logo sur fond blanc arrondi
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.15),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4)),
+                ],
+              ),
+              child: Image.asset(
+                'assets/brand/uniflow-wordmark.png',
+                height: 28,
+                filterQuality: FilterQuality.high,
+                fit: BoxFit.contain,
+                errorBuilder: (_, __, ___) => const Text(
+                  'UniFlow',
+                  style: TextStyle(
+                    color: Color(0xFF1E3A8A),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(width: 20),
             Expanded(
               child: Column(
@@ -416,77 +793,136 @@ class AuthHeroPanel extends StatelessWidget {
         ),
       );
 
-  Widget _fullPanel(BuildContext context, double logoWidth, double dpr) {
+  Widget _fullPanel(BuildContext context) {
     final pad = scale.padding;
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Sous ~620 px de haut, les cartes d'arguments n'ont plus leur place :
-        // on les retire plutôt que de faire défiler un panneau décoratif.
-        final showFeatures = constraints.maxHeight >= 620;
-        // Archlord et Uni discutent au-dessus du logo dès que la hauteur le
-        // permet ; sous 560 px ils céderaient la place au formulaire.
-        final showMascots = constraints.maxHeight >= 560;
-        final mascotSize = (scale.title * 4.2).clamp(96.0, 132.0);
+        final h = constraints.maxHeight;
+        final w = constraints.maxWidth;
+        final showFeatures = h >= 680;
+        // Largeur du blob blanc : environ 75% de la colonne, borné
+        final blobW = (w * 0.80).clamp(260.0, 440.0);
+        final blobH = (h * 0.55).clamp(240.0, 380.0);
+
         return SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: pad, vertical: pad * 0.8),
+          padding: EdgeInsets.symmetric(horizontal: pad, vertical: pad * 0.7),
           child: ConstrainedBox(
-            constraints:
-                BoxConstraints(minHeight: constraints.maxHeight - pad * 1.6),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 520),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (showMascots) ...[
-                      Center(
-                        child: MascotDialogue(
-                          lines: kAuthMascotDialogue,
-                          size: mascotSize,
-                          archlordPose: ArchlordPose.wave,
-                          uniPose: UniPose.wave,
+            constraints: BoxConstraints(minHeight: h - pad * 1.4),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // ── Blob blanc central avec mascotte + logo ────────────────
+                Center(
+                  child: Container(
+                    width: blobW,
+                    height: blobH,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(28),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.25),
+                          blurRadius: 36,
+                          offset: const Offset(0, 14),
                         ),
-                      ),
-                      SizedBox(height: pad * 0.4),
-                    ],
-                    Center(child: _logoPlaque(logoWidth, dpr)),
-                    SizedBox(height: pad * 0.7),
-                    Text(
-                      'Bienvenue sur UniFlow',
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.h1.copyWith(
-                          color: Colors.white,
-                          fontSize: scale.title + 2,
-                          height: 1.15),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'La plateforme universitaire intelligente qui fonctionne partout, même sans Internet.',
-                      textAlign: TextAlign.center,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: scale.body + 1,
-                          height: 1.5,
-                          color: const Color(0xFFDBEAFE)),
-                    ),
-                    if (showFeatures) ...[
-                      SizedBox(height: pad * 0.8),
-                      for (var i = 0; i < kAuthFeatures.length; i++) ...[
-                        CascadeIn(
-                            index: 2 + i,
-                            child: _FeatureCard(
-                                feature: kAuthFeatures[i], scale: scale)),
-                        if (i < kAuthFeatures.length - 1)
-                          const SizedBox(height: 12),
+                        BoxShadow(
+                          color: const Color(0xFF0D9488).withValues(alpha: 0.16),
+                          blurRadius: 20,
+                          offset: const Offset(-6, 6),
+                        ),
                       ],
-                    ],
-                  ],
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.asset(
+                          'assets/auth/login_hero.webp',
+                          fit: BoxFit.cover,
+                          alignment: Alignment.center,
+                          filterQuality: FilterQuality.high,
+                          errorBuilder: (_, __, ___) => Image.asset(
+                            'assets/mascot/archlord_uni_duo_solid.webp',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        // Logo UniFlow officiel en haut à gauche
+                        Positioned(
+                          top: 14,
+                          left: 14,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.90),
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.10),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Image.asset(
+                              'assets/brand/uniflow_logo_horizontal.png',
+                              height: 20,
+                              fit: BoxFit.contain,
+                              errorBuilder: (_, __, ___) => const Text(
+                                'UniFlow',
+                                style: TextStyle(
+                                  color: Color(0xFF1E3A8A),
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+
+                SizedBox(height: pad * 0.6),
+
+                // ── Titre + sous-titre sous le blob ───────────────────────
+                Text(
+                  'Bienvenue sur UniFlow',
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.h1.copyWith(
+                      color: Colors.white,
+                      fontSize: scale.title + 2,
+                      height: 1.15),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'La plateforme universitaire intelligente\nqui fonctionne partout, même sans Internet.',
+                  textAlign: TextAlign.center,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: scale.body,
+                      height: 1.5,
+                      color: const Color(0xFFDBEAFE)),
+                ),
+
+                // ── Arguments en bas ─────────────────────────────────────
+                if (showFeatures) ...[
+                  SizedBox(height: pad * 0.7),
+                  for (var i = 0; i < kAuthFeatures.length; i++) ...[
+                    CascadeIn(
+                        index: 2 + i,
+                        child: _FeatureCard(
+                            feature: kAuthFeatures[i], scale: scale)),
+                    if (i < kAuthFeatures.length - 1)
+                      const SizedBox(height: 10),
+                  ],
+                ],
+              ],
             ),
           ),
         );
@@ -590,16 +1026,30 @@ class GradientButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final disabled = onPressed == null;
+    final dark = AuthTone.of(context).dark;
+    // Sur le panneau bleu nuit, le bouton est une pilule teal (maquette) ;
+    // sur fond clair, le dégradé bleu → teal de la charte.
+    final radius = BorderRadius.circular(dark ? 999 : AppTheme.radiusCard);
+    final gradient = dark
+        ? const LinearGradient(
+            colors: [Color(0xFF14B8A8), Color(0xFF0D9488)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          )
+        : AppColors.logoGradient;
     return DecoratedBox(
       decoration: BoxDecoration(
-        gradient: disabled ? null : AppColors.logoGradient,
-        color: disabled ? AppColors.inputBorder : null,
-        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+        gradient: disabled ? null : gradient,
+        color: disabled
+            ? (dark ? const Color(0x33FFFFFF) : AppColors.inputBorder)
+            : null,
+        borderRadius: radius,
         boxShadow: disabled
             ? null
             : [
                 BoxShadow(
-                  color: AppColors.primaryBlue.withValues(alpha: 0.30),
+                  color: (dark ? AppColors.teal : AppColors.primaryBlue)
+                      .withValues(alpha: 0.32),
                   blurRadius: 18,
                   offset: const Offset(0, 8),
                 ),
@@ -609,7 +1059,7 @@ class GradientButton extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: onPressed,
-          borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+          borderRadius: radius,
           child: SizedBox(
             height: AuthScale.of(context).field,
             child: Center(
@@ -652,13 +1102,14 @@ class ErrorBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = AuthTone.of(context).dark;
     return CascadeIn(
       index: 0,
       offset: const Offset(0, -0.1),
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.danger.withValues(alpha: 0.07),
+          color: AppColors.danger.withValues(alpha: dark ? 0.16 : 0.07),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: AppColors.danger.withValues(alpha: 0.25)),
         ),
@@ -671,11 +1122,11 @@ class ErrorBanner extends StatelessWidget {
             Flexible(
               child: Text(
                 message,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12.5,
                   height: 1.35,
                   fontWeight: FontWeight.w500,
-                  color: kDangerInk,
+                  color: dark ? const Color(0xFFFECACA) : kDangerInk,
                 ),
               ),
             ),
@@ -746,6 +1197,7 @@ class _TypeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = AuthTone.of(context);
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -754,18 +1206,17 @@ class _TypeCard extends StatelessWidget {
         curve: Curves.easeOut,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
-          color: selected ? AppColors.primary50 : AppColors.inputFill,
+          color: selected ? p.selectedFill : p.fill,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: selected ? AppColors.primaryBlue : AppColors.inputBorder,
+            color: selected ? p.selectedBorder : p.border,
             width: selected ? 1.6 : 1,
           ),
         ),
         child: Row(
           children: [
             PhosphorIcon(icon,
-                size: 22,
-                color: selected ? AppColors.primaryBlue : AppColors.textMuted),
+                size: 22, color: selected ? p.selectedText : p.muted),
             const SizedBox(width: 10),
             Expanded(
               child: Column(
@@ -779,17 +1230,14 @@ class _TypeCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w700,
-                      color: selected
-                          ? AppColors.primaryBlue
-                          : AppColors.textPrimary,
+                      color: selected ? p.selectedText : p.text,
                     ),
                   ),
                   Text(
                     subtitle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontSize: 11, color: AppColors.textSecondary),
+                    style: TextStyle(fontSize: 11, color: p.textSoft),
                   ),
                 ],
               ),
@@ -820,15 +1268,16 @@ class AuthDropdown<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = AuthTone.of(context);
     OutlineInputBorder border(Color color, [double width = 1]) =>
         OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(p.fieldRadius),
           borderSide: BorderSide(color: color, width: width),
         );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppTextStyles.label),
+        Text(label, style: p.label),
         const SizedBox(height: 8),
         DropdownButtonFormField<T>(
           // `initialValue` est l'API des versions récentes de Flutter ; la
@@ -838,22 +1287,24 @@ class AuthDropdown<T> extends StatelessWidget {
           initialValue: value,
           isExpanded: true,
           icon: PhosphorIcon(UniIcons.chevronDown(UniIconStyle.bold),
-              color: AppColors.textMuted),
-          style: const TextStyle(fontSize: 14, color: AppColors.textPrimary),
+              color: p.muted),
+          dropdownColor: p.menu,
+          borderRadius: BorderRadius.circular(14),
+          style: TextStyle(fontSize: 14, color: p.text),
           hint: Text(
             hint,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 14, color: AppColors.textMuted),
+            style: TextStyle(fontSize: 14, color: p.muted),
           ),
           decoration: InputDecoration(
             filled: true,
-            fillColor: AppColors.inputFill,
+            fillColor: p.fill,
             contentPadding:
-                const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
-            border: border(AppColors.inputBorder),
-            enabledBorder: border(AppColors.inputBorder),
-            focusedBorder: border(AppColors.primaryBlue, 1.5),
+                const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+            border: border(p.border),
+            enabledBorder: border(p.border),
+            focusedBorder: border(p.focus, 1.5),
           ),
           items: items,
           onChanged: onChanged,

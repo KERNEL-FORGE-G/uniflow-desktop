@@ -25,6 +25,8 @@ abstract final class ApiPaths {
   static const subscriptionPayments = '/subscription-payments';
   static const teamRoster = '/team-roster';
   static const account = '/account';
+  static const openLibrary = '/open-library';
+  static const news = '/news';
 }
 
 /// Erreur portant le message rédigé par la Function.

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
@@ -29,50 +27,29 @@ class GlassCard extends StatelessWidget {
     final colors = UniFlowColors.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    if (!isDark) {
-      return Container(
-        padding: padding ?? const EdgeInsets.all(18),
-        decoration: BoxDecoration(
-          color: colors.surface,
-          borderRadius: BorderRadius.circular(borderRadius),
-          border: Border.all(color: colors.border),
+    return Container(
+      padding: padding ?? const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF172033) : colors.surface,
+        borderRadius: BorderRadius.circular(borderRadius),
+        border: Border.all(
+          color: isDark
+              ? (accentColor?.withValues(alpha: 0.25) ??
+                  const Color(0xFF2E3E5D))
+              : colors.border,
+          width: 1,
         ),
-        child: child,
-      );
-    }
-
-    final accent = accentColor ?? colors.primary;
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-        child: Container(
-          padding: padding ?? const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            // Fond très sombre légèrement bleuté, semi-transparent
-            color: Color.alphaBlend(
-              accent.withAlpha(25),
-              colors.surface,
-            ),
-            borderRadius: BorderRadius.circular(borderRadius),
-            border: Border.all(
-              color: accent.withAlpha(60),
-              width: 1,
-            ),
-            // Légère lueur sur le bord supérieur
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                accent.withAlpha(30),
-                Colors.transparent,
-              ],
-            ),
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.3)
+                : AppColors.primaryBlue.withValues(alpha: 0.04),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
           ),
-          child: child,
-        ),
+        ],
       ),
+      child: child,
     );
   }
 }

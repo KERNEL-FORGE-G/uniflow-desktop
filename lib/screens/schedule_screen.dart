@@ -11,6 +11,7 @@ import '../ui/app_button.dart';
 import '../ui/status_badge.dart';
 import '../widgets/app_page_bar.dart';
 import '../widgets/data_state_view.dart';
+import '../widgets/timetable_scan_dialog.dart';
 import '../widgets/uni_icons.dart';
 
 /// Hauteur commune des contrôles de la barre d'outils (sélecteurs, boutons) :
@@ -353,6 +354,20 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
               // barre (40 px) : les trois avaient chacun leur marge et leur
               // rayon, différents de ceux des autres pages.
               children: [
+                AppButton(
+                  label: 'Scan officiel',
+                  icon: UniIcons.document(UniIconStyle.bold),
+                  height: _toolbarControlHeight,
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => TimetableScanDialog(
+                        initialProgram: scope.program,
+                        initialLevel: scope.level,
+                      ),
+                    );
+                  },
+                ),
                 AppButton.secondary(
                   label: 'Export PDF',
                   icon: UniIcons.download(UniIconStyle.bold),

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'providers/auth_provider.dart';
 import 'providers/preferences_provider.dart';
 import 'theme/app_theme.dart';
 import 'screens/login_screen.dart';
 import 'screens/main_shell.dart';
 import 'screens/onboarding_screen.dart';
+import 'models/appwrite_models.dart';
 import 'widgets/uni/uni_mascot.dart';
 import 'widgets/uni/uni_scenes.dart';
 
@@ -46,14 +46,10 @@ class UniFlowApp extends ConsumerWidget {
       themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
       home: session.when(
         loading: () => const _SplashScreen(),
-        // Un échec de résolution (Appwrite injoignable) ne doit pas bloquer
-        // l'app : on laisse l'utilisateur tenter de se connecter.
-        error: (_, __) => const LoginScreen(),
-        data: (_) {
-          if (user == null) return const LoginScreen();
-          // _AppEntryPoint gère l'onboarding (premier lancement)
-          return const _AppEntryPoint();
-        },
+        // En cas d'erreur ou de succès, on passe par _AppEntryPoint qui affiche
+        // l'onboarding au premier lancement avant de basculer vers Login ou Shell.
+        error: (_, __) => _AppEntryPoint(user: user),
+        data: (_) => _AppEntryPoint(user: user),
       ),
     );
   }
@@ -150,45 +146,28 @@ class _SplashScreen extends StatelessWidget {
 /// le shell sous-jacent se charge en arrière-plan (pas de délai à la première
 /// connexion).
 class _AppEntryPoint extends StatefulWidget {
-  const _AppEntryPoint();
+  final UniFlowUser? user;
+  const _AppEntryPoint({this.user});
 
   @override
   State<_AppEntryPoint> createState() => _AppEntryPointState();
 }
 
 class _AppEntryPointState extends State<_AppEntryPoint> {
-  bool _checked = false;
-  bool _showOnboarding = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkOnboarding();
-  }
-
-  Future<void> _checkOnboarding() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final done = prefs.getBool('prefs.onboardingDone') ?? false;
-      if (mounted) setState(() {
-        _showOnboarding = !done;
-        _checked = true;
-      });
-    } catch (_) {
-      if (mounted) setState(() => _checked = true);
-    }
-  }
+  // L'utilisateur souhaite que l'onboarding s'affiche à chaque lancement de l'application
+  bool _showOnboarding = true;
 
   @override
   Widget build(BuildContext context) {
-    if (!_checked) return const _SplashScreen();
     if (_showOnboarding) {
-      return Stack(
-        children: [
-          const MainShell(),
-          const OnboardingScreen(),
-        ],
+      return OnboardingScreen(
+        onFinished: () {
+          if (mounted) setState(() => _showOnboarding = false);
+        },
       );
+    }
+    if (widget.user == null) {
+      return const LoginScreen();
     }
     return const MainShell();
   }

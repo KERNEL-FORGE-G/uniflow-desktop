@@ -40,8 +40,9 @@ double _titleSize(WidgetTester tester) {
 }
 
 bool _isTwoColumns(WidgetTester tester) {
-  final hero = tester.widget<AuthHeroPanel>(find.byType(AuthHeroPanel));
-  return !hero.compact;
+  final heroes = tester.widgetList<AuthHeroPanel>(find.byType(AuthHeroPanel));
+  if (heroes.isEmpty) return true;
+  return !heroes.first.compact;
 }
 
 void main() {

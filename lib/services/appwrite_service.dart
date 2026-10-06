@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:appwrite/appwrite.dart';
+import 'package:appwrite/enums.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Valeurs de repli quand la `.env` embarquée est antérieure à une variable.
@@ -68,5 +70,28 @@ class AppwriteService {
   String fileViewUrl(String fileId, {String? bucketId}) {
     final base = endpoint.replaceAll(RegExp(r'/+$'), '');
     return '$base/storage/buckets/${bucketId ?? storageBucketId}/files/$fileId/view?project=$projectId';
+  }
+
+  /// Exécute une requête vers la Function Appwrite principale.
+  Future<Map<String, dynamic>> executeFunction(
+    String path,
+    Map<String, dynamic> payload,
+  ) async {
+    try {
+      final execution = await functions.createExecution(
+        functionId: apiFunctionId,
+        body: jsonEncode(payload),
+        xasync: false,
+        path: path,
+        method: ExecutionMethod.pOST,
+      );
+      if (execution.responseBody.isNotEmpty) {
+        final decoded = jsonDecode(execution.responseBody);
+        if (decoded is Map<String, dynamic>) return decoded;
+      }
+      return {};
+    } catch (_) {
+      return {};
+    }
   }
 }

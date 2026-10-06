@@ -12,6 +12,7 @@ import '../providers/appwrite_provider.dart';
 import '../providers/auth_provider.dart';
 import '../services/appwrite_service.dart';
 import '../models/gamification.dart';
+import '../data/quests_catalog_250.dart';
 
 // ─── Constantes ─────────────────────────────────────────────────────────────
 
@@ -92,38 +93,101 @@ class GamificationService {
     String userId, {
     QuestPeriod? period,
   }) async {
-    final queries = [
-      Query.equal('userId', userId),
-      Query.equal('status', 'active'),
-      Query.limit(50),
-    ];
-    if (period != null) queries.add(Query.equal('period', period.name));
+    try {
+      final queries = [
+        Query.equal('userId', userId),
+        Query.equal('status', 'active'),
+        Query.limit(50),
+      ];
+      if (period != null) queries.add(Query.equal('period', period.name));
 
-    final progressDocs = await _databases.listDocuments(
-      databaseId: _databaseId,
-      collectionId: _userQuestProg,
-      queries: queries,
-    );
+      final progressDocs = await _databases.listDocuments(
+        databaseId: _databaseId,
+        collectionId: _userQuestProg,
+        queries: queries,
+      );
 
-    final results = <QuestWithProgress>[];
-    for (final prog in progressDocs.documents) {
-      final questId = prog.data['questId'] as String?;
-      if (questId == null) continue;
-      try {
-        final questDoc = await _databases.getDocument(
-          databaseId: _databaseId,
-          collectionId: _questsCatalog,
-          documentId: questId,
-        );
-        results.add(QuestWithProgress(
-          definition: QuestDefinition.fromDocument(questDoc),
-          progress: UserQuestProgress.fromDocument(prog),
-        ));
-      } catch (_) {
-        continue;
+      final results = <QuestWithProgress>[];
+      for (final prog in progressDocs.documents) {
+        final questId = prog.data['questId'] as String?;
+        if (questId == null) continue;
+        try {
+          final questDoc = await _databases.getDocument(
+            databaseId: _databaseId,
+            collectionId: _questsCatalog,
+            documentId: questId,
+          );
+          results.add(QuestWithProgress(
+            definition: QuestDefinition.fromDocument(questDoc),
+            progress: UserQuestProgress.fromDocument(prog),
+          ));
+        } catch (_) {
+          continue;
+        }
       }
+      if (results.isNotEmpty) return results;
+    } catch (_) {
+      // Fallback automatique vers le catalogue local 250 quêtes
     }
-    return results;
+    return _fallbackQuests(userId, period: period);
+  }
+
+  /// Charge l'intégralité des 250 quêtes du catalogue avec progression locale.
+  Future<List<QuestWithProgress>> fetchAll250Quests(String userId) async {
+    return _fallbackQuests(userId, all: true);
+  }
+
+  List<QuestWithProgress> _fallbackQuests(
+    String userId, {
+    QuestPeriod? period,
+    bool all = false,
+  }) {
+    final now = DateTime.now();
+    final List<QuestCatalogItem> items;
+    if (all) {
+      items = QuestAutoAdjuster.allQuests;
+    } else if (period == QuestPeriod.daily) {
+      items = QuestAutoAdjuster.getDailyQuests(now);
+    } else if (period == QuestPeriod.monthly) {
+      items = QuestAutoAdjuster.getMonthlyQuests(now);
+    } else if (period == QuestPeriod.yearly) {
+      items = QuestAutoAdjuster.getYearlyQuests(now);
+    } else {
+      items = QuestAutoAdjuster.getActiveQuests(now);
+    }
+
+    return items.map((q) {
+      final pEnum = switch (q.period) {
+        'daily' => QuestPeriod.daily,
+        'monthly' => QuestPeriod.monthly,
+        'yearly' => QuestPeriod.yearly,
+        _ => QuestPeriod.weekly,
+      };
+      const isDone = false;
+      const current = 0;
+
+      return QuestWithProgress(
+        definition: QuestDefinition(
+          id: q.id,
+          title: q.title,
+          description: q.description,
+          period: pEnum,
+          criteriaType: QuestCriteriaType.attendSession,
+          targetValue: q.targetValue,
+          xpReward: q.xpReward,
+          iconName: q.iconName,
+          colorHex: q.colorHex,
+        ),
+        progress: UserQuestProgress(
+          id: 'prog_${q.id}',
+          userId: userId,
+          questId: q.id,
+          currentValue: current,
+          completed: isDone,
+          updatedAt: now,
+        ),
+      );
+    }).toList();
   }
 
   // ── XP & Classement ──────────────────────────────────────────────────────
@@ -135,11 +199,18 @@ class GamificationService {
         collectionId: _userXp,
         queries: [Query.equal('userId', userId), Query.limit(1)],
       );
-      if (page.documents.isEmpty) return null;
-      return UserXp.fromDocument(page.documents.first);
-    } catch (_) {
-      return null;
-    }
+      if (page.documents.isNotEmpty) {
+        return UserXp.fromDocument(page.documents.first);
+      }
+    } catch (_) {}
+    return UserXp(
+      id: 'local_xp_$userId',
+      userId: userId,
+      totalXp: 0,
+      level: 1,
+      xpInCurrentLevel: 0,
+      xpToNextLevel: 100,
+    );
   }
 
   Future<List<LeaderboardEntry>> fetchLeaderboard({
@@ -149,21 +220,35 @@ class GamificationService {
   }) async {
     final now = DateTime.now();
     final periodKey = _periodKey(period, now);
-    return _listAll(
-      _leaderboard,
-      LeaderboardEntry.fromDocument,
-      queries: [
-        Query.equal('period', period),
-        Query.equal('metric', metric),
-        Query.equal('periodKey', periodKey),
-        Query.orderAsc('rank'),
-        Query.limit(limit),
-      ],
-    );
+    try {
+      final list = await _listAll(
+        _leaderboard,
+        LeaderboardEntry.fromDocument,
+        queries: [
+          Query.equal('period', period),
+          Query.equal('metric', metric),
+          Query.equal('periodKey', periodKey),
+          Query.orderAsc('rank'),
+          Query.limit(limit),
+        ],
+      );
+      if (list.isNotEmpty) return list;
+    } catch (_) {
+      // Fallback classement local de promo
+    }
+    return _fallbackLeaderboard(period: period, limit: limit);
+  }
+
+  List<LeaderboardEntry> _fallbackLeaderboard({
+    required String period,
+    int limit = 20,
+  }) {
+    // Le classement commence vide tant qu'aucun utilisateur n'a validé de quêtes
+    return const [];
   }
 
   String _periodKey(String period, DateTime now) {
-    if (period == 'annual')  return '${now.year}';
+    if (period == 'annual' || period == 'yearly') return '${now.year}';
     if (period == 'monthly') return '${now.year}-${now.month.toString().padLeft(2, '0')}';
     final startOfYear = DateTime(now.year, 1, 1);
     final week = ((now.difference(startOfYear).inDays) / 7).ceil();
@@ -236,26 +321,49 @@ final badgesWithProgressProvider = FutureProvider<List<BadgeWithProgress>>((ref)
 
 final activeQuestsProvider = FutureProvider<List<QuestWithProgress>>((ref) async {
   final user = ref.watch(currentUserProvider);
-  if (user == null) return [];
-  return ref.read(gamificationServiceProvider).fetchActiveQuests(user.id);
+  final userId = user?.id ?? 'guest';
+  return ref.read(gamificationServiceProvider).fetchActiveQuests(userId);
+});
+
+final dailyQuestsProvider = FutureProvider<List<QuestWithProgress>>((ref) async {
+  final user = ref.watch(currentUserProvider);
+  final userId = user?.id ?? 'guest';
+  return ref.read(gamificationServiceProvider).fetchActiveQuests(userId, period: QuestPeriod.daily);
 });
 
 final weeklyQuestsProvider = FutureProvider<List<QuestWithProgress>>((ref) async {
   final user = ref.watch(currentUserProvider);
-  if (user == null) return [];
-  return ref.read(gamificationServiceProvider).fetchActiveQuests(user.id, period: QuestPeriod.weekly);
+  final userId = user?.id ?? 'guest';
+  return ref.read(gamificationServiceProvider).fetchActiveQuests(userId, period: QuestPeriod.weekly);
 });
 
 final monthlyQuestsProvider = FutureProvider<List<QuestWithProgress>>((ref) async {
   final user = ref.watch(currentUserProvider);
-  if (user == null) return [];
-  return ref.read(gamificationServiceProvider).fetchActiveQuests(user.id, period: QuestPeriod.monthly);
+  final userId = user?.id ?? 'guest';
+  return ref.read(gamificationServiceProvider).fetchActiveQuests(userId, period: QuestPeriod.monthly);
+});
+
+final yearlyQuestsProvider = FutureProvider<List<QuestWithProgress>>((ref) async {
+  final user = ref.watch(currentUserProvider);
+  final userId = user?.id ?? 'guest';
+  return ref.read(gamificationServiceProvider).fetchActiveQuests(userId, period: QuestPeriod.yearly);
+});
+
+final all250QuestsProvider = FutureProvider<List<QuestWithProgress>>((ref) async {
+  final user = ref.watch(currentUserProvider);
+  final userId = user?.id ?? 'guest';
+  return ref.read(gamificationServiceProvider).fetchAll250Quests(userId);
 });
 
 final userXpProvider = FutureProvider<UserXp?>((ref) async {
   final user = ref.watch(currentUserProvider);
-  if (user == null) return null;
-  return ref.read(gamificationServiceProvider).fetchUserXp(user.id);
+  final userId = user?.id ?? 'guest';
+  return ref.read(gamificationServiceProvider).fetchUserXp(userId);
+});
+
+final currentXpProvider = FutureProvider<int>((ref) async {
+  final xp = await ref.watch(userXpProvider.future);
+  return xp?.totalXp ?? 0;
 });
 
 final weeklyLeaderboardProvider = FutureProvider<List<LeaderboardEntry>>((ref) async {
@@ -264,4 +372,8 @@ final weeklyLeaderboardProvider = FutureProvider<List<LeaderboardEntry>>((ref) a
 
 final monthlyLeaderboardProvider = FutureProvider<List<LeaderboardEntry>>((ref) async {
   return ref.read(gamificationServiceProvider).fetchLeaderboard(period: 'monthly', metric: 'xp');
+});
+
+final annualLeaderboardProvider = FutureProvider<List<LeaderboardEntry>>((ref) async {
+  return ref.read(gamificationServiceProvider).fetchLeaderboard(period: 'annual', metric: 'xp');
 });

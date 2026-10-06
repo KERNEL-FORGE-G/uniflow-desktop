@@ -23,6 +23,7 @@ class StatCard extends StatelessWidget {
   final bool isPositive;
   final IconData icon;
   final Color iconBackground;
+  final String? imageAsset;
 
   /// Rang dans la grille : décale l'apparition en cascade de la tuile.
   final int index;
@@ -35,6 +36,7 @@ class StatCard extends StatelessWidget {
     this.hint,
     required this.icon,
     required this.iconBackground,
+    this.imageAsset,
     this.isPositive = true,
     this.index = 0,
   });
@@ -54,13 +56,33 @@ class StatCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          IconTile(
-            icon: icon,
-            color: iconBackground,
-            size: 56,
-            index: index,
-            semanticLabel: label,
-          ),
+          if (imageAsset != null)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: SizedBox(
+                width: 56,
+                height: 56,
+                child: Image.asset(
+                  imageAsset!,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => IconTile(
+                    icon: icon,
+                    color: iconBackground,
+                    size: 56,
+                    index: index,
+                    semanticLabel: label,
+                  ),
+                ),
+              ),
+            )
+          else
+            IconTile(
+              icon: icon,
+              color: iconBackground,
+              size: 56,
+              index: index,
+              semanticLabel: label,
+            ),
           const SizedBox(height: 12),
           // `maxLines` + ellipse sur le libellé : dans une grille de KPI, la
           // colonne peut devenir étroite (fenêtre réduite, tablette) et un

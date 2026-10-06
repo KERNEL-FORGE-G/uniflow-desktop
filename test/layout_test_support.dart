@@ -22,6 +22,10 @@ import 'package:uniflow/models/teaching_unit.dart';
 import 'package:uniflow/models/team_member.dart';
 import 'package:uniflow/services/conference/attendance_store.dart';
 import 'package:uniflow/services/conference/conference_models.dart';
+import 'package:uniflow/models/badges.dart';
+import 'package:uniflow/models/gamification.dart';
+import 'package:uniflow/providers/badges_provider.dart';
+import 'package:uniflow/services/gamification_service.dart';
 import 'package:uniflow/providers/analytics_provider.dart';
 import 'package:uniflow/providers/attendance_provider.dart';
 import 'package:uniflow/providers/auth_provider.dart';
@@ -157,6 +161,15 @@ List<Override> _overrides(UniFlowUser user) => [
       // avec ses quatre listes déroulantes, pas avec la saisie libre de secours.
       academicReferenceProvider
           .overrideWith((ref) async => referentielDeTest()),
+      studentBadgesProvider.overrideWith((ref) async => <BadgeProgress>[]),
+      badgesWithProgressProvider.overrideWith((ref) async => <BadgeWithProgress>[]),
+      activeQuestsProvider.overrideWith((ref) async => <QuestWithProgress>[]),
+      weeklyQuestsProvider.overrideWith((ref) async => <QuestWithProgress>[]),
+      monthlyQuestsProvider.overrideWith((ref) async => <QuestWithProgress>[]),
+      userXpProvider.overrideWith((ref) async => null),
+      currentXpProvider.overrideWith((ref) async => 0),
+      weeklyLeaderboardProvider.overrideWith((ref) async => <LeaderboardEntry>[]),
+      monthlyLeaderboardProvider.overrideWith((ref) async => <LeaderboardEntry>[]),
     ];
 
 AcademicReference referentielDeTest() => const AcademicReference(

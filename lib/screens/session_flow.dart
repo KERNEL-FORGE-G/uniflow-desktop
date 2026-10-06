@@ -34,17 +34,43 @@ class SignOutButton extends ConsumerWidget {
     final tint = color ?? AppColors.danger;
     if (compact) {
       return IconButton(
+        key: const Key('signout-btn-compact'),
         tooltip: 'Se déconnecter',
         onPressed: () => signOutToLogin(context, ref),
         icon: PhosphorIcon(UniIcons.signOut(UniIconStyle.bold),
             color: tint, size: 20),
       );
     }
-    return TextButton.icon(
-      onPressed: () => signOutToLogin(context, ref),
-      style: TextButton.styleFrom(foregroundColor: tint),
-      icon: PhosphorIcon(UniIcons.signOut(UniIconStyle.bold), size: 18),
-      label: const Text('Se déconnecter'),
+    return Material(
+      key: const Key('signout-btn-full'),
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => signOutToLogin(context, ref),
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              PhosphorIcon(UniIcons.signOut(UniIconStyle.bold), size: 18, color: tint),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  'Se déconnecter',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: AppTextStyles.fontFamily,
+                    color: tint,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
