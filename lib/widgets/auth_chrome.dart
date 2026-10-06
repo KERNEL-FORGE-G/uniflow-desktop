@@ -374,8 +374,8 @@ class _PortalCard extends StatelessWidget {
   }
 }
 
-/// Bord droit ondulé du volet blanc : il rentre en haut, bombe vers le
-/// formulaire au milieu, puis se retire en bas — comme sur la maquette.
+/// Bord droit ondulé du volet blanc : courbe douce et généreuse
+/// qui enveloppe parfaitement les mascottes sans jamais rogner Uni.
 class _PortalWaveClipper extends CustomClipper<Path> {
   const _PortalWaveClipper();
 
@@ -385,10 +385,10 @@ class _PortalWaveClipper extends CustomClipper<Path> {
     final h = size.height;
     return Path()
       ..moveTo(0, 0)
-      ..lineTo(w * 0.74, 0)
-      ..cubicTo(w * 0.88, h * 0.06, w * 0.80, h * 0.28, w * 0.91, h * 0.44)
-      ..cubicTo(w * 1.02, h * 0.60, w * 0.99, h * 0.82, w * 0.82, h * 0.92)
-      ..cubicTo(w * 0.74, h * 0.97, w * 0.68, h, w * 0.62, h)
+      ..lineTo(w * 0.84, 0)
+      ..cubicTo(w * 0.95, h * 0.08, w * 0.89, h * 0.28, w * 0.97, h * 0.45)
+      ..cubicTo(w * 1.03, h * 0.60, w * 1.01, h * 0.78, w * 0.92, h * 0.90)
+      ..cubicTo(w * 0.87, h * 0.96, w * 0.83, h, w * 0.80, h)
       ..lineTo(0, h)
       ..close();
   }
@@ -476,7 +476,7 @@ class _ArtworkPanel extends StatelessWidget {
 }
 
 /// Scène d'accueil : Archlord et Uni font un fistbump, sur fond de bulles pastel,
-/// exactement comme sur la maquette officielle.
+/// parfaitement centrés dans l'espace blanc visible.
 class _ArtworkScene extends StatelessWidget {
   final bool isLogin;
   const _ArtworkScene({required this.isLogin});
@@ -486,10 +486,10 @@ class _ArtworkScene extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        // Bulles pastel décoratives en arrière-plan comme sur la capture
+        // Bulles pastel décoratives en arrière-plan harmonisées
         Positioned(
           top: 10,
-          right: 24,
+          right: 48,
           child: Container(
             width: 76,
             height: 76,
@@ -513,7 +513,7 @@ class _ArtworkScene extends StatelessWidget {
         ),
         Positioned(
           bottom: 16,
-          right: 36,
+          right: 64,
           child: Container(
             width: 44,
             height: 44,
@@ -523,10 +523,12 @@ class _ArtworkScene extends StatelessWidget {
             ),
           ),
         ),
-        // Illustration officielle exacte : Archlord et Uni font un fistbump
-        Center(
+        // Illustration officielle exacte : rééquilibrée vers la gauche
+        // pour que Archlord et Uni soient harmonieusement centrés dans la zone blanche
+        Align(
+          alignment: const Alignment(-0.25, 0.0),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.only(left: 4, right: 36),
             child: Image.asset(
               'assets/mascot/archlord_uni_fistbump.webp',
               fit: BoxFit.contain,
@@ -534,6 +536,10 @@ class _ArtworkScene extends StatelessWidget {
               errorBuilder: (_, __, ___) => Image.asset(
                 'assets/illustrations/archlord_uni_duo_solid.webp',
                 fit: BoxFit.contain,
+                errorBuilder: (_, __, ___) => Image.asset(
+                  'assets/brand/uniflow_marque.png',
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ),

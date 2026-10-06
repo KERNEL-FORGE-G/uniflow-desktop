@@ -1,15 +1,17 @@
 /// Écrans Badges et Quêtes — UniFlow Desktop
 ///
-/// Affiche le catalogue des 100 badges et les 300 quêtes dynamiques
-/// (hebdomadaires, mensuelles, annuelles) avec progression et leaderboard.
+/// Affiche les 6 badges académiques réels de l'étudiant, le catalogue
+/// étendu de distinctions, et les quêtes dynamiques avec progression.
 library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/quests_catalog_250.dart';
+import '../models/badges.dart';
 import '../models/gamification.dart';
 import '../providers/auth_provider.dart';
+import '../providers/badges_provider.dart';
 import '../services/gamification_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/phosphor.dart';
@@ -17,115 +19,1005 @@ import '../widgets/uni/archlord_mascot.dart';
 import '../widgets/uni/uni_mascot.dart';
 
 // ═══════════════════════════════════════════════════════════════════════════
-// ÉCRAN BADGES
+// ÉCRAN BADGES — RESILIENT, COMPLET ET FLUIDE
 // ═══════════════════════════════════════════════════════════════════════════
 
-class BadgesDesktopScreen extends ConsumerWidget {
+class BadgesDesktopScreen extends ConsumerStatefulWidget {
   const BadgesDesktopScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final badgesAsync = ref.watch(badgesWithProgressProvider);
-    return _ScreenShell(
-      title: 'Badges',
-      subtitle: '100 badges à débloquer',
-      icon: Icons.military_tech_rounded,
-      color: const Color(0xFF8B5CF6),
-      child: badgesAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => _ErrorView(message: e.toString()),
-        data: (badges) => _BadgesGrid(badges: badges),
+  ConsumerState<BadgesDesktopScreen> createState() => _BadgesDesktopScreenState();
+}
+
+class _BadgesDesktopScreenState extends ConsumerState<BadgesDesktopScreen> {
+  String _selectedCategory = 'all';
+  String _statusFilter = 'all'; // 'all', 'unlocked', 'locked'
+  final TextEditingController _searchCtrl = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _searchCtrl.addListener(() {
+      setState(() {
+        _searchQuery = _searchCtrl.text.trim().toLowerCase();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  void _refreshAll() {
+    ref.invalidate(studentBadgesProvider);
+    ref.invalidate(badgesWithProgressProvider);
+    ref.invalidate(userXpProvider);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final studentBadgesAsync = ref.watch(studentBadgesProvider);
+    final catalogBadgesAsync = ref.watch(badgesWithProgressProvider);
+    final userXpAsync = ref.watch(userXpProvider);
+
+    // Données par défaut ou réelles (résilience absolue via valueOrNull)
+    final studentBadges = studentBadgesAsync.valueOrNull ?? const <BadgeProgress>[];
+    final catalogBadges = catalogBadgesAsync.valueOrNull ?? const <BadgeWithProgress>[];
+    final userXp = userXpAsync.valueOrNull?.totalXp ?? 0;
+
+    // Statistiques combinées
+    final unlockedStudent = studentBadges.where((b) => b.unlocked).length;
+    final totalStudent = studentBadges.isEmpty ? 6 : studentBadges.length;
+
+    final unlockedCatalog = catalogBadges.where((b) => b.unlocked).length;
+    final totalCatalog = catalogBadges.length;
+
+    final totalUnlocked = unlockedStudent + unlockedCatalog;
+    final totalBadges = totalStudent + totalCatalog;
+    final overallPercent = totalBadges > 0
+        ? ((totalUnlocked / totalBadges) * 100).round()
+        : 0;
+
+    // Filtrer le catalogue étendu
+    final filteredCatalog = catalogBadges.where((b) {
+      if (_selectedCategory != 'all' && b.definition.category.name != _selectedCategory) {
+        return false;
+      }
+      if (_statusFilter == 'unlocked' && !b.unlocked) {
+        return false;
+      }
+      if (_statusFilter == 'locked' && b.unlocked) {
+        return false;
+      }
+      if (_searchQuery.isNotEmpty) {
+        final name = b.definition.name.toLowerCase();
+        final desc = b.definition.description.toLowerCase();
+        if (!name.contains(_searchQuery) && !desc.contains(_searchQuery)) {
+          return false;
+        }
+      }
+      return true;
+    }).toList();
+
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // ── Bannière Hero Décorée ──
+          _BadgesHeroBanner(
+            unlockedTotal: totalUnlocked,
+            unlockedAcademic: unlockedStudent,
+            totalAcademic: totalStudent,
+            overallPercent: overallPercent,
+            totalXp: userXp,
+            onRefresh: _refreshAll,
+          ),
+
+          // ── Contenu principal scrollable sans conflit ──
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 1. SECTION BADGES ACADÉMIQUES DU COMPTE (RÉELS)
+                  _SectionHeader(
+                    icon: PhosphorIconsBold.graduationCap,
+                    title: 'Mes Badges Académiques',
+                    badgeCount: '$unlockedStudent / $totalStudent débloqués',
+                    subtitle:
+                        'Évalués en direct sur votre présence aux cours, vos devoirs rendus, vos notes d\'examen et le forum.',
+                  ),
+                  const SizedBox(height: 16),
+                  if (studentBadgesAsync.isLoading && studentBadges.isEmpty)
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(32),
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  else
+                    _StudentBadgesGrid(
+                      badges: studentBadges.isNotEmpty
+                          ? studentBadges
+                          : _defaultStudentBadges(),
+                      onTapBadge: (badge) => _showStudentBadgeModal(context, badge),
+                    ),
+
+                  const SizedBox(height: 36),
+
+                  // 2. SECTION CATALOGUE ÉTENDU & DISTINCTIONS
+                  _SectionHeader(
+                    icon: PhosphorIconsBold.medal,
+                    title: 'Catalogue des Distinctions & Trophées',
+                    badgeCount: '${catalogBadges.length} trophées',
+                    subtitle:
+                        'Explorez les paliers de fidélité, de rapidité et d\'excellence communautaire UniFlow.',
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Filtres de recherche et catégories
+                  _CatalogFiltersBar(
+                    searchCtrl: _searchCtrl,
+                    selectedCategory: _selectedCategory,
+                    statusFilter: _statusFilter,
+                    onCategoryChanged: (cat) => setState(() => _selectedCategory = cat),
+                    onStatusChanged: (status) => setState(() => _statusFilter = status),
+                  ),
+                  const SizedBox(height: 20),
+
+                  if (catalogBadgesAsync.isLoading && catalogBadges.isEmpty)
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(32),
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  else if (filteredCatalog.isEmpty)
+                    _CatalogEmptyState(onResetFilters: () {
+                      setState(() {
+                        _selectedCategory = 'all';
+                        _statusFilter = 'all';
+                        _searchCtrl.clear();
+                      });
+                    })
+                  else
+                    _CatalogBadgesGrid(
+                      items: filteredCatalog,
+                      onTapBadge: (badge) => _showCatalogBadgeModal(context, badge),
+                    ),
+
+                  const SizedBox(height: 48),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<BadgeProgress> _defaultStudentBadges() {
+    return StudentBadge.values
+        .map((b) => BadgeProgress(badge: b, progress: 0.0, detail: b.rule))
+        .toList();
+  }
+
+  void _showStudentBadgeModal(BuildContext context, BadgeProgress progress) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => _BadgeDetailDialog(
+        title: progress.badge.title,
+        assetPath: progress.badge.asset,
+        isUnlocked: progress.unlocked,
+        percent: progress.percent,
+        detailText: progress.detail,
+        ruleText: progress.badge.rule,
+        congratsMessage: progress.badge.unlockedMessage,
+        isAcademic: true,
+      ),
+    );
+  }
+
+  void _showCatalogBadgeModal(BuildContext context, BadgeWithProgress item) {
+    final criteria = item.definition.criteria;
+    final target = criteria['target'] ?? criteria['threshold'] ?? criteria['count'] ?? '1';
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => _BadgeDetailDialog(
+        title: item.definition.name,
+        assetPath: null,
+        isUnlocked: item.unlocked,
+        percent: item.progressPercent,
+        detailText: item.definition.description,
+        ruleText: 'Condition : $target ${_targetUnit(item.definition.category)}',
+        congratsMessage: 'Félicitations ! Vous avez accompli cette distinction.',
+        isAcademic: false,
+        xpReward: item.definition.xpReward,
+      ),
+    );
+  }
+
+  String _targetUnit(BadgeCategory cat) {
+    switch (cat) {
+      case BadgeCategory.assiduite:
+        return 'séances de présence requises';
+      case BadgeCategory.academique:
+        return 'devoirs ou examens requis';
+      case BadgeCategory.social:
+        return 'interactions d\'entraide ou forum';
+      case BadgeCategory.progression:
+        return 'paliers de cours et semestres validés';
+      case BadgeCategory.communaute:
+        return 'points de communauté ou classement';
+      case BadgeCategory.special:
+        return 'actions spéciales d\'excellence';
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// BANNIÈRE HERO DU HAUT
+// ═══════════════════════════════════════════════════════════════════════════
+
+class _BadgesHeroBanner extends StatelessWidget {
+  final int unlockedTotal;
+  final int unlockedAcademic;
+  final int totalAcademic;
+  final int overallPercent;
+  final int totalXp;
+  final VoidCallback onRefresh;
+
+  const _BadgesHeroBanner({
+    required this.unlockedTotal,
+    required this.unlockedAcademic,
+    required this.totalAcademic,
+    required this.overallPercent,
+    required this.totalXp,
+    required this.onRefresh,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(28, 20, 28, 20),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF1E3A8A), Color(0xFF4338CA), Color(0xFF7C3AED)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Mascotte Uni diplômé
+              const UniMascot(pose: UniPose.graduate, size: 68),
+              const SizedBox(width: 16),
+
+              // Titre & description
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 10,
+                      runSpacing: 4,
+                      children: [
+                        const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(PhosphorIconsBold.medal, color: Color(0xFFFFD700), size: 24),
+                            SizedBox(width: 8),
+                            Text(
+                              'Trophées & Badges d\'Excellence',
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.white,
+                                letterSpacing: -0.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.18),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                          ),
+                          child: Text(
+                            '$unlockedAcademic / $totalAcademic académiques',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 11.5,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Valorisez votre assiduité, vos résultats et vos accomplissements sur UniFlow.',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.white.withValues(alpha: 0.85),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(width: 12),
+
+              // Bouton Actualiser
+              Tooltip(
+                message: 'Actualiser les badges',
+                child: InkWell(
+                  onTap: onRefresh,
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.16),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.25)),
+                    ),
+                    child: const Icon(PhosphorIconsBold.arrowsClockwise, color: Colors.white, size: 20),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          // 4 Cartes de stats KPI en Wrap responsive
+          Wrap(
+            spacing: 12,
+            runSpacing: 10,
+            children: [
+              _HeroKpiCard(
+                label: 'Total Trophées',
+                value: '$unlockedTotal',
+                icon: PhosphorIconsBold.trophy,
+                color: const Color(0xFFFFD700),
+              ),
+              _HeroKpiCard(
+                label: 'Académiques',
+                value: '$unlockedAcademic / $totalAcademic',
+                icon: PhosphorIconsBold.graduationCap,
+                color: const Color(0xFF38BDF8),
+              ),
+              _HeroKpiCard(
+                label: 'Progression',
+                value: '$overallPercent%',
+                icon: PhosphorIconsBold.chartLineUp,
+                color: const Color(0xFF34D399),
+              ),
+              _HeroKpiCard(
+                label: 'XP Cumulé',
+                value: '$totalXp',
+                icon: PhosphorIconsBold.star,
+                color: const Color(0xFFFBBF24),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 }
 
-class _BadgesGrid extends StatelessWidget {
-  final List<BadgeWithProgress> badges;
-  const _BadgesGrid({required this.badges});
+class _HeroKpiCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final PhosphorIconData icon;
+  final Color color;
+
+  const _HeroKpiCard({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
-    if (badges.isEmpty) {
-      return const Center(
-        child: Text('Aucun badge disponible pour l\'instant.',
-            style: TextStyle(color: Color(0xFF64748B))),
-      );
-    }
-
-    // Grouper par catégorie
-    final categories = <String, List<BadgeWithProgress>>{};
-    for (final b in badges) {
-      final cat = b.definition.category.name;
-      categories.putIfAbsent(cat, () => []).add(b);
-    }
-
-    return ListView.builder(
-      padding: const EdgeInsets.all(24),
-      itemCount: categories.length,
-      itemBuilder: (_, i) {
-        final cat = categories.keys.elementAt(i);
-        final items = categories[cat]!;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12, top: 8),
-              child: Row(children: [
-                Container(
-                  width: 4, height: 20,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF8B5CF6),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.22)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: color, size: 20),
+          const SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
                 ),
-                const SizedBox(width: 8),
-                Text(_categoryLabel(cat),
-                    style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E293B))),
-                const SizedBox(width: 8),
-                Text('(${items.length})',
-                    style: const TextStyle(fontSize: 13, color: Color(0xFF94A3B8))),
-              ]),
-            ),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 180,
-                mainAxisExtent: 200,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
               ),
-              itemCount: items.length,
-              itemBuilder: (_, j) => _BadgeCard(item: items[j]),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 10.5,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white.withValues(alpha: 0.75),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// EN-TÊTE DE SECTION
+// ═══════════════════════════════════════════════════════════════════════════
+
+class _SectionHeader extends StatelessWidget {
+  final PhosphorIconData icon;
+  final String title;
+  final String badgeCount;
+  final String subtitle;
+
+  const _SectionHeader({
+    required this.icon,
+    required this.title,
+    required this.badgeCount,
+    required this.subtitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: const Color(0xFF8B5CF6).withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(icon, color: const Color(0xFF7C3AED), size: 20),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(width: 10),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                color: AppColors.textPrimary,
+                letterSpacing: -0.3,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+              decoration: BoxDecoration(
+                color: const Color(0xFF8B5CF6).withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFF8B5CF6).withValues(alpha: 0.25)),
+              ),
+              child: Text(
+                badgeCount,
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF6D28D9),
+                ),
+              ),
+            ),
           ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          subtitle,
+          style: const TextStyle(
+            fontSize: 12.5,
+            color: AppColors.textSecondary,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// GRILLE DES 6 BADGES ACADÉMIQUES
+// ═══════════════════════════════════════════════════════════════════════════
+
+class _StudentBadgesGrid extends StatelessWidget {
+  final List<BadgeProgress> badges;
+  final ValueChanged<BadgeProgress> onTapBadge;
+
+  const _StudentBadgesGrid({
+    required this.badges,
+    required this.onTapBadge,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final w = constraints.maxWidth;
+        final int crossAxisCount;
+        if (w >= 1200) {
+          crossAxisCount = 6;
+        } else if (w >= 850) {
+          crossAxisCount = 3;
+        } else {
+          crossAxisCount = 2;
+        }
+
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 0.82,
+          ),
+          itemCount: badges.length,
+          itemBuilder: (context, i) {
+            final b = badges[i];
+            return _StudentBadgeCard(
+              progress: b,
+              onTap: () => onTapBadge(b),
+            );
+          },
         );
       },
     );
   }
+}
 
-  String _categoryLabel(String cat) {
-    const labels = {
-      'attendance':  'Assiduité',
-      'academic':    'Académique',
-      'social':      'Social',
-      'forum':       'Forum',
-      'streak':      'Régularité',
-      'leaderboard': 'Classement',
-      'library':     'Bibliothèque',
-      'special':     'Spécial',
-    };
-    return labels[cat] ?? cat;
+class _StudentBadgeCard extends StatelessWidget {
+  final BadgeProgress progress;
+  final VoidCallback onTap;
+
+  const _StudentBadgeCard({
+    required this.progress,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final unlocked = progress.unlocked;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: unlocked
+                ? const Color(0xFF10B981).withValues(alpha: 0.5)
+                : const Color(0xFFE2E8F0),
+            width: unlocked ? 1.5 : 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: unlocked
+                  ? const Color(0xFF10B981).withValues(alpha: 0.08)
+                  : const Color(0xFF1E3A8A).withValues(alpha: 0.04),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Image 3D du badge
+            SizedBox(
+              width: 76,
+              height: 76,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Image.asset(
+                    progress.badge.asset,
+                    width: 72,
+                    height: 72,
+                    fit: BoxFit.contain,
+                    color: unlocked ? null : Colors.grey,
+                    colorBlendMode: unlocked ? null : BlendMode.saturation,
+                    errorBuilder: (_, __, ___) => Icon(
+                      PhosphorIconsFill.medal,
+                      size: 56,
+                      color: unlocked ? const Color(0xFFF59E0B) : const Color(0xFF94A3B8),
+                    ),
+                  ),
+                  if (!unlocked)
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: const Color(0xFFCBD5E1)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.08),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          PhosphorIconsFill.lock,
+                          size: 13,
+                          color: Color(0xFF64748B),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            // Titre du badge
+            Text(
+              progress.badge.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: unlocked ? AppColors.textPrimary : const Color(0xFF64748B),
+              ),
+            ),
+            const SizedBox(height: 4),
+
+            // Règle courte ou statut
+            Text(
+              progress.badge.rule,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 10.5,
+                color: AppColors.textSecondary,
+                height: 1.25,
+              ),
+            ),
+            const Spacer(),
+
+            // Statut ou Barre de progression
+            if (unlocked)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFD1FAE5),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(PhosphorIconsBold.checkCircle, size: 12, color: Color(0xFF047857)),
+                    SizedBox(width: 4),
+                    Text(
+                      'Débloqué',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF047857),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            else ...[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: progress.progress.clamp(0.0, 1.0),
+                  minHeight: 5,
+                  backgroundColor: const Color(0xFFE2E8F0),
+                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF8B5CF6)),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      progress.detail,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 10, color: Color(0xFF94A3B8)),
+                    ),
+                  ),
+                  Text(
+                    '${progress.percent}%',
+                    style: const TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF7C3AED),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
   }
 }
 
-class _BadgeCard extends StatelessWidget {
+// ═══════════════════════════════════════════════════════════════════════════
+// FILTRES ET CATALOGUE ÉTENDU
+// ═══════════════════════════════════════════════════════════════════════════
+
+class _CatalogFiltersBar extends StatelessWidget {
+  final TextEditingController searchCtrl;
+  final String selectedCategory;
+  final String statusFilter;
+  final ValueChanged<String> onCategoryChanged;
+  final ValueChanged<String> onStatusChanged;
+
+  const _CatalogFiltersBar({
+    required this.searchCtrl,
+    required this.selectedCategory,
+    required this.statusFilter,
+    required this.onCategoryChanged,
+    required this.onStatusChanged,
+  });
+
+  static const _categories = [
+    ('all', 'Tous'),
+    ('academique', 'Académique'),
+    ('assiduite', 'Assiduité'),
+    ('social', 'Social & Forum'),
+    ('progression', 'Progression'),
+    ('communaute', 'Communauté'),
+    ('special', 'Spécial'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF1E3A8A).withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Champ recherche + filtres de statut
+          Row(
+            children: [
+              // Champ de recherche
+              Expanded(
+                flex: 3,
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8FAFC),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color(0xFFCBD5E1)),
+                  ),
+                  child: TextField(
+                    controller: searchCtrl,
+                    style: const TextStyle(fontSize: 13),
+                    decoration: InputDecoration(
+                      hintText: 'Rechercher un badge ou un mot-clé...',
+                      hintStyle: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+                      prefixIcon: const Icon(PhosphorIconsBold.magnifyingGlass,
+                          size: 16, color: Color(0xFF64748B)),
+                      suffixIcon: searchCtrl.text.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear, size: 16),
+                              onPressed: () => searchCtrl.clear(),
+                            )
+                          : null,
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+
+              // Segmented / Filter chips pour Statut
+              _StatusFilterChip(
+                label: 'Tous',
+                selected: statusFilter == 'all',
+                onTap: () => onStatusChanged('all'),
+              ),
+              const SizedBox(width: 6),
+              _StatusFilterChip(
+                label: 'Débloqués',
+                selected: statusFilter == 'unlocked',
+                onTap: () => onStatusChanged('unlocked'),
+              ),
+              const SizedBox(width: 6),
+              _StatusFilterChip(
+                label: 'À débloquer',
+                selected: statusFilter == 'locked',
+                onTap: () => onStatusChanged('locked'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+
+          // Chips de catégories
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: _categories.map((cat) {
+                final isSelected = selectedCategory == cat.$1;
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: FilterChip(
+                    label: Text(cat.$2),
+                    selected: isSelected,
+                    onSelected: (_) => onCategoryChanged(cat.$1),
+                    backgroundColor: const Color(0xFFF1F5F9),
+                    selectedColor: const Color(0xFFEDE9FE),
+                    labelStyle: TextStyle(
+                      fontSize: 12,
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      color: isSelected ? const Color(0xFF7C3AED) : const Color(0xFF475569),
+                    ),
+                    side: BorderSide(
+                      color: isSelected ? const Color(0xFF8B5CF6) : const Color(0xFFE2E8F0),
+                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatusFilterChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _StatusFilterChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: selected ? const Color(0xFF1E3A8A) : const Color(0xFFF1F5F9),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: selected ? const Color(0xFF1E3A8A) : const Color(0xFFE2E8F0),
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+            color: selected ? Colors.white : const Color(0xFF475569),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// GRILLE CATALOGUE ÉTENDU
+// ═══════════════════════════════════════════════════════════════════════════
+
+class _CatalogBadgesGrid extends StatelessWidget {
+  final List<BadgeWithProgress> items;
+  final ValueChanged<BadgeWithProgress> onTapBadge;
+
+  const _CatalogBadgesGrid({
+    required this.items,
+    required this.onTapBadge,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final w = constraints.maxWidth;
+        final int crossAxisCount;
+        if (w >= 1200) {
+          crossAxisCount = 5;
+        } else if (w >= 900) {
+          crossAxisCount = 4;
+        } else if (w >= 650) {
+          crossAxisCount = 3;
+        } else {
+          crossAxisCount = 2;
+        }
+
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: 14,
+            mainAxisSpacing: 14,
+            childAspectRatio: 0.85,
+          ),
+          itemCount: items.length,
+          itemBuilder: (context, i) {
+            final item = items[i];
+            return _CatalogBadgeCard(
+              item: item,
+              onTap: () => onTapBadge(item),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _CatalogBadgeCard extends StatelessWidget {
   final BadgeWithProgress item;
-  const _BadgeCard({required this.item});
+  final VoidCallback onTap;
+
+  const _CatalogBadgeCard({
+    required this.item,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -133,71 +1025,473 @@ class _BadgeCard extends StatelessWidget {
     final unlocked = item.unlocked;
     final pct = item.progressPercent;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF1E3A8A).withAlpha(15),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
-        border: unlocked
-            ? Border.all(color: const Color(0xFF8B5CF6).withAlpha(80), width: 1.5)
-            : null,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          // Badge image ou icône placeholder
-          Container(
-            width: 64, height: 64,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
               color: unlocked
-                  ? const Color(0xFF8B5CF6).withAlpha(25)
-                  : const Color(0xFFE2E8F0),
+                  ? const Color(0xFF8B5CF6).withValues(alpha: 0.12)
+                  : const Color(0xFF1E3A8A).withValues(alpha: 0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
             ),
-            child: unlocked
-                ? const Icon(Icons.military_tech_rounded,
-                    size: 32, color: Color(0xFF8B5CF6))
-                : const ColorFiltered(
-                    colorFilter: ColorFilter.mode(
-                        Colors.grey, BlendMode.saturation),
-                    child: Icon(Icons.military_tech_rounded,
-                        size: 32, color: Color(0xFFCBD5E1)),
-                  ),
+          ],
+          border: Border.all(
+            color: unlocked
+                ? const Color(0xFF8B5CF6).withValues(alpha: 0.5)
+                : const Color(0xFFE2E8F0),
+            width: unlocked ? 1.5 : 1,
           ),
-          const SizedBox(height: 8),
-          Text(b.name,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Pastille XP + Catégorie
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF1F5F9),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    _categoryShortLabel(b.category.name),
+                    style: const TextStyle(
+                      fontSize: 9.5,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF64748B),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFFBEB),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: const Color(0xFFFDE68A)),
+                  ),
+                  child: Text(
+                    '+${b.xpReward} XP',
+                    style: const TextStyle(
+                      fontSize: 9.5,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFFB45309),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            // Icône / Médaille
+            Container(
+              width: 54,
+              height: 54,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: unlocked
+                    ? const Color(0xFF8B5CF6).withValues(alpha: 0.15)
+                    : const Color(0xFFF1F5F9),
+              ),
+              child: Center(
+                child: Icon(
+                  unlocked ? PhosphorIconsFill.medal : PhosphorIconsFill.lock,
+                  size: 26,
+                  color: unlocked ? const Color(0xFF8B5CF6) : const Color(0xFF94A3B8),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            // Nom du badge
+            Text(
+              b.name,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 12.5,
+                fontWeight: FontWeight.w700,
+                color: unlocked ? AppColors.textPrimary : const Color(0xFF64748B),
+              ),
+            ),
+            const SizedBox(height: 3),
+
+            // Description courte
+            Text(
+              b.description,
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: unlocked ? const Color(0xFF1E293B) : const Color(0xFF94A3B8))),
-          const SizedBox(height: 6),
-          if (!unlocked) ...[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: pct / 100,
-                minHeight: 4,
-                backgroundColor: const Color(0xFFE2E8F0),
-                valueColor: const AlwaysStoppedAnimation(Color(0xFF8B5CF6)),
+              style: const TextStyle(
+                fontSize: 10,
+                color: AppColors.textSecondary,
+                height: 1.2,
               ),
             ),
-            const SizedBox(height: 4),
-            Text('$pct%',
-                style: const TextStyle(fontSize: 10, color: Color(0xFF94A3B8))),
-          ] else ...[
-            const Icon(Icons.check_circle_rounded,
-                size: 14, color: Color(0xFF10B981)),
+            const Spacer(),
+
+            // Progression ou Validé
+            if (!unlocked) ...[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: (pct / 100).clamp(0.0, 1.0),
+                  minHeight: 4,
+                  backgroundColor: const Color(0xFFE2E8F0),
+                  valueColor: const AlwaysStoppedAnimation(Color(0xFF8B5CF6)),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                '$pct%',
+                style: const TextStyle(fontSize: 10, color: Color(0xFF94A3B8)),
+              ),
+            ] else ...[
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFD1FAE5),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(PhosphorIconsBold.check, size: 11, color: Color(0xFF047857)),
+                    SizedBox(width: 3),
+                    Text(
+                      'Acquis',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF047857),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ],
-        ]),
+        ),
+      ),
+    );
+  }
+
+  String _categoryShortLabel(String cat) {
+    const labels = {
+      'assiduite': 'Assiduité',
+      'academique': 'Notes',
+      'social': 'Social',
+      'progression': 'Parcours',
+      'communaute': 'Rang',
+      'special': 'Spécial',
+    };
+    return labels[cat] ?? cat;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ÉTAT VIDE CATALOGUE
+// ═══════════════════════════════════════════════════════════════════════════
+
+class _CatalogEmptyState extends StatelessWidget {
+  final VoidCallback onResetFilters;
+
+  const _CatalogEmptyState({required this.onResetFilters});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 40),
+        child: Column(
+          children: [
+            const Icon(PhosphorIconsBold.funnel, size: 40, color: Color(0xFF94A3B8)),
+            const SizedBox(height: 12),
+            const Text(
+              'Aucun trophée ne correspond à vos filtres',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF475569),
+              ),
+            ),
+            const SizedBox(height: 6),
+            const Text(
+              'Essayez de modifier votre recherche ou de réinitialiser la catégorie.',
+              style: TextStyle(fontSize: 12, color: Color(0xFF94A3B8)),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: onResetFilters,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1E3A8A),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: const Text('Réinitialiser les filtres'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DIALOGUE DÉTAILLÉ DU BADGE
+// ═══════════════════════════════════════════════════════════════════════════
+
+class _BadgeDetailDialog extends StatelessWidget {
+  final String title;
+  final String? assetPath;
+  final bool isUnlocked;
+  final int percent;
+  final String detailText;
+  final String ruleText;
+  final String congratsMessage;
+  final bool isAcademic;
+  final int? xpReward;
+
+  const _BadgeDetailDialog({
+    required this.title,
+    required this.assetPath,
+    required this.isUnlocked,
+    required this.percent,
+    required this.detailText,
+    required this.ruleText,
+    required this.congratsMessage,
+    required this.isAcademic,
+    this.xpReward,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      backgroundColor: Colors.white,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 480),
+        child: Padding(
+          padding: const EdgeInsets.all(28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Badge illustration ou médaille
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isUnlocked
+                      ? const Color(0xFF10B981).withValues(alpha: 0.12)
+                      : const Color(0xFFF1F5F9),
+                  border: Border.all(
+                    color: isUnlocked
+                        ? const Color(0xFF10B981).withValues(alpha: 0.3)
+                        : const Color(0xFFCBD5E1),
+                    width: 2,
+                  ),
+                ),
+                child: Center(
+                  child: assetPath != null
+                      ? Image.asset(
+                          assetPath!,
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) => Icon(
+                            PhosphorIconsFill.medal,
+                            size: 48,
+                            color: isUnlocked
+                                ? const Color(0xFF10B981)
+                                : const Color(0xFF94A3B8),
+                          ),
+                        )
+                      : Icon(
+                          isUnlocked ? PhosphorIconsFill.medal : PhosphorIconsFill.lock,
+                          size: 48,
+                          color: isUnlocked
+                              ? const Color(0xFF7C3AED)
+                              : const Color(0xFF94A3B8),
+                        ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Titre et badges tags
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 6),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: isUnlocked ? const Color(0xFFD1FAE5) : const Color(0xFFFEF3C7),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      isUnlocked ? 'Débloqué & Actif' : 'En progression ($percent%)',
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w700,
+                        color: isUnlocked ? const Color(0xFF047857) : const Color(0xFFB45309),
+                      ),
+                    ),
+                  ),
+                  if (xpReward != null) ...[
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFFBEB),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: const Color(0xFFFDE68A)),
+                      ),
+                      child: Text(
+                        '+$xpReward XP',
+                        style: const TextStyle(
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFFB45309),
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              const SizedBox(height: 18),
+
+              // Explication de la condition
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8FAFC),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Objectif requis :',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF64748B),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      ruleText,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Color(0xFF1E293B),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Votre statut actuel :',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF64748B),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      detailText,
+                      style: const TextStyle(
+                        fontSize: 12.5,
+                        color: Color(0xFF475569),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 18),
+
+              // Mascotte Uni avec conseil
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  UniMascot(
+                    pose: isUnlocked ? UniPose.celebrate : UniPose.wave,
+                    size: 48,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: isUnlocked
+                            ? const Color(0xFFF0FDF4)
+                            : const Color(0xFFEFF6FF),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isUnlocked
+                              ? const Color(0xFFBBF7D0)
+                              : const Color(0xFFBFDBFE),
+                        ),
+                      ),
+                      child: Text(
+                        isUnlocked
+                            ? congratsMessage
+                            : 'Conseil d\'Uni : Continuez vos efforts chaque jour, chaque devoir et séance vous rapproche de ce badge !',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: isUnlocked
+                              ? const Color(0xFF166534)
+                              : const Color(0xFF1E40AF),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 22),
+
+              // Bouton Fermer
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF1E3A8A),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  child: const Text(
+                    'Compris !',
+                    style: TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -1300,66 +2594,6 @@ class _QuestRowDesktop extends StatelessWidget {
 // ═══════════════════════════════════════════════════════════════════════════
 // WIDGETS PARTAGÉS
 // ═══════════════════════════════════════════════════════════════════════════
-
-class _ScreenShell extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final IconData icon;
-  final Color color;
-  final Widget child;
-  const _ScreenShell({
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-    required this.color,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Header
-        Container(
-          padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [color.withAlpha(230), const Color(0xFF1E3A8A)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: Row(children: [
-            Container(
-              width: 44, height: 44,
-              decoration: BoxDecoration(
-                color: Colors.white.withAlpha(30),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: Colors.white, size: 22),
-            ),
-            const SizedBox(width: 12),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(title,
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold,
-                      color: Colors.white)),
-              Text(subtitle,
-                  style: TextStyle(fontSize: 13,
-                      color: Colors.white.withAlpha(180))),
-            ]),
-          ]),
-        ),
-        Expanded(
-          child: Container(
-            color: AppColors.background,
-            child: child,
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 class _ErrorView extends StatelessWidget {
   final String message;

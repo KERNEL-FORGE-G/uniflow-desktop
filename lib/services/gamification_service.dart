@@ -65,26 +65,193 @@ class GamificationService {
 
   // ── Catalogue de badges ──────────────────────────────────────────────────
 
-  Future<List<BadgeDefinition>> fetchBadgeCatalog() => _listAll(
-    _badgesCatalog,
-    BadgeDefinition.fromDocument,
-    queries: [Query.orderAsc('sortOrder')],
-  );
+  // ── Catalogue de badges ──────────────────────────────────────────────────
 
-  Future<List<UserBadge>> fetchUserBadges(String userId) => _listAll(
-    _userBadges,
-    UserBadge.fromDocument,
-    queries: [Query.equal('userId', userId)],
-  );
+  Future<List<BadgeDefinition>> fetchBadgeCatalog() async {
+    try {
+      final list = await _listAll(
+        _badgesCatalog,
+        BadgeDefinition.fromDocument,
+        queries: [Query.orderAsc('sortOrder')],
+      );
+      if (list.isNotEmpty) return list;
+    } catch (_) {}
+    return _fallbackBadgeCatalog();
+  }
+
+  Future<List<UserBadge>> fetchUserBadges(String userId) async {
+    try {
+      return await _listAll(
+        _userBadges,
+        UserBadge.fromDocument,
+        queries: [Query.equal('userId', userId)],
+      );
+    } catch (_) {
+      return const [];
+    }
+  }
 
   Future<List<BadgeWithProgress>> fetchBadgesWithProgress(String userId) async {
-    final catalog  = await fetchBadgeCatalog();
-    final unlocked = await fetchUserBadges(userId);
-    final unlockedIds = {for (final b in unlocked) b.badgeId: b};
-    return catalog.map((def) {
-      final ub = unlockedIds[def.id];
-      return BadgeWithProgress(definition: def, userBadge: ub);
-    }).toList();
+    try {
+      final catalog  = await fetchBadgeCatalog();
+      final unlocked = await fetchUserBadges(userId);
+      final unlockedIds = {for (final b in unlocked) b.badgeId: b};
+      return catalog.map((def) {
+        final ub = unlockedIds[def.id];
+        return BadgeWithProgress(definition: def, userBadge: ub);
+      }).toList();
+    } catch (_) {
+      return _fallbackBadgeCatalog().map((def) => BadgeWithProgress(definition: def)).toList();
+    }
+  }
+
+  static List<BadgeDefinition> _fallbackBadgeCatalog() {
+    return const [
+      BadgeDefinition(
+        id: 'premier_pas',
+        name: 'Premier pas',
+        description: 'Rendre son premier devoir ou projet académique.',
+        unlockedMessage: 'Premier devoir rendu — votre aventure est lancée !',
+        category: BadgeCategory.academique,
+        rarity: BadgeRarity.common,
+        level: BadgeLevel.bronze,
+        imageFileId: 'badge_premier_pas.webp',
+        criteria: {'type': 'submissions', 'min': 1},
+        xpReward: 50,
+      ),
+      BadgeDefinition(
+        id: 'assidu',
+        name: 'Assidu',
+        description: 'Être présent à 90 % des séances relevées (au moins 5 séances).',
+        unlockedMessage: 'Présence exemplaire confirmée aux cours.',
+        category: BadgeCategory.assiduite,
+        rarity: BadgeRarity.rare,
+        level: BadgeLevel.silver,
+        imageFileId: 'badge_assidu.webp',
+        criteria: {'type': 'attendance', 'rate': 0.90, 'min_sessions': 5},
+        xpReward: 100,
+      ),
+      BadgeDefinition(
+        id: 'ponctuel',
+        name: 'Ponctuel',
+        description: "Rendre 3 devoirs consécutifs avant l'échéance fixée.",
+        unlockedMessage: 'Trois devoirs rendus dans les délais, sans aucun retard.',
+        category: BadgeCategory.assiduite,
+        rarity: BadgeRarity.rare,
+        level: BadgeLevel.silver,
+        imageFileId: 'badge_ponctuel.webp',
+        criteria: {'type': 'on_time_submissions', 'min': 3},
+        xpReward: 100,
+      ),
+      BadgeDefinition(
+        id: 'major',
+        name: 'Major',
+        description: 'Obtenir une moyenne pondérée de 14/20 ou plus sur au moins 3 notes.',
+        unlockedMessage: "Moyenne pondérée d'excellence obtenue.",
+        category: BadgeCategory.academique,
+        rarity: BadgeRarity.epic,
+        level: BadgeLevel.gold,
+        imageFileId: 'badge_major.webp',
+        criteria: {'type': 'gpa', 'min': 14.0, 'min_grades': 3},
+        xpReward: 250,
+      ),
+      BadgeDefinition(
+        id: 'entraide',
+        name: 'Entraide',
+        description: "Publier au moins 3 sujets d'entraide ou réponses sur le forum académique.",
+        unlockedMessage: 'La promotion compte sur votre soutien et esprit de partage.',
+        category: BadgeCategory.social,
+        rarity: BadgeRarity.common,
+        level: BadgeLevel.bronze,
+        imageFileId: 'badge_entraide.webp',
+        criteria: {'type': 'forum_posts', 'min': 3},
+        xpReward: 75,
+      ),
+      BadgeDefinition(
+        id: 'sans_faute',
+        name: 'Sans faute',
+        description: "Réussir un quiz d'évaluation avec la note maximale (100 %).",
+        unlockedMessage: 'Score parfait obtenu sur une évaluation.',
+        category: BadgeCategory.academique,
+        rarity: BadgeRarity.epic,
+        level: BadgeLevel.gold,
+        imageFileId: 'badge_sans_faute.webp',
+        criteria: {'type': 'perfect_quiz', 'min': 1},
+        xpReward: 150,
+      ),
+      BadgeDefinition(
+        id: 'pionnier',
+        name: 'Pionnier UniFlow',
+        description: 'Activer son compte et compléter son profil académique.',
+        unlockedMessage: 'Profil complété avec succès !',
+        category: BadgeCategory.progression,
+        rarity: BadgeRarity.common,
+        level: BadgeLevel.bronze,
+        imageFileId: 'badge_premier_pas.webp',
+        criteria: {'type': 'profile_setup'},
+        xpReward: 30,
+      ),
+      BadgeDefinition(
+        id: 'bibliothecaire',
+        name: 'Explorateur Uni Book',
+        description: 'Consulter et explorer au moins 5 ouvrages scientifiques dans Uni Book.',
+        unlockedMessage: 'La soif de connaissances scientifiques récompensée !',
+        category: BadgeCategory.academique,
+        rarity: BadgeRarity.uncommon,
+        level: BadgeLevel.silver,
+        imageFileId: 'badge_premier_pas.webp',
+        criteria: {'type': 'library_downloads', 'min': 5},
+        xpReward: 80,
+      ),
+      BadgeDefinition(
+        id: 'vigilant',
+        name: 'Sentinelle Active',
+        description: 'Participer aux alertes et signalements du campus.',
+        unlockedMessage: 'Engagement pour la sécurité et la sérénité du campus.',
+        category: BadgeCategory.special,
+        rarity: BadgeRarity.rare,
+        level: BadgeLevel.silver,
+        imageFileId: 'badge_assidu.webp',
+        criteria: {'type': 'sentinelle_events', 'min': 2},
+        xpReward: 120,
+      ),
+      BadgeDefinition(
+        id: 'semaine_parfaite',
+        name: 'Semaine Parfaite',
+        description: '100 % de présence et aucun retard durant une semaine entière de cours.',
+        unlockedMessage: 'Discipline et assiduité totales sur une semaine complète.',
+        category: BadgeCategory.assiduite,
+        rarity: BadgeRarity.epic,
+        level: BadgeLevel.platinum,
+        imageFileId: 'badge_assidu.webp',
+        criteria: {'type': 'perfect_week', 'min': 1},
+        xpReward: 200,
+      ),
+      BadgeDefinition(
+        id: 'marathonien',
+        name: 'Marathonien du Savoir',
+        description: 'Atteindre un palier de 10 devoirs rendus avec succès.',
+        unlockedMessage: 'Constance et rigueur sur la durée !',
+        category: BadgeCategory.progression,
+        rarity: BadgeRarity.legendary,
+        level: BadgeLevel.diamond,
+        imageFileId: 'badge_major.webp',
+        criteria: {'type': 'submissions', 'min': 10},
+        xpReward: 400,
+      ),
+      BadgeDefinition(
+        id: 'ambassadeur',
+        name: 'Ambassadeur Campus',
+        description: 'Faire partie du top 10 des étudiants les plus actifs du mois.',
+        unlockedMessage: 'Votre rayonnement inspire toute la faculté !',
+        category: BadgeCategory.communaute,
+        rarity: BadgeRarity.legendary,
+        level: BadgeLevel.diamond,
+        imageFileId: 'badge_major.webp',
+        criteria: {'type': 'rank', 'max': 10},
+        xpReward: 500,
+      ),
+    ];
   }
 
   // ── Quêtes ───────────────────────────────────────────────────────────────
