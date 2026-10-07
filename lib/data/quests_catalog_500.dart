@@ -32,18 +32,18 @@ class QuestCatalogItem {
   });
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'title': title,
-    'description': description,
-    'period': period,
-    'category': category,
-    'targetValue': targetValue,
-    'xpReward': xpReward,
-    'iconName': iconName,
-    'colorHex': colorHex,
-    'monthAffinity': monthAffinity,
-    'criteriaType': criteriaType,
-  };
+        'id': id,
+        'title': title,
+        'description': description,
+        'period': period,
+        'category': category,
+        'targetValue': targetValue,
+        'xpReward': xpReward,
+        'iconName': iconName,
+        'colorHex': colorHex,
+        'monthAffinity': monthAffinity,
+        'criteriaType': criteriaType,
+      };
 }
 
 /// Les 500 quêtes complètes du catalogue UniFlow.
@@ -51,7 +51,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_001',
     title: 'Connexion matinale',
-    description: 'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 1)',
+    description:
+        'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 1)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -64,7 +65,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_002',
     title: 'Pointeur ponctuel',
-    description: 'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 2)',
+    description:
+        'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 2)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -77,7 +79,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_003',
     title: 'Cap sur demain',
-    description: 'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 3)',
+    description:
+        'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 3)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -90,7 +93,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_004',
     title: 'Flashcard Maestro',
-    description: 'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 4)',
+    description:
+        'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 4)',
     period: 'daily',
     category: 'study',
     targetValue: 15,
@@ -103,7 +107,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_005',
     title: 'Pomodoro Initial',
-    description: 'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 5)',
+    description:
+        'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 5)',
     period: 'daily',
     category: 'productivity',
     targetValue: 1,
@@ -116,7 +121,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_006',
     title: 'Synthèse de séance',
-    description: 'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 6)',
+    description:
+        'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 6)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -129,7 +135,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_007',
     title: 'Interaction amphi',
-    description: 'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 7)',
+    description:
+        'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 7)',
     period: 'daily',
     category: 'engagement',
     targetValue: 1,
@@ -142,7 +149,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_008',
     title: 'Partage solidaire',
-    description: 'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 8)',
+    description:
+        'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 8)',
     period: 'daily',
     category: 'community',
     targetValue: 1,
@@ -155,7 +163,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_009',
     title: 'Bibliothèque connectée',
-    description: 'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 9)',
+    description:
+        'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 9)',
     period: 'daily',
     category: 'resources',
     targetValue: 1,
@@ -168,7 +177,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_010',
     title: 'Pause oxygène',
-    description: 'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 10)',
+    description:
+        'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 10)',
     period: 'daily',
     category: 'wellness',
     targetValue: 1,
@@ -181,7 +191,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_011',
     title: 'Exercice d\'application',
-    description: 'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 11)',
+    description:
+        'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 11)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -194,7 +205,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_012',
     title: 'Scan express',
-    description: 'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 12)',
+    description:
+        'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 12)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -207,7 +219,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_013',
     title: 'Veille départementale',
-    description: 'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 13)',
+    description:
+        'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 13)',
     period: 'daily',
     category: 'information',
     targetValue: 1,
@@ -220,7 +233,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_014',
     title: 'Glossaire technique',
-    description: 'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 14)',
+    description:
+        'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 14)',
     period: 'daily',
     category: 'learning',
     targetValue: 3,
@@ -233,7 +247,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_015',
     title: 'Rendu serein',
-    description: 'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 15)',
+    description:
+        'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 15)',
     period: 'daily',
     category: 'punctuality',
     targetValue: 1,
@@ -246,7 +261,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_016',
     title: 'Classeur impeccable',
-    description: 'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 16)',
+    description:
+        'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 16)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -259,7 +275,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_017',
     title: 'Quiz flash',
-    description: 'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 17)',
+    description:
+        'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 17)',
     period: 'daily',
     category: 'assessment',
     targetValue: 1,
@@ -272,7 +289,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_018',
     title: 'Auto-évaluation',
-    description: 'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 18)',
+    description:
+        'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 18)',
     period: 'daily',
     category: 'reflection',
     targetValue: 1,
@@ -285,7 +303,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_019',
     title: 'Aide entre pairs',
-    description: 'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 19)',
+    description:
+        'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 19)',
     period: 'daily',
     category: 'social',
     targetValue: 1,
@@ -298,7 +317,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_020',
     title: 'Trois priorités',
-    description: 'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 20)',
+    description:
+        'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 20)',
     period: 'daily',
     category: 'planning',
     targetValue: 3,
@@ -311,7 +331,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_021',
     title: 'Connexion matinale · Série 2',
-    description: 'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 21)',
+    description:
+        'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 21)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -324,7 +345,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_022',
     title: 'Pointeur ponctuel · Série 2',
-    description: 'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 22)',
+    description:
+        'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 22)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -337,7 +359,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_023',
     title: 'Cap sur demain · Série 2',
-    description: 'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 23)',
+    description:
+        'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 23)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -350,7 +373,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_024',
     title: 'Flashcard Maestro · Série 2',
-    description: 'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 24)',
+    description:
+        'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 24)',
     period: 'daily',
     category: 'study',
     targetValue: 15,
@@ -363,7 +387,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_025',
     title: 'Pomodoro Initial · Série 2',
-    description: 'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 25)',
+    description:
+        'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 25)',
     period: 'daily',
     category: 'productivity',
     targetValue: 1,
@@ -376,7 +401,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_026',
     title: 'Synthèse de séance · Série 2',
-    description: 'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 26)',
+    description:
+        'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 26)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -389,7 +415,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_027',
     title: 'Interaction amphi · Série 2',
-    description: 'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 27)',
+    description:
+        'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 27)',
     period: 'daily',
     category: 'engagement',
     targetValue: 1,
@@ -402,7 +429,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_028',
     title: 'Partage solidaire · Série 2',
-    description: 'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 28)',
+    description:
+        'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 28)',
     period: 'daily',
     category: 'community',
     targetValue: 1,
@@ -415,7 +443,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_029',
     title: 'Bibliothèque connectée · Série 2',
-    description: 'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 29)',
+    description:
+        'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 29)',
     period: 'daily',
     category: 'resources',
     targetValue: 1,
@@ -428,7 +457,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_030',
     title: 'Pause oxygène · Série 2',
-    description: 'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 30)',
+    description:
+        'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 30)',
     period: 'daily',
     category: 'wellness',
     targetValue: 1,
@@ -441,7 +471,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_031',
     title: 'Exercice d\'application · Série 2',
-    description: 'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 31)',
+    description:
+        'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 31)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -454,7 +485,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_032',
     title: 'Scan express · Série 2',
-    description: 'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 32)',
+    description:
+        'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 32)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -467,7 +499,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_033',
     title: 'Veille départementale · Série 2',
-    description: 'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 33)',
+    description:
+        'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 33)',
     period: 'daily',
     category: 'information',
     targetValue: 1,
@@ -480,7 +513,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_034',
     title: 'Glossaire technique · Série 2',
-    description: 'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 34)',
+    description:
+        'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 34)',
     period: 'daily',
     category: 'learning',
     targetValue: 3,
@@ -493,7 +527,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_035',
     title: 'Rendu serein · Série 2',
-    description: 'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 35)',
+    description:
+        'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 35)',
     period: 'daily',
     category: 'punctuality',
     targetValue: 1,
@@ -506,7 +541,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_036',
     title: 'Classeur impeccable · Série 2',
-    description: 'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 36)',
+    description:
+        'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 36)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -519,7 +555,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_037',
     title: 'Quiz flash · Série 2',
-    description: 'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 37)',
+    description:
+        'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 37)',
     period: 'daily',
     category: 'assessment',
     targetValue: 1,
@@ -532,7 +569,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_038',
     title: 'Auto-évaluation · Série 2',
-    description: 'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 38)',
+    description:
+        'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 38)',
     period: 'daily',
     category: 'reflection',
     targetValue: 1,
@@ -545,7 +583,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_039',
     title: 'Aide entre pairs · Série 2',
-    description: 'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 39)',
+    description:
+        'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 39)',
     period: 'daily',
     category: 'social',
     targetValue: 1,
@@ -558,7 +597,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_040',
     title: 'Trois priorités · Série 2',
-    description: 'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 40)',
+    description:
+        'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 40)',
     period: 'daily',
     category: 'planning',
     targetValue: 3,
@@ -571,7 +611,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_041',
     title: 'Connexion matinale · Série 3',
-    description: 'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 41)',
+    description:
+        'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 41)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -584,7 +625,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_042',
     title: 'Pointeur ponctuel · Série 3',
-    description: 'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 42)',
+    description:
+        'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 42)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -597,7 +639,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_043',
     title: 'Cap sur demain · Série 3',
-    description: 'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 43)',
+    description:
+        'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 43)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -610,7 +653,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_044',
     title: 'Flashcard Maestro · Série 3',
-    description: 'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 44)',
+    description:
+        'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 44)',
     period: 'daily',
     category: 'study',
     targetValue: 15,
@@ -623,7 +667,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_045',
     title: 'Pomodoro Initial · Série 3',
-    description: 'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 45)',
+    description:
+        'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 45)',
     period: 'daily',
     category: 'productivity',
     targetValue: 1,
@@ -636,7 +681,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_046',
     title: 'Synthèse de séance · Série 3',
-    description: 'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 46)',
+    description:
+        'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 46)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -649,7 +695,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_047',
     title: 'Interaction amphi · Série 3',
-    description: 'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 47)',
+    description:
+        'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 47)',
     period: 'daily',
     category: 'engagement',
     targetValue: 1,
@@ -662,7 +709,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_048',
     title: 'Partage solidaire · Série 3',
-    description: 'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 48)',
+    description:
+        'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 48)',
     period: 'daily',
     category: 'community',
     targetValue: 1,
@@ -675,7 +723,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_049',
     title: 'Bibliothèque connectée · Série 3',
-    description: 'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 49)',
+    description:
+        'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 49)',
     period: 'daily',
     category: 'resources',
     targetValue: 1,
@@ -688,7 +737,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_050',
     title: 'Pause oxygène · Série 3',
-    description: 'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 50)',
+    description:
+        'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 50)',
     period: 'daily',
     category: 'wellness',
     targetValue: 1,
@@ -701,7 +751,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_051',
     title: 'Exercice d\'application · Série 3',
-    description: 'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 51)',
+    description:
+        'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 51)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -714,7 +765,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_052',
     title: 'Scan express · Série 3',
-    description: 'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 52)',
+    description:
+        'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 52)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -727,7 +779,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_053',
     title: 'Veille départementale · Série 3',
-    description: 'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 53)',
+    description:
+        'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 53)',
     period: 'daily',
     category: 'information',
     targetValue: 1,
@@ -740,7 +793,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_054',
     title: 'Glossaire technique · Série 3',
-    description: 'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 54)',
+    description:
+        'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 54)',
     period: 'daily',
     category: 'learning',
     targetValue: 3,
@@ -753,7 +807,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_055',
     title: 'Rendu serein · Série 3',
-    description: 'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 55)',
+    description:
+        'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 55)',
     period: 'daily',
     category: 'punctuality',
     targetValue: 1,
@@ -766,7 +821,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_056',
     title: 'Classeur impeccable · Série 3',
-    description: 'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 56)',
+    description:
+        'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 56)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -779,7 +835,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_057',
     title: 'Quiz flash · Série 3',
-    description: 'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 57)',
+    description:
+        'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 57)',
     period: 'daily',
     category: 'assessment',
     targetValue: 1,
@@ -792,7 +849,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_058',
     title: 'Auto-évaluation · Série 3',
-    description: 'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 58)',
+    description:
+        'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 58)',
     period: 'daily',
     category: 'reflection',
     targetValue: 1,
@@ -805,7 +863,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_059',
     title: 'Aide entre pairs · Série 3',
-    description: 'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 59)',
+    description:
+        'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 59)',
     period: 'daily',
     category: 'social',
     targetValue: 1,
@@ -818,7 +877,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_060',
     title: 'Trois priorités · Série 3',
-    description: 'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 60)',
+    description:
+        'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 60)',
     period: 'daily',
     category: 'planning',
     targetValue: 3,
@@ -831,7 +891,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_061',
     title: 'Connexion matinale · Série 4',
-    description: 'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 61)',
+    description:
+        'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 61)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -844,7 +905,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_062',
     title: 'Pointeur ponctuel · Série 4',
-    description: 'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 62)',
+    description:
+        'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 62)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -857,7 +919,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_063',
     title: 'Cap sur demain · Série 4',
-    description: 'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 63)',
+    description:
+        'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 63)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -870,7 +933,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_064',
     title: 'Flashcard Maestro · Série 4',
-    description: 'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 64)',
+    description:
+        'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 64)',
     period: 'daily',
     category: 'study',
     targetValue: 15,
@@ -883,7 +947,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_065',
     title: 'Pomodoro Initial · Série 4',
-    description: 'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 65)',
+    description:
+        'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 65)',
     period: 'daily',
     category: 'productivity',
     targetValue: 1,
@@ -896,7 +961,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_066',
     title: 'Synthèse de séance · Série 4',
-    description: 'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 66)',
+    description:
+        'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 66)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -909,7 +975,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_067',
     title: 'Interaction amphi · Série 4',
-    description: 'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 67)',
+    description:
+        'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 67)',
     period: 'daily',
     category: 'engagement',
     targetValue: 1,
@@ -922,7 +989,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_068',
     title: 'Partage solidaire · Série 4',
-    description: 'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 68)',
+    description:
+        'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 68)',
     period: 'daily',
     category: 'community',
     targetValue: 1,
@@ -935,7 +1003,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_069',
     title: 'Bibliothèque connectée · Série 4',
-    description: 'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 69)',
+    description:
+        'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 69)',
     period: 'daily',
     category: 'resources',
     targetValue: 1,
@@ -948,7 +1017,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_070',
     title: 'Pause oxygène · Série 4',
-    description: 'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 70)',
+    description:
+        'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 70)',
     period: 'daily',
     category: 'wellness',
     targetValue: 1,
@@ -961,7 +1031,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_071',
     title: 'Exercice d\'application · Série 4',
-    description: 'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 71)',
+    description:
+        'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 71)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -974,7 +1045,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_072',
     title: 'Scan express · Série 4',
-    description: 'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 72)',
+    description:
+        'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 72)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -987,7 +1059,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_073',
     title: 'Veille départementale · Série 4',
-    description: 'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 73)',
+    description:
+        'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 73)',
     period: 'daily',
     category: 'information',
     targetValue: 1,
@@ -1000,7 +1073,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_074',
     title: 'Glossaire technique · Série 4',
-    description: 'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 74)',
+    description:
+        'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 74)',
     period: 'daily',
     category: 'learning',
     targetValue: 3,
@@ -1013,7 +1087,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_075',
     title: 'Rendu serein · Série 4',
-    description: 'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 75)',
+    description:
+        'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 75)',
     period: 'daily',
     category: 'punctuality',
     targetValue: 1,
@@ -1026,7 +1101,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_076',
     title: 'Classeur impeccable · Série 4',
-    description: 'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 76)',
+    description:
+        'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 76)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -1039,7 +1115,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_077',
     title: 'Quiz flash · Série 4',
-    description: 'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 77)',
+    description:
+        'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 77)',
     period: 'daily',
     category: 'assessment',
     targetValue: 1,
@@ -1052,7 +1129,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_078',
     title: 'Auto-évaluation · Série 4',
-    description: 'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 78)',
+    description:
+        'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 78)',
     period: 'daily',
     category: 'reflection',
     targetValue: 1,
@@ -1065,7 +1143,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_079',
     title: 'Aide entre pairs · Série 4',
-    description: 'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 79)',
+    description:
+        'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 79)',
     period: 'daily',
     category: 'social',
     targetValue: 1,
@@ -1078,7 +1157,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_080',
     title: 'Trois priorités · Série 4',
-    description: 'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 80)',
+    description:
+        'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 80)',
     period: 'daily',
     category: 'planning',
     targetValue: 3,
@@ -1091,7 +1171,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_081',
     title: 'Connexion matinale · Série 5',
-    description: 'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 81)',
+    description:
+        'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 81)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -1104,7 +1185,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_082',
     title: 'Pointeur ponctuel · Série 5',
-    description: 'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 82)',
+    description:
+        'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 82)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -1117,7 +1199,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_083',
     title: 'Cap sur demain · Série 5',
-    description: 'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 83)',
+    description:
+        'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 83)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -1130,7 +1213,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_084',
     title: 'Flashcard Maestro · Série 5',
-    description: 'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 84)',
+    description:
+        'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 84)',
     period: 'daily',
     category: 'study',
     targetValue: 15,
@@ -1143,7 +1227,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_085',
     title: 'Pomodoro Initial · Série 5',
-    description: 'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 85)',
+    description:
+        'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 85)',
     period: 'daily',
     category: 'productivity',
     targetValue: 1,
@@ -1156,7 +1241,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_086',
     title: 'Synthèse de séance · Série 5',
-    description: 'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 86)',
+    description:
+        'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 86)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -1169,7 +1255,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_087',
     title: 'Interaction amphi · Série 5',
-    description: 'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 87)',
+    description:
+        'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 87)',
     period: 'daily',
     category: 'engagement',
     targetValue: 1,
@@ -1182,7 +1269,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_088',
     title: 'Partage solidaire · Série 5',
-    description: 'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 88)',
+    description:
+        'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 88)',
     period: 'daily',
     category: 'community',
     targetValue: 1,
@@ -1195,7 +1283,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_089',
     title: 'Bibliothèque connectée · Série 5',
-    description: 'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 89)',
+    description:
+        'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 89)',
     period: 'daily',
     category: 'resources',
     targetValue: 1,
@@ -1208,7 +1297,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_090',
     title: 'Pause oxygène · Série 5',
-    description: 'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 90)',
+    description:
+        'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 90)',
     period: 'daily',
     category: 'wellness',
     targetValue: 1,
@@ -1221,7 +1311,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_091',
     title: 'Exercice d\'application · Série 5',
-    description: 'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 91)',
+    description:
+        'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 91)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -1234,7 +1325,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_092',
     title: 'Scan express · Série 5',
-    description: 'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 92)',
+    description:
+        'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 92)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -1247,7 +1339,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_093',
     title: 'Veille départementale · Série 5',
-    description: 'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 93)',
+    description:
+        'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 93)',
     period: 'daily',
     category: 'information',
     targetValue: 1,
@@ -1260,7 +1353,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_094',
     title: 'Glossaire technique · Série 5',
-    description: 'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 94)',
+    description:
+        'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 94)',
     period: 'daily',
     category: 'learning',
     targetValue: 3,
@@ -1273,7 +1367,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_095',
     title: 'Rendu serein · Série 5',
-    description: 'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 95)',
+    description:
+        'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 95)',
     period: 'daily',
     category: 'punctuality',
     targetValue: 1,
@@ -1286,7 +1381,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_096',
     title: 'Classeur impeccable · Série 5',
-    description: 'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 96)',
+    description:
+        'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 96)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -1299,7 +1395,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_097',
     title: 'Quiz flash · Série 5',
-    description: 'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 97)',
+    description:
+        'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 97)',
     period: 'daily',
     category: 'assessment',
     targetValue: 1,
@@ -1312,7 +1409,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_098',
     title: 'Auto-évaluation · Série 5',
-    description: 'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 98)',
+    description:
+        'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 98)',
     period: 'daily',
     category: 'reflection',
     targetValue: 1,
@@ -1325,7 +1423,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_099',
     title: 'Aide entre pairs · Série 5',
-    description: 'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 99)',
+    description:
+        'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 99)',
     period: 'daily',
     category: 'social',
     targetValue: 1,
@@ -1338,7 +1437,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_100',
     title: 'Trois priorités · Série 5',
-    description: 'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 100)',
+    description:
+        'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 100)',
     period: 'daily',
     category: 'planning',
     targetValue: 3,
@@ -1351,7 +1451,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_101',
     title: 'Connexion matinale · Série 6',
-    description: 'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 101)',
+    description:
+        'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 101)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -1364,7 +1465,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_102',
     title: 'Pointeur ponctuel · Série 6',
-    description: 'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 102)',
+    description:
+        'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 102)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -1377,7 +1479,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_103',
     title: 'Cap sur demain · Série 6',
-    description: 'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 103)',
+    description:
+        'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 103)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -1390,7 +1493,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_104',
     title: 'Flashcard Maestro · Série 6',
-    description: 'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 104)',
+    description:
+        'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 104)',
     period: 'daily',
     category: 'study',
     targetValue: 15,
@@ -1403,7 +1507,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_105',
     title: 'Pomodoro Initial · Série 6',
-    description: 'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 105)',
+    description:
+        'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 105)',
     period: 'daily',
     category: 'productivity',
     targetValue: 1,
@@ -1416,7 +1521,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_106',
     title: 'Synthèse de séance · Série 6',
-    description: 'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 106)',
+    description:
+        'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 106)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -1429,7 +1535,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_107',
     title: 'Interaction amphi · Série 6',
-    description: 'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 107)',
+    description:
+        'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 107)',
     period: 'daily',
     category: 'engagement',
     targetValue: 1,
@@ -1442,7 +1549,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_108',
     title: 'Partage solidaire · Série 6',
-    description: 'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 108)',
+    description:
+        'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 108)',
     period: 'daily',
     category: 'community',
     targetValue: 1,
@@ -1455,7 +1563,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_109',
     title: 'Bibliothèque connectée · Série 6',
-    description: 'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 109)',
+    description:
+        'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 109)',
     period: 'daily',
     category: 'resources',
     targetValue: 1,
@@ -1468,7 +1577,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_110',
     title: 'Pause oxygène · Série 6',
-    description: 'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 110)',
+    description:
+        'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 110)',
     period: 'daily',
     category: 'wellness',
     targetValue: 1,
@@ -1481,7 +1591,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_111',
     title: 'Exercice d\'application · Série 6',
-    description: 'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 111)',
+    description:
+        'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 111)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -1494,7 +1605,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_112',
     title: 'Scan express · Série 6',
-    description: 'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 112)',
+    description:
+        'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 112)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -1507,7 +1619,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_113',
     title: 'Veille départementale · Série 6',
-    description: 'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 113)',
+    description:
+        'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 113)',
     period: 'daily',
     category: 'information',
     targetValue: 1,
@@ -1520,7 +1633,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_114',
     title: 'Glossaire technique · Série 6',
-    description: 'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 114)',
+    description:
+        'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 114)',
     period: 'daily',
     category: 'learning',
     targetValue: 3,
@@ -1533,7 +1647,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_115',
     title: 'Rendu serein · Série 6',
-    description: 'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 115)',
+    description:
+        'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 115)',
     period: 'daily',
     category: 'punctuality',
     targetValue: 1,
@@ -1546,7 +1661,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_116',
     title: 'Classeur impeccable · Série 6',
-    description: 'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 116)',
+    description:
+        'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 116)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -1559,7 +1675,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_117',
     title: 'Quiz flash · Série 6',
-    description: 'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 117)',
+    description:
+        'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 117)',
     period: 'daily',
     category: 'assessment',
     targetValue: 1,
@@ -1572,7 +1689,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_118',
     title: 'Auto-évaluation · Série 6',
-    description: 'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 118)',
+    description:
+        'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 118)',
     period: 'daily',
     category: 'reflection',
     targetValue: 1,
@@ -1585,7 +1703,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_119',
     title: 'Aide entre pairs · Série 6',
-    description: 'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 119)',
+    description:
+        'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 119)',
     period: 'daily',
     category: 'social',
     targetValue: 1,
@@ -1598,7 +1717,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_120',
     title: 'Trois priorités · Série 6',
-    description: 'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 120)',
+    description:
+        'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 120)',
     period: 'daily',
     category: 'planning',
     targetValue: 3,
@@ -1611,7 +1731,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_121',
     title: 'Connexion matinale · Série 7',
-    description: 'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 121)',
+    description:
+        'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 121)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -1624,7 +1745,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_122',
     title: 'Pointeur ponctuel · Série 7',
-    description: 'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 122)',
+    description:
+        'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 122)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -1637,7 +1759,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_123',
     title: 'Cap sur demain · Série 7',
-    description: 'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 123)',
+    description:
+        'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 123)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -1650,7 +1773,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_124',
     title: 'Flashcard Maestro · Série 7',
-    description: 'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 124)',
+    description:
+        'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 124)',
     period: 'daily',
     category: 'study',
     targetValue: 15,
@@ -1663,7 +1787,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_125',
     title: 'Pomodoro Initial · Série 7',
-    description: 'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 125)',
+    description:
+        'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 125)',
     period: 'daily',
     category: 'productivity',
     targetValue: 1,
@@ -1676,7 +1801,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_126',
     title: 'Synthèse de séance · Série 7',
-    description: 'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 126)',
+    description:
+        'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 126)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -1689,7 +1815,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_127',
     title: 'Interaction amphi · Série 7',
-    description: 'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 127)',
+    description:
+        'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 127)',
     period: 'daily',
     category: 'engagement',
     targetValue: 1,
@@ -1702,7 +1829,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_128',
     title: 'Partage solidaire · Série 7',
-    description: 'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 128)',
+    description:
+        'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 128)',
     period: 'daily',
     category: 'community',
     targetValue: 1,
@@ -1715,7 +1843,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_129',
     title: 'Bibliothèque connectée · Série 7',
-    description: 'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 129)',
+    description:
+        'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 129)',
     period: 'daily',
     category: 'resources',
     targetValue: 1,
@@ -1728,7 +1857,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_130',
     title: 'Pause oxygène · Série 7',
-    description: 'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 130)',
+    description:
+        'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 130)',
     period: 'daily',
     category: 'wellness',
     targetValue: 1,
@@ -1741,7 +1871,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_131',
     title: 'Exercice d\'application · Série 7',
-    description: 'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 131)',
+    description:
+        'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 131)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -1754,7 +1885,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_132',
     title: 'Scan express · Série 7',
-    description: 'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 132)',
+    description:
+        'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 132)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -1767,7 +1899,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_133',
     title: 'Veille départementale · Série 7',
-    description: 'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 133)',
+    description:
+        'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 133)',
     period: 'daily',
     category: 'information',
     targetValue: 1,
@@ -1780,7 +1913,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_134',
     title: 'Glossaire technique · Série 7',
-    description: 'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 134)',
+    description:
+        'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 134)',
     period: 'daily',
     category: 'learning',
     targetValue: 3,
@@ -1793,7 +1927,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_135',
     title: 'Rendu serein · Série 7',
-    description: 'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 135)',
+    description:
+        'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 135)',
     period: 'daily',
     category: 'punctuality',
     targetValue: 1,
@@ -1806,7 +1941,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_136',
     title: 'Classeur impeccable · Série 7',
-    description: 'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 136)',
+    description:
+        'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 136)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -1819,7 +1955,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_137',
     title: 'Quiz flash · Série 7',
-    description: 'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 137)',
+    description:
+        'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 137)',
     period: 'daily',
     category: 'assessment',
     targetValue: 1,
@@ -1832,7 +1969,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_138',
     title: 'Auto-évaluation · Série 7',
-    description: 'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 138)',
+    description:
+        'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 138)',
     period: 'daily',
     category: 'reflection',
     targetValue: 1,
@@ -1845,7 +1983,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_139',
     title: 'Aide entre pairs · Série 7',
-    description: 'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 139)',
+    description:
+        'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 139)',
     period: 'daily',
     category: 'social',
     targetValue: 1,
@@ -1858,7 +1997,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_140',
     title: 'Trois priorités · Série 7',
-    description: 'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 140)',
+    description:
+        'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 140)',
     period: 'daily',
     category: 'planning',
     targetValue: 3,
@@ -1871,7 +2011,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_141',
     title: 'Connexion matinale · Série 8',
-    description: 'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 141)',
+    description:
+        'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 141)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -1884,7 +2025,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_142',
     title: 'Pointeur ponctuel · Série 8',
-    description: 'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 142)',
+    description:
+        'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 142)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -1897,7 +2039,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_143',
     title: 'Cap sur demain · Série 8',
-    description: 'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 143)',
+    description:
+        'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 143)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -1910,7 +2053,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_144',
     title: 'Flashcard Maestro · Série 8',
-    description: 'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 144)',
+    description:
+        'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 144)',
     period: 'daily',
     category: 'study',
     targetValue: 15,
@@ -1923,7 +2067,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_145',
     title: 'Pomodoro Initial · Série 8',
-    description: 'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 145)',
+    description:
+        'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 145)',
     period: 'daily',
     category: 'productivity',
     targetValue: 1,
@@ -1936,7 +2081,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_146',
     title: 'Synthèse de séance · Série 8',
-    description: 'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 146)',
+    description:
+        'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 146)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -1949,7 +2095,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_147',
     title: 'Interaction amphi · Série 8',
-    description: 'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 147)',
+    description:
+        'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 147)',
     period: 'daily',
     category: 'engagement',
     targetValue: 1,
@@ -1962,7 +2109,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_148',
     title: 'Partage solidaire · Série 8',
-    description: 'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 148)',
+    description:
+        'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 148)',
     period: 'daily',
     category: 'community',
     targetValue: 1,
@@ -1975,7 +2123,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_149',
     title: 'Bibliothèque connectée · Série 8',
-    description: 'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 149)',
+    description:
+        'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 149)',
     period: 'daily',
     category: 'resources',
     targetValue: 1,
@@ -1988,7 +2137,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_150',
     title: 'Pause oxygène · Série 8',
-    description: 'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 150)',
+    description:
+        'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 150)',
     period: 'daily',
     category: 'wellness',
     targetValue: 1,
@@ -2001,7 +2151,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_151',
     title: 'Exercice d\'application · Série 8',
-    description: 'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 151)',
+    description:
+        'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 151)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -2014,7 +2165,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_152',
     title: 'Scan express · Série 8',
-    description: 'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 152)',
+    description:
+        'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 152)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -2027,7 +2179,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_153',
     title: 'Veille départementale · Série 8',
-    description: 'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 153)',
+    description:
+        'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 153)',
     period: 'daily',
     category: 'information',
     targetValue: 1,
@@ -2040,7 +2193,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_154',
     title: 'Glossaire technique · Série 8',
-    description: 'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 154)',
+    description:
+        'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 154)',
     period: 'daily',
     category: 'learning',
     targetValue: 3,
@@ -2053,7 +2207,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_155',
     title: 'Rendu serein · Série 8',
-    description: 'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 155)',
+    description:
+        'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 155)',
     period: 'daily',
     category: 'punctuality',
     targetValue: 1,
@@ -2066,7 +2221,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_156',
     title: 'Classeur impeccable · Série 8',
-    description: 'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 156)',
+    description:
+        'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 156)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -2079,7 +2235,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_157',
     title: 'Quiz flash · Série 8',
-    description: 'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 157)',
+    description:
+        'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 157)',
     period: 'daily',
     category: 'assessment',
     targetValue: 1,
@@ -2092,7 +2249,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_158',
     title: 'Auto-évaluation · Série 8',
-    description: 'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 158)',
+    description:
+        'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 158)',
     period: 'daily',
     category: 'reflection',
     targetValue: 1,
@@ -2105,7 +2263,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_159',
     title: 'Aide entre pairs · Série 8',
-    description: 'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 159)',
+    description:
+        'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 159)',
     period: 'daily',
     category: 'social',
     targetValue: 1,
@@ -2118,7 +2277,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_160',
     title: 'Trois priorités · Série 8',
-    description: 'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 160)',
+    description:
+        'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 160)',
     period: 'daily',
     category: 'planning',
     targetValue: 3,
@@ -2131,7 +2291,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_161',
     title: 'Connexion matinale · Série 9',
-    description: 'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 161)',
+    description:
+        'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 161)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -2144,7 +2305,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_162',
     title: 'Pointeur ponctuel · Série 9',
-    description: 'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 162)',
+    description:
+        'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 162)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -2157,7 +2319,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_163',
     title: 'Cap sur demain · Série 9',
-    description: 'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 163)',
+    description:
+        'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 163)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -2170,7 +2333,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_164',
     title: 'Flashcard Maestro · Série 9',
-    description: 'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 164)',
+    description:
+        'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 164)',
     period: 'daily',
     category: 'study',
     targetValue: 15,
@@ -2183,7 +2347,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_165',
     title: 'Pomodoro Initial · Série 9',
-    description: 'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 165)',
+    description:
+        'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 165)',
     period: 'daily',
     category: 'productivity',
     targetValue: 1,
@@ -2196,7 +2361,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_166',
     title: 'Synthèse de séance · Série 9',
-    description: 'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 166)',
+    description:
+        'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 166)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -2209,7 +2375,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_167',
     title: 'Interaction amphi · Série 9',
-    description: 'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 167)',
+    description:
+        'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 167)',
     period: 'daily',
     category: 'engagement',
     targetValue: 1,
@@ -2222,7 +2389,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_168',
     title: 'Partage solidaire · Série 9',
-    description: 'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 168)',
+    description:
+        'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 168)',
     period: 'daily',
     category: 'community',
     targetValue: 1,
@@ -2235,7 +2403,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_169',
     title: 'Bibliothèque connectée · Série 9',
-    description: 'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 169)',
+    description:
+        'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 169)',
     period: 'daily',
     category: 'resources',
     targetValue: 1,
@@ -2248,7 +2417,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_170',
     title: 'Pause oxygène · Série 9',
-    description: 'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 170)',
+    description:
+        'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 170)',
     period: 'daily',
     category: 'wellness',
     targetValue: 1,
@@ -2261,7 +2431,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_171',
     title: 'Exercice d\'application · Série 9',
-    description: 'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 171)',
+    description:
+        'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 171)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -2274,7 +2445,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_172',
     title: 'Scan express · Série 9',
-    description: 'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 172)',
+    description:
+        'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 172)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -2287,7 +2459,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_173',
     title: 'Veille départementale · Série 9',
-    description: 'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 173)',
+    description:
+        'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 173)',
     period: 'daily',
     category: 'information',
     targetValue: 1,
@@ -2300,7 +2473,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_174',
     title: 'Glossaire technique · Série 9',
-    description: 'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 174)',
+    description:
+        'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 174)',
     period: 'daily',
     category: 'learning',
     targetValue: 3,
@@ -2313,7 +2487,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_175',
     title: 'Rendu serein · Série 9',
-    description: 'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 175)',
+    description:
+        'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 175)',
     period: 'daily',
     category: 'punctuality',
     targetValue: 1,
@@ -2326,7 +2501,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_176',
     title: 'Classeur impeccable · Série 9',
-    description: 'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 176)',
+    description:
+        'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 176)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -2339,7 +2515,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_177',
     title: 'Quiz flash · Série 9',
-    description: 'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 177)',
+    description:
+        'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 177)',
     period: 'daily',
     category: 'assessment',
     targetValue: 1,
@@ -2352,7 +2529,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_178',
     title: 'Auto-évaluation · Série 9',
-    description: 'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 178)',
+    description:
+        'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 178)',
     period: 'daily',
     category: 'reflection',
     targetValue: 1,
@@ -2365,7 +2543,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_179',
     title: 'Aide entre pairs · Série 9',
-    description: 'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 179)',
+    description:
+        'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 179)',
     period: 'daily',
     category: 'social',
     targetValue: 1,
@@ -2378,7 +2557,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_180',
     title: 'Trois priorités · Série 9',
-    description: 'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 180)',
+    description:
+        'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 180)',
     period: 'daily',
     category: 'planning',
     targetValue: 3,
@@ -2391,7 +2571,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_181',
     title: 'Connexion matinale · Série 10',
-    description: 'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 181)',
+    description:
+        'Connecte-toi à UniFlow avant 8h30 pour bien débuter la journée (Objectif quotidien 181)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -2404,7 +2585,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_182',
     title: 'Pointeur ponctuel · Série 10',
-    description: 'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 182)',
+    description:
+        'Valide ta présence à ton premier cours sans aucun retard (Objectif quotidien 182)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -2417,7 +2599,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_183',
     title: 'Cap sur demain · Série 10',
-    description: 'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 183)',
+    description:
+        'Consulte ton emploi du temps pour préparer tes cours du lendemain (Objectif quotidien 183)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -2430,7 +2613,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_184',
     title: 'Flashcard Maestro · Série 10',
-    description: 'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 184)',
+    description:
+        'Révise une série de 15 flashcards de révision rapide (Objectif quotidien 184)',
     period: 'daily',
     category: 'study',
     targetValue: 15,
@@ -2443,7 +2627,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_185',
     title: 'Pomodoro Initial · Série 10',
-    description: 'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 185)',
+    description:
+        'Effectue 25 minutes de travail concentré sans interruption (Objectif quotidien 185)',
     period: 'daily',
     category: 'productivity',
     targetValue: 1,
@@ -2456,7 +2641,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_186',
     title: 'Synthèse de séance · Série 10',
-    description: 'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 186)',
+    description:
+        'Rédige une fiche mémo résumée pour le cours magistral du jour (Objectif quotidien 186)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -2469,7 +2655,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_187',
     title: 'Interaction amphi · Série 10',
-    description: 'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 187)',
+    description:
+        'Pose ou note une question pertinente lors d\'un amphi ou TD (Objectif quotidien 187)',
     period: 'daily',
     category: 'engagement',
     targetValue: 1,
@@ -2482,7 +2669,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_188',
     title: 'Partage solidaire · Série 10',
-    description: 'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 188)',
+    description:
+        'Partage un résumé ou une astuce de cours avec un camarade (Objectif quotidien 188)',
     period: 'daily',
     category: 'community',
     targetValue: 1,
@@ -2495,7 +2683,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_189',
     title: 'Bibliothèque connectée · Série 10',
-    description: 'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 189)',
+    description:
+        'Consulte un document ou livre numérique de la bibliothèque (Objectif quotidien 189)',
     period: 'daily',
     category: 'resources',
     targetValue: 1,
@@ -2508,7 +2697,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_190',
     title: 'Pause oxygène · Série 10',
-    description: 'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 190)',
+    description:
+        'Accorde-toi 15 minutes d\'aération complète entre deux sessions de révision (Objectif quotidien 190)',
     period: 'daily',
     category: 'wellness',
     targetValue: 1,
@@ -2521,7 +2711,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_191',
     title: 'Exercice d\'application · Série 10',
-    description: 'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 191)',
+    description:
+        'Résous un exercice d\'entraînement en autonomie complète (Objectif quotidien 191)',
     period: 'daily',
     category: 'academic',
     targetValue: 1,
@@ -2534,7 +2725,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_192',
     title: 'Scan express · Série 10',
-    description: 'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 192)',
+    description:
+        'Scanne le QR code de présence de la séance en moins de 30 secondes (Objectif quotidien 192)',
     period: 'daily',
     category: 'assiduity',
     targetValue: 1,
@@ -2547,7 +2739,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_193',
     title: 'Veille départementale · Série 10',
-    description: 'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 193)',
+    description:
+        'Consulte les annonces officielles de ta filière ou faculté (Objectif quotidien 193)',
     period: 'daily',
     category: 'information',
     targetValue: 1,
@@ -2560,7 +2753,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_194',
     title: 'Glossaire technique · Série 10',
-    description: 'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 194)',
+    description:
+        'Mémorise 3 nouveaux termes techniques ou théoriques (Objectif quotidien 194)',
     period: 'daily',
     category: 'learning',
     targetValue: 3,
@@ -2573,7 +2767,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_195',
     title: 'Rendu serein · Série 10',
-    description: 'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 195)',
+    description:
+        'Dépose un travail personnel avec de l\'avance sur l\'horaire (Objectif quotidien 195)',
     period: 'daily',
     category: 'punctuality',
     targetValue: 1,
@@ -2586,7 +2781,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_196',
     title: 'Classeur impeccable · Série 10',
-    description: 'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 196)',
+    description:
+        'Organise tes fichiers et notes de la journée dans ton espace (Objectif quotidien 196)',
     period: 'daily',
     category: 'organization',
     targetValue: 1,
@@ -2599,7 +2795,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_197',
     title: 'Quiz flash · Série 10',
-    description: 'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 197)',
+    description:
+        'Complète un auto-test ou quiz rapide pour évaluer ta compréhension (Objectif quotidien 197)',
     period: 'daily',
     category: 'assessment',
     targetValue: 1,
@@ -2612,7 +2809,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_198',
     title: 'Auto-évaluation · Série 10',
-    description: 'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 198)',
+    description:
+        'Note tes axes de progression sur le chapitre étudié aujourd\'hui (Objectif quotidien 198)',
     period: 'daily',
     category: 'reflection',
     targetValue: 1,
@@ -2625,7 +2823,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_199',
     title: 'Aide entre pairs · Série 10',
-    description: 'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 199)',
+    description:
+        'Réponds à la question d\'un étudiant sur l\'espace d\'échange (Objectif quotidien 199)',
     period: 'daily',
     category: 'social',
     targetValue: 1,
@@ -2638,7 +2837,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_daily_200',
     title: 'Trois priorités · Série 10',
-    description: 'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 200)',
+    description:
+        'Planifie les 3 tâches prioritaires de ton planning de demain (Objectif quotidien 200)',
     period: 'daily',
     category: 'planning',
     targetValue: 3,
@@ -2651,7 +2851,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_001',
     title: 'Assiduité d\'élite',
-    description: 'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 1)',
+    description:
+        'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 1)',
     period: 'monthly',
     category: 'presence',
     targetValue: 1,
@@ -2664,7 +2865,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_002',
     title: 'Capitaine d\'étude',
-    description: 'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 2)',
+    description:
+        'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 2)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 2,
@@ -2677,7 +2879,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_003',
     title: 'Exploration documentaire',
-    description: 'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 3)',
+    description:
+        'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 3)',
     period: 'monthly',
     category: 'research',
     targetValue: 6,
@@ -2690,7 +2893,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_004',
     title: 'Maître des quiz',
-    description: 'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 4)',
+    description:
+        'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 4)',
     period: 'monthly',
     category: 'excellence',
     targetValue: 4,
@@ -2703,7 +2907,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_005',
     title: 'Soutien et entraide',
-    description: 'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 5)',
+    description:
+        'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 5)',
     period: 'monthly',
     category: 'mentorship',
     targetValue: 5,
@@ -2716,7 +2921,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_006',
     title: 'Sprint de rentrée',
-    description: 'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 6)',
+    description:
+        'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 6)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -2729,7 +2935,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_007',
     title: 'Lancement du semestre',
-    description: 'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 7)',
+    description:
+        'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 7)',
     period: 'monthly',
     category: 'assiduity',
     targetValue: 1,
@@ -2742,7 +2949,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_008',
     title: 'Préparation des partiels',
-    description: 'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 8)',
+    description:
+        'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 8)',
     period: 'monthly',
     category: 'review',
     targetValue: 1,
@@ -2755,7 +2963,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_009',
     title: 'Clôture d\'année civile',
-    description: 'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 9)',
+    description:
+        'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 9)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -2768,7 +2977,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_010',
     title: 'Examens du Semestre 1',
-    description: 'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 10)',
+    description:
+        'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 10)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -2781,7 +2991,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_011',
     title: 'Coup d\'envoi Semestre 2',
-    description: 'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 11)',
+    description:
+        'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 11)',
     period: 'monthly',
     category: 'organization',
     targetValue: 1,
@@ -2794,7 +3005,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_012',
     title: 'Régularité de mi-parcours',
-    description: 'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 12)',
+    description:
+        'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 12)',
     period: 'monthly',
     category: 'diligence',
     targetValue: 1,
@@ -2807,7 +3019,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_013',
     title: 'Sprint terminal de printemps',
-    description: 'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 13)',
+    description:
+        'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 13)',
     period: 'monthly',
     category: 'academic',
     targetValue: 3,
@@ -2820,7 +3033,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_014',
     title: 'Session finale d\'examens',
-    description: 'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 14)',
+    description:
+        'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 14)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -2833,7 +3047,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_015',
     title: 'Bilan des délibérations',
-    description: 'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 15)',
+    description:
+        'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 15)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -2846,7 +3061,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_016',
     title: 'Veille estivale',
-    description: 'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 16)',
+    description:
+        'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 16)',
     period: 'monthly',
     category: 'growth',
     targetValue: 1,
@@ -2859,7 +3075,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_017',
     title: 'Projection future',
-    description: 'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 17)',
+    description:
+        'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 17)',
     period: 'monthly',
     category: 'planning',
     targetValue: 1,
@@ -2872,7 +3089,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_018',
     title: 'Projet d\'équipe modèle',
-    description: 'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 18)',
+    description:
+        'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 18)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 1,
@@ -2885,7 +3103,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_019',
     title: 'Assiduité d\'élite · Niveau 2',
-    description: 'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 19)',
+    description:
+        'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 19)',
     period: 'monthly',
     category: 'presence',
     targetValue: 1,
@@ -2898,7 +3117,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_020',
     title: 'Capitaine d\'étude · Niveau 2',
-    description: 'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 20)',
+    description:
+        'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 20)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 2,
@@ -2911,7 +3131,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_021',
     title: 'Exploration documentaire · Niveau 2',
-    description: 'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 21)',
+    description:
+        'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 21)',
     period: 'monthly',
     category: 'research',
     targetValue: 6,
@@ -2924,7 +3145,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_022',
     title: 'Maître des quiz · Niveau 2',
-    description: 'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 22)',
+    description:
+        'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 22)',
     period: 'monthly',
     category: 'excellence',
     targetValue: 4,
@@ -2937,7 +3159,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_023',
     title: 'Soutien et entraide · Niveau 2',
-    description: 'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 23)',
+    description:
+        'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 23)',
     period: 'monthly',
     category: 'mentorship',
     targetValue: 5,
@@ -2950,7 +3173,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_024',
     title: 'Sprint de rentrée · Niveau 2',
-    description: 'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 24)',
+    description:
+        'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 24)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -2963,7 +3187,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_025',
     title: 'Lancement du semestre · Niveau 2',
-    description: 'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 25)',
+    description:
+        'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 25)',
     period: 'monthly',
     category: 'assiduity',
     targetValue: 1,
@@ -2976,7 +3201,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_026',
     title: 'Préparation des partiels · Niveau 2',
-    description: 'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 26)',
+    description:
+        'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 26)',
     period: 'monthly',
     category: 'review',
     targetValue: 1,
@@ -2989,7 +3215,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_027',
     title: 'Clôture d\'année civile · Niveau 2',
-    description: 'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 27)',
+    description:
+        'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 27)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -3002,7 +3229,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_028',
     title: 'Examens du Semestre 1 · Niveau 2',
-    description: 'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 28)',
+    description:
+        'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 28)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -3015,7 +3243,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_029',
     title: 'Coup d\'envoi Semestre 2 · Niveau 2',
-    description: 'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 29)',
+    description:
+        'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 29)',
     period: 'monthly',
     category: 'organization',
     targetValue: 1,
@@ -3028,7 +3257,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_030',
     title: 'Régularité de mi-parcours · Niveau 2',
-    description: 'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 30)',
+    description:
+        'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 30)',
     period: 'monthly',
     category: 'diligence',
     targetValue: 1,
@@ -3041,7 +3271,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_031',
     title: 'Sprint terminal de printemps · Niveau 2',
-    description: 'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 31)',
+    description:
+        'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 31)',
     period: 'monthly',
     category: 'academic',
     targetValue: 3,
@@ -3054,7 +3285,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_032',
     title: 'Session finale d\'examens · Niveau 2',
-    description: 'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 32)',
+    description:
+        'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 32)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -3067,7 +3299,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_033',
     title: 'Bilan des délibérations · Niveau 2',
-    description: 'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 33)',
+    description:
+        'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 33)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -3080,7 +3313,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_034',
     title: 'Veille estivale · Niveau 2',
-    description: 'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 34)',
+    description:
+        'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 34)',
     period: 'monthly',
     category: 'growth',
     targetValue: 1,
@@ -3093,7 +3327,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_035',
     title: 'Projection future · Niveau 2',
-    description: 'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 35)',
+    description:
+        'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 35)',
     period: 'monthly',
     category: 'planning',
     targetValue: 1,
@@ -3106,7 +3341,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_036',
     title: 'Projet d\'équipe modèle · Niveau 2',
-    description: 'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 36)',
+    description:
+        'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 36)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 1,
@@ -3119,7 +3355,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_037',
     title: 'Assiduité d\'élite · Niveau 3',
-    description: 'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 37)',
+    description:
+        'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 37)',
     period: 'monthly',
     category: 'presence',
     targetValue: 1,
@@ -3132,7 +3369,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_038',
     title: 'Capitaine d\'étude · Niveau 3',
-    description: 'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 38)',
+    description:
+        'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 38)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 2,
@@ -3145,7 +3383,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_039',
     title: 'Exploration documentaire · Niveau 3',
-    description: 'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 39)',
+    description:
+        'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 39)',
     period: 'monthly',
     category: 'research',
     targetValue: 6,
@@ -3158,7 +3397,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_040',
     title: 'Maître des quiz · Niveau 3',
-    description: 'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 40)',
+    description:
+        'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 40)',
     period: 'monthly',
     category: 'excellence',
     targetValue: 4,
@@ -3171,7 +3411,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_041',
     title: 'Soutien et entraide · Niveau 3',
-    description: 'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 41)',
+    description:
+        'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 41)',
     period: 'monthly',
     category: 'mentorship',
     targetValue: 5,
@@ -3184,7 +3425,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_042',
     title: 'Sprint de rentrée · Niveau 3',
-    description: 'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 42)',
+    description:
+        'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 42)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -3197,7 +3439,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_043',
     title: 'Lancement du semestre · Niveau 3',
-    description: 'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 43)',
+    description:
+        'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 43)',
     period: 'monthly',
     category: 'assiduity',
     targetValue: 1,
@@ -3210,7 +3453,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_044',
     title: 'Préparation des partiels · Niveau 3',
-    description: 'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 44)',
+    description:
+        'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 44)',
     period: 'monthly',
     category: 'review',
     targetValue: 1,
@@ -3223,7 +3467,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_045',
     title: 'Clôture d\'année civile · Niveau 3',
-    description: 'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 45)',
+    description:
+        'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 45)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -3236,7 +3481,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_046',
     title: 'Examens du Semestre 1 · Niveau 3',
-    description: 'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 46)',
+    description:
+        'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 46)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -3249,7 +3495,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_047',
     title: 'Coup d\'envoi Semestre 2 · Niveau 3',
-    description: 'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 47)',
+    description:
+        'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 47)',
     period: 'monthly',
     category: 'organization',
     targetValue: 1,
@@ -3262,7 +3509,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_048',
     title: 'Régularité de mi-parcours · Niveau 3',
-    description: 'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 48)',
+    description:
+        'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 48)',
     period: 'monthly',
     category: 'diligence',
     targetValue: 1,
@@ -3275,7 +3523,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_049',
     title: 'Sprint terminal de printemps · Niveau 3',
-    description: 'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 49)',
+    description:
+        'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 49)',
     period: 'monthly',
     category: 'academic',
     targetValue: 3,
@@ -3288,7 +3537,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_050',
     title: 'Session finale d\'examens · Niveau 3',
-    description: 'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 50)',
+    description:
+        'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 50)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -3301,7 +3551,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_051',
     title: 'Bilan des délibérations · Niveau 3',
-    description: 'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 51)',
+    description:
+        'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 51)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -3314,7 +3565,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_052',
     title: 'Veille estivale · Niveau 3',
-    description: 'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 52)',
+    description:
+        'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 52)',
     period: 'monthly',
     category: 'growth',
     targetValue: 1,
@@ -3327,7 +3579,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_053',
     title: 'Projection future · Niveau 3',
-    description: 'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 53)',
+    description:
+        'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 53)',
     period: 'monthly',
     category: 'planning',
     targetValue: 1,
@@ -3340,7 +3593,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_054',
     title: 'Projet d\'équipe modèle · Niveau 3',
-    description: 'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 54)',
+    description:
+        'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 54)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 1,
@@ -3353,7 +3607,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_055',
     title: 'Assiduité d\'élite · Niveau 4',
-    description: 'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 55)',
+    description:
+        'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 55)',
     period: 'monthly',
     category: 'presence',
     targetValue: 1,
@@ -3366,7 +3621,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_056',
     title: 'Capitaine d\'étude · Niveau 4',
-    description: 'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 56)',
+    description:
+        'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 56)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 2,
@@ -3379,7 +3635,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_057',
     title: 'Exploration documentaire · Niveau 4',
-    description: 'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 57)',
+    description:
+        'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 57)',
     period: 'monthly',
     category: 'research',
     targetValue: 6,
@@ -3392,7 +3649,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_058',
     title: 'Maître des quiz · Niveau 4',
-    description: 'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 58)',
+    description:
+        'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 58)',
     period: 'monthly',
     category: 'excellence',
     targetValue: 4,
@@ -3405,7 +3663,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_059',
     title: 'Soutien et entraide · Niveau 4',
-    description: 'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 59)',
+    description:
+        'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 59)',
     period: 'monthly',
     category: 'mentorship',
     targetValue: 5,
@@ -3418,7 +3677,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_060',
     title: 'Sprint de rentrée · Niveau 4',
-    description: 'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 60)',
+    description:
+        'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 60)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -3431,7 +3691,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_061',
     title: 'Lancement du semestre · Niveau 4',
-    description: 'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 61)',
+    description:
+        'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 61)',
     period: 'monthly',
     category: 'assiduity',
     targetValue: 1,
@@ -3444,7 +3705,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_062',
     title: 'Préparation des partiels · Niveau 4',
-    description: 'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 62)',
+    description:
+        'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 62)',
     period: 'monthly',
     category: 'review',
     targetValue: 1,
@@ -3457,7 +3719,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_063',
     title: 'Clôture d\'année civile · Niveau 4',
-    description: 'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 63)',
+    description:
+        'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 63)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -3470,7 +3733,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_064',
     title: 'Examens du Semestre 1 · Niveau 4',
-    description: 'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 64)',
+    description:
+        'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 64)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -3483,7 +3747,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_065',
     title: 'Coup d\'envoi Semestre 2 · Niveau 4',
-    description: 'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 65)',
+    description:
+        'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 65)',
     period: 'monthly',
     category: 'organization',
     targetValue: 1,
@@ -3496,7 +3761,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_066',
     title: 'Régularité de mi-parcours · Niveau 4',
-    description: 'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 66)',
+    description:
+        'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 66)',
     period: 'monthly',
     category: 'diligence',
     targetValue: 1,
@@ -3509,7 +3775,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_067',
     title: 'Sprint terminal de printemps · Niveau 4',
-    description: 'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 67)',
+    description:
+        'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 67)',
     period: 'monthly',
     category: 'academic',
     targetValue: 3,
@@ -3522,7 +3789,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_068',
     title: 'Session finale d\'examens · Niveau 4',
-    description: 'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 68)',
+    description:
+        'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 68)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -3535,7 +3803,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_069',
     title: 'Bilan des délibérations · Niveau 4',
-    description: 'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 69)',
+    description:
+        'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 69)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -3548,7 +3817,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_070',
     title: 'Veille estivale · Niveau 4',
-    description: 'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 70)',
+    description:
+        'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 70)',
     period: 'monthly',
     category: 'growth',
     targetValue: 1,
@@ -3561,7 +3831,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_071',
     title: 'Projection future · Niveau 4',
-    description: 'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 71)',
+    description:
+        'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 71)',
     period: 'monthly',
     category: 'planning',
     targetValue: 1,
@@ -3574,7 +3845,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_072',
     title: 'Projet d\'équipe modèle · Niveau 4',
-    description: 'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 72)',
+    description:
+        'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 72)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 1,
@@ -3587,7 +3859,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_073',
     title: 'Assiduité d\'élite · Niveau 5',
-    description: 'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 73)',
+    description:
+        'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 73)',
     period: 'monthly',
     category: 'presence',
     targetValue: 1,
@@ -3600,7 +3873,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_074',
     title: 'Capitaine d\'étude · Niveau 5',
-    description: 'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 74)',
+    description:
+        'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 74)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 2,
@@ -3613,7 +3887,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_075',
     title: 'Exploration documentaire · Niveau 5',
-    description: 'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 75)',
+    description:
+        'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 75)',
     period: 'monthly',
     category: 'research',
     targetValue: 6,
@@ -3626,7 +3901,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_076',
     title: 'Maître des quiz · Niveau 5',
-    description: 'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 76)',
+    description:
+        'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 76)',
     period: 'monthly',
     category: 'excellence',
     targetValue: 4,
@@ -3639,7 +3915,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_077',
     title: 'Soutien et entraide · Niveau 5',
-    description: 'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 77)',
+    description:
+        'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 77)',
     period: 'monthly',
     category: 'mentorship',
     targetValue: 5,
@@ -3652,7 +3929,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_078',
     title: 'Sprint de rentrée · Niveau 5',
-    description: 'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 78)',
+    description:
+        'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 78)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -3665,7 +3943,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_079',
     title: 'Lancement du semestre · Niveau 5',
-    description: 'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 79)',
+    description:
+        'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 79)',
     period: 'monthly',
     category: 'assiduity',
     targetValue: 1,
@@ -3678,7 +3957,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_080',
     title: 'Préparation des partiels · Niveau 5',
-    description: 'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 80)',
+    description:
+        'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 80)',
     period: 'monthly',
     category: 'review',
     targetValue: 1,
@@ -3691,7 +3971,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_081',
     title: 'Clôture d\'année civile · Niveau 5',
-    description: 'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 81)',
+    description:
+        'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 81)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -3704,7 +3985,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_082',
     title: 'Examens du Semestre 1 · Niveau 5',
-    description: 'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 82)',
+    description:
+        'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 82)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -3717,7 +3999,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_083',
     title: 'Coup d\'envoi Semestre 2 · Niveau 5',
-    description: 'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 83)',
+    description:
+        'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 83)',
     period: 'monthly',
     category: 'organization',
     targetValue: 1,
@@ -3730,7 +4013,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_084',
     title: 'Régularité de mi-parcours · Niveau 5',
-    description: 'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 84)',
+    description:
+        'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 84)',
     period: 'monthly',
     category: 'diligence',
     targetValue: 1,
@@ -3743,7 +4027,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_085',
     title: 'Sprint terminal de printemps · Niveau 5',
-    description: 'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 85)',
+    description:
+        'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 85)',
     period: 'monthly',
     category: 'academic',
     targetValue: 3,
@@ -3756,7 +4041,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_086',
     title: 'Session finale d\'examens · Niveau 5',
-    description: 'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 86)',
+    description:
+        'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 86)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -3769,7 +4055,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_087',
     title: 'Bilan des délibérations · Niveau 5',
-    description: 'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 87)',
+    description:
+        'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 87)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -3782,7 +4069,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_088',
     title: 'Veille estivale · Niveau 5',
-    description: 'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 88)',
+    description:
+        'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 88)',
     period: 'monthly',
     category: 'growth',
     targetValue: 1,
@@ -3795,7 +4083,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_089',
     title: 'Projection future · Niveau 5',
-    description: 'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 89)',
+    description:
+        'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 89)',
     period: 'monthly',
     category: 'planning',
     targetValue: 1,
@@ -3808,7 +4097,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_090',
     title: 'Projet d\'équipe modèle · Niveau 5',
-    description: 'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 90)',
+    description:
+        'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 90)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 1,
@@ -3821,7 +4111,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_091',
     title: 'Assiduité d\'élite · Niveau 6',
-    description: 'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 91)',
+    description:
+        'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 91)',
     period: 'monthly',
     category: 'presence',
     targetValue: 1,
@@ -3834,7 +4125,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_092',
     title: 'Capitaine d\'étude · Niveau 6',
-    description: 'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 92)',
+    description:
+        'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 92)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 2,
@@ -3847,7 +4139,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_093',
     title: 'Exploration documentaire · Niveau 6',
-    description: 'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 93)',
+    description:
+        'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 93)',
     period: 'monthly',
     category: 'research',
     targetValue: 6,
@@ -3860,7 +4153,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_094',
     title: 'Maître des quiz · Niveau 6',
-    description: 'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 94)',
+    description:
+        'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 94)',
     period: 'monthly',
     category: 'excellence',
     targetValue: 4,
@@ -3873,7 +4167,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_095',
     title: 'Soutien et entraide · Niveau 6',
-    description: 'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 95)',
+    description:
+        'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 95)',
     period: 'monthly',
     category: 'mentorship',
     targetValue: 5,
@@ -3886,7 +4181,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_096',
     title: 'Sprint de rentrée · Niveau 6',
-    description: 'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 96)',
+    description:
+        'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 96)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -3899,7 +4195,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_097',
     title: 'Lancement du semestre · Niveau 6',
-    description: 'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 97)',
+    description:
+        'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 97)',
     period: 'monthly',
     category: 'assiduity',
     targetValue: 1,
@@ -3912,7 +4209,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_098',
     title: 'Préparation des partiels · Niveau 6',
-    description: 'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 98)',
+    description:
+        'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 98)',
     period: 'monthly',
     category: 'review',
     targetValue: 1,
@@ -3925,7 +4223,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_099',
     title: 'Clôture d\'année civile · Niveau 6',
-    description: 'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 99)',
+    description:
+        'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 99)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -3938,7 +4237,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_100',
     title: 'Examens du Semestre 1 · Niveau 6',
-    description: 'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 100)',
+    description:
+        'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 100)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -3951,7 +4251,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_101',
     title: 'Coup d\'envoi Semestre 2 · Niveau 6',
-    description: 'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 101)',
+    description:
+        'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 101)',
     period: 'monthly',
     category: 'organization',
     targetValue: 1,
@@ -3964,7 +4265,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_102',
     title: 'Régularité de mi-parcours · Niveau 6',
-    description: 'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 102)',
+    description:
+        'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 102)',
     period: 'monthly',
     category: 'diligence',
     targetValue: 1,
@@ -3977,7 +4279,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_103',
     title: 'Sprint terminal de printemps · Niveau 6',
-    description: 'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 103)',
+    description:
+        'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 103)',
     period: 'monthly',
     category: 'academic',
     targetValue: 3,
@@ -3990,7 +4293,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_104',
     title: 'Session finale d\'examens · Niveau 6',
-    description: 'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 104)',
+    description:
+        'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 104)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -4003,7 +4307,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_105',
     title: 'Bilan des délibérations · Niveau 6',
-    description: 'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 105)',
+    description:
+        'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 105)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -4016,7 +4321,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_106',
     title: 'Veille estivale · Niveau 6',
-    description: 'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 106)',
+    description:
+        'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 106)',
     period: 'monthly',
     category: 'growth',
     targetValue: 1,
@@ -4029,7 +4335,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_107',
     title: 'Projection future · Niveau 6',
-    description: 'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 107)',
+    description:
+        'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 107)',
     period: 'monthly',
     category: 'planning',
     targetValue: 1,
@@ -4042,7 +4349,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_108',
     title: 'Projet d\'équipe modèle · Niveau 6',
-    description: 'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 108)',
+    description:
+        'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 108)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 1,
@@ -4055,7 +4363,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_109',
     title: 'Assiduité d\'élite · Niveau 7',
-    description: 'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 109)',
+    description:
+        'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 109)',
     period: 'monthly',
     category: 'presence',
     targetValue: 1,
@@ -4068,7 +4377,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_110',
     title: 'Capitaine d\'étude · Niveau 7',
-    description: 'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 110)',
+    description:
+        'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 110)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 2,
@@ -4081,7 +4391,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_111',
     title: 'Exploration documentaire · Niveau 7',
-    description: 'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 111)',
+    description:
+        'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 111)',
     period: 'monthly',
     category: 'research',
     targetValue: 6,
@@ -4094,7 +4405,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_112',
     title: 'Maître des quiz · Niveau 7',
-    description: 'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 112)',
+    description:
+        'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 112)',
     period: 'monthly',
     category: 'excellence',
     targetValue: 4,
@@ -4107,7 +4419,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_113',
     title: 'Soutien et entraide · Niveau 7',
-    description: 'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 113)',
+    description:
+        'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 113)',
     period: 'monthly',
     category: 'mentorship',
     targetValue: 5,
@@ -4120,7 +4433,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_114',
     title: 'Sprint de rentrée · Niveau 7',
-    description: 'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 114)',
+    description:
+        'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 114)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -4133,7 +4447,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_115',
     title: 'Lancement du semestre · Niveau 7',
-    description: 'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 115)',
+    description:
+        'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 115)',
     period: 'monthly',
     category: 'assiduity',
     targetValue: 1,
@@ -4146,7 +4461,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_116',
     title: 'Préparation des partiels · Niveau 7',
-    description: 'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 116)',
+    description:
+        'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 116)',
     period: 'monthly',
     category: 'review',
     targetValue: 1,
@@ -4159,7 +4475,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_117',
     title: 'Clôture d\'année civile · Niveau 7',
-    description: 'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 117)',
+    description:
+        'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 117)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -4172,7 +4489,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_118',
     title: 'Examens du Semestre 1 · Niveau 7',
-    description: 'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 118)',
+    description:
+        'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 118)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -4185,7 +4503,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_119',
     title: 'Coup d\'envoi Semestre 2 · Niveau 7',
-    description: 'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 119)',
+    description:
+        'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 119)',
     period: 'monthly',
     category: 'organization',
     targetValue: 1,
@@ -4198,7 +4517,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_120',
     title: 'Régularité de mi-parcours · Niveau 7',
-    description: 'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 120)',
+    description:
+        'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 120)',
     period: 'monthly',
     category: 'diligence',
     targetValue: 1,
@@ -4211,7 +4531,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_121',
     title: 'Sprint terminal de printemps · Niveau 7',
-    description: 'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 121)',
+    description:
+        'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 121)',
     period: 'monthly',
     category: 'academic',
     targetValue: 3,
@@ -4224,7 +4545,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_122',
     title: 'Session finale d\'examens · Niveau 7',
-    description: 'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 122)',
+    description:
+        'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 122)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -4237,7 +4559,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_123',
     title: 'Bilan des délibérations · Niveau 7',
-    description: 'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 123)',
+    description:
+        'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 123)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -4250,7 +4573,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_124',
     title: 'Veille estivale · Niveau 7',
-    description: 'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 124)',
+    description:
+        'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 124)',
     period: 'monthly',
     category: 'growth',
     targetValue: 1,
@@ -4263,7 +4587,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_125',
     title: 'Projection future · Niveau 7',
-    description: 'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 125)',
+    description:
+        'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 125)',
     period: 'monthly',
     category: 'planning',
     targetValue: 1,
@@ -4276,7 +4601,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_126',
     title: 'Projet d\'équipe modèle · Niveau 7',
-    description: 'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 126)',
+    description:
+        'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 126)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 1,
@@ -4289,7 +4615,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_127',
     title: 'Assiduité d\'élite · Niveau 8',
-    description: 'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 127)',
+    description:
+        'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 127)',
     period: 'monthly',
     category: 'presence',
     targetValue: 1,
@@ -4302,7 +4629,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_128',
     title: 'Capitaine d\'étude · Niveau 8',
-    description: 'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 128)',
+    description:
+        'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 128)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 2,
@@ -4315,7 +4643,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_129',
     title: 'Exploration documentaire · Niveau 8',
-    description: 'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 129)',
+    description:
+        'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 129)',
     period: 'monthly',
     category: 'research',
     targetValue: 6,
@@ -4328,7 +4657,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_130',
     title: 'Maître des quiz · Niveau 8',
-    description: 'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 130)',
+    description:
+        'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 130)',
     period: 'monthly',
     category: 'excellence',
     targetValue: 4,
@@ -4341,7 +4671,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_131',
     title: 'Soutien et entraide · Niveau 8',
-    description: 'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 131)',
+    description:
+        'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 131)',
     period: 'monthly',
     category: 'mentorship',
     targetValue: 5,
@@ -4354,7 +4685,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_132',
     title: 'Sprint de rentrée · Niveau 8',
-    description: 'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 132)',
+    description:
+        'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 132)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -4367,7 +4699,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_133',
     title: 'Lancement du semestre · Niveau 8',
-    description: 'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 133)',
+    description:
+        'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 133)',
     period: 'monthly',
     category: 'assiduity',
     targetValue: 1,
@@ -4380,7 +4713,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_134',
     title: 'Préparation des partiels · Niveau 8',
-    description: 'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 134)',
+    description:
+        'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 134)',
     period: 'monthly',
     category: 'review',
     targetValue: 1,
@@ -4393,7 +4727,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_135',
     title: 'Clôture d\'année civile · Niveau 8',
-    description: 'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 135)',
+    description:
+        'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 135)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -4406,7 +4741,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_136',
     title: 'Examens du Semestre 1 · Niveau 8',
-    description: 'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 136)',
+    description:
+        'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 136)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -4419,7 +4755,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_137',
     title: 'Coup d\'envoi Semestre 2 · Niveau 8',
-    description: 'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 137)',
+    description:
+        'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 137)',
     period: 'monthly',
     category: 'organization',
     targetValue: 1,
@@ -4432,7 +4769,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_138',
     title: 'Régularité de mi-parcours · Niveau 8',
-    description: 'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 138)',
+    description:
+        'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 138)',
     period: 'monthly',
     category: 'diligence',
     targetValue: 1,
@@ -4445,7 +4783,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_139',
     title: 'Sprint terminal de printemps · Niveau 8',
-    description: 'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 139)',
+    description:
+        'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 139)',
     period: 'monthly',
     category: 'academic',
     targetValue: 3,
@@ -4458,7 +4797,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_140',
     title: 'Session finale d\'examens · Niveau 8',
-    description: 'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 140)',
+    description:
+        'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 140)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -4471,7 +4811,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_141',
     title: 'Bilan des délibérations · Niveau 8',
-    description: 'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 141)',
+    description:
+        'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 141)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -4484,7 +4825,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_142',
     title: 'Veille estivale · Niveau 8',
-    description: 'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 142)',
+    description:
+        'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 142)',
     period: 'monthly',
     category: 'growth',
     targetValue: 1,
@@ -4497,7 +4839,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_143',
     title: 'Projection future · Niveau 8',
-    description: 'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 143)',
+    description:
+        'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 143)',
     period: 'monthly',
     category: 'planning',
     targetValue: 1,
@@ -4510,7 +4853,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_144',
     title: 'Projet d\'équipe modèle · Niveau 8',
-    description: 'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 144)',
+    description:
+        'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 144)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 1,
@@ -4523,7 +4867,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_145',
     title: 'Assiduité d\'élite · Niveau 9',
-    description: 'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 145)',
+    description:
+        'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 145)',
     period: 'monthly',
     category: 'presence',
     targetValue: 1,
@@ -4536,7 +4881,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_146',
     title: 'Capitaine d\'étude · Niveau 9',
-    description: 'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 146)',
+    description:
+        'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 146)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 2,
@@ -4549,7 +4895,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_147',
     title: 'Exploration documentaire · Niveau 9',
-    description: 'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 147)',
+    description:
+        'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 147)',
     period: 'monthly',
     category: 'research',
     targetValue: 6,
@@ -4562,7 +4909,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_148',
     title: 'Maître des quiz · Niveau 9',
-    description: 'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 148)',
+    description:
+        'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 148)',
     period: 'monthly',
     category: 'excellence',
     targetValue: 4,
@@ -4575,7 +4923,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_149',
     title: 'Soutien et entraide · Niveau 9',
-    description: 'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 149)',
+    description:
+        'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 149)',
     period: 'monthly',
     category: 'mentorship',
     targetValue: 5,
@@ -4588,7 +4937,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_150',
     title: 'Sprint de rentrée · Niveau 9',
-    description: 'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 150)',
+    description:
+        'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 150)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -4601,7 +4951,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_151',
     title: 'Lancement du semestre · Niveau 9',
-    description: 'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 151)',
+    description:
+        'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 151)',
     period: 'monthly',
     category: 'assiduity',
     targetValue: 1,
@@ -4614,7 +4965,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_152',
     title: 'Préparation des partiels · Niveau 9',
-    description: 'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 152)',
+    description:
+        'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 152)',
     period: 'monthly',
     category: 'review',
     targetValue: 1,
@@ -4627,7 +4979,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_153',
     title: 'Clôture d\'année civile · Niveau 9',
-    description: 'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 153)',
+    description:
+        'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 153)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -4640,7 +4993,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_154',
     title: 'Examens du Semestre 1 · Niveau 9',
-    description: 'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 154)',
+    description:
+        'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 154)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -4653,7 +5007,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_155',
     title: 'Coup d\'envoi Semestre 2 · Niveau 9',
-    description: 'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 155)',
+    description:
+        'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 155)',
     period: 'monthly',
     category: 'organization',
     targetValue: 1,
@@ -4666,7 +5021,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_156',
     title: 'Régularité de mi-parcours · Niveau 9',
-    description: 'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 156)',
+    description:
+        'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 156)',
     period: 'monthly',
     category: 'diligence',
     targetValue: 1,
@@ -4679,7 +5035,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_157',
     title: 'Sprint terminal de printemps · Niveau 9',
-    description: 'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 157)',
+    description:
+        'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 157)',
     period: 'monthly',
     category: 'academic',
     targetValue: 3,
@@ -4692,7 +5049,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_158',
     title: 'Session finale d\'examens · Niveau 9',
-    description: 'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 158)',
+    description:
+        'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 158)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -4705,7 +5063,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_159',
     title: 'Bilan des délibérations · Niveau 9',
-    description: 'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 159)',
+    description:
+        'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 159)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -4718,7 +5077,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_160',
     title: 'Veille estivale · Niveau 9',
-    description: 'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 160)',
+    description:
+        'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 160)',
     period: 'monthly',
     category: 'growth',
     targetValue: 1,
@@ -4731,7 +5091,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_161',
     title: 'Projection future · Niveau 9',
-    description: 'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 161)',
+    description:
+        'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 161)',
     period: 'monthly',
     category: 'planning',
     targetValue: 1,
@@ -4744,7 +5105,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_162',
     title: 'Projet d\'équipe modèle · Niveau 9',
-    description: 'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 162)',
+    description:
+        'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 162)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 1,
@@ -4757,7 +5119,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_163',
     title: 'Assiduité d\'élite · Niveau 10',
-    description: 'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 163)',
+    description:
+        'Valide au moins 90% de présences effectives sur le mois (Défi mensuel 163)',
     period: 'monthly',
     category: 'presence',
     targetValue: 1,
@@ -4770,7 +5133,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_164',
     title: 'Capitaine d\'étude · Niveau 10',
-    description: 'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 164)',
+    description:
+        'Co-organise 2 sessions de révision en groupe ce mois-ci (Défi mensuel 164)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 2,
@@ -4783,7 +5147,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_165',
     title: 'Exploration documentaire · Niveau 10',
-    description: 'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 165)',
+    description:
+        'Consulte ou télécharge 6 cours ou ouvrages de référence (Défi mensuel 165)',
     period: 'monthly',
     category: 'research',
     targetValue: 6,
@@ -4796,7 +5161,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_166',
     title: 'Maître des quiz · Niveau 10',
-    description: 'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 166)',
+    description:
+        'Complète 4 quiz d\'évaluation avec un score supérieur à 80% (Défi mensuel 166)',
     period: 'monthly',
     category: 'excellence',
     targetValue: 4,
@@ -4809,7 +5175,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_167',
     title: 'Soutien et entraide · Niveau 10',
-    description: 'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 167)',
+    description:
+        'Apporte ton aide à des camarades sur le forum à 5 reprises (Défi mensuel 167)',
     period: 'monthly',
     category: 'mentorship',
     targetValue: 5,
@@ -4822,7 +5189,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_168',
     title: 'Sprint de rentrée · Niveau 10',
-    description: 'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 168)',
+    description:
+        'Configure ton profil, emploi du temps et choix pédagogiques (Défi mensuel 168)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -4835,7 +5203,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_169',
     title: 'Lancement du semestre · Niveau 10',
-    description: 'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 169)',
+    description:
+        'Assiste à l\'intégralité des séances introductives du semestre (Défi mensuel 169)',
     period: 'monthly',
     category: 'assiduity',
     targetValue: 1,
@@ -4848,7 +5217,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_170',
     title: 'Préparation des partiels · Niveau 10',
-    description: 'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 170)',
+    description:
+        'Rassemble et finalise toutes les fiches de révision de mi-parcours (Défi mensuel 170)',
     period: 'monthly',
     category: 'review',
     targetValue: 1,
@@ -4861,7 +5231,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_171',
     title: 'Clôture d\'année civile · Niveau 10',
-    description: 'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 171)',
+    description:
+        'Fais le bilan de tes acquis et prépare la reprise de janvier (Défi mensuel 171)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -4874,7 +5245,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_172',
     title: 'Examens du Semestre 1 · Niveau 10',
-    description: 'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 172)',
+    description:
+        'Aborde les épreuves du premier semestre avec calme et méthode (Défi mensuel 172)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -4887,7 +5259,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_173',
     title: 'Coup d\'envoi Semestre 2 · Niveau 10',
-    description: 'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 173)',
+    description:
+        'Intègre ton nouvel emploi du temps et tes nouvelles UEs (Défi mensuel 173)',
     period: 'monthly',
     category: 'organization',
     targetValue: 1,
@@ -4900,7 +5273,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_174',
     title: 'Régularité de mi-parcours · Niveau 10',
-    description: 'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 174)',
+    description:
+        'Maintiens une régularité exemplaire sans fausse note (Défi mensuel 174)',
     period: 'monthly',
     category: 'diligence',
     targetValue: 1,
@@ -4913,7 +5287,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_175',
     title: 'Sprint terminal de printemps · Niveau 10',
-    description: 'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 175)',
+    description:
+        'Résous les annales des 3 dernières années pour ta filière (Défi mensuel 175)',
     period: 'monthly',
     category: 'academic',
     targetValue: 3,
@@ -4926,7 +5301,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_176',
     title: 'Session finale d\'examens · Niveau 10',
-    description: 'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 176)',
+    description:
+        'Présente-toi à toutes les épreuves du second semestre (Défi mensuel 176)',
     period: 'monthly',
     category: 'exam_prep',
     targetValue: 1,
@@ -4939,7 +5315,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_177',
     title: 'Bilan des délibérations · Niveau 10',
-    description: 'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 177)',
+    description:
+        'Consulte tes relevés et valide tes crédits universitaires (Défi mensuel 177)',
     period: 'monthly',
     category: 'milestone',
     targetValue: 1,
@@ -4952,7 +5329,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_178',
     title: 'Veille estivale · Niveau 10',
-    description: 'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 178)',
+    description:
+        'Prépare tes lectures ou ton stage pour l\'année à venir (Défi mensuel 178)',
     period: 'monthly',
     category: 'growth',
     targetValue: 1,
@@ -4965,7 +5343,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_179',
     title: 'Projection future · Niveau 10',
-    description: 'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 179)',
+    description:
+        'Finalise tes inscriptions et tes démarches académiques (Défi mensuel 179)',
     period: 'monthly',
     category: 'planning',
     targetValue: 1,
@@ -4978,7 +5357,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_monthly_180',
     title: 'Projet d\'équipe modèle · Niveau 10',
-    description: 'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 180)',
+    description:
+        'Livre un travail de groupe avec un rapport soigné et validé (Défi mensuel 180)',
     period: 'monthly',
     category: 'teamwork',
     targetValue: 1,
@@ -4991,7 +5371,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_001',
     title: 'Tableau d\'Honneur',
-    description: 'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 1)',
+    description:
+        'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 1)',
     period: 'yearly',
     category: 'honors',
     targetValue: 1,
@@ -5004,7 +5385,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_002',
     title: 'Pilier Inébranlable',
-    description: 'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 2)',
+    description:
+        'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 2)',
     period: 'yearly',
     category: 'attendance',
     targetValue: 1,
@@ -5017,7 +5399,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_003',
     title: 'Grand Maître du Forum',
-    description: 'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 3)',
+    description:
+        'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 3)',
     period: 'yearly',
     category: 'community',
     targetValue: 50,
@@ -5030,7 +5413,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_004',
     title: 'Validation des 60 Crédits',
-    description: 'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 4)',
+    description:
+        'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 4)',
     period: 'yearly',
     category: 'curriculum',
     targetValue: 60,
@@ -5043,7 +5427,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_005',
     title: 'Série Olympienne',
-    description: 'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 5)',
+    description:
+        'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 5)',
     period: 'yearly',
     category: 'streak',
     targetValue: 30,
@@ -5056,7 +5441,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_006',
     title: 'Passeur de Savoir',
-    description: 'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 6)',
+    description:
+        'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 6)',
     period: 'yearly',
     category: 'mentorship',
     targetValue: 1,
@@ -5069,7 +5455,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_007',
     title: 'Major de Promotion',
-    description: 'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 7)',
+    description:
+        'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 7)',
     period: 'yearly',
     category: 'excellence',
     targetValue: 1,
@@ -5082,7 +5469,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_008',
     title: 'Projet Remarquable',
-    description: 'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 8)',
+    description:
+        'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 8)',
     period: 'yearly',
     category: 'innovation',
     targetValue: 1,
@@ -5095,7 +5483,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_009',
     title: 'Zéro Absence Non Justifiée',
-    description: 'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 9)',
+    description:
+        'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 9)',
     period: 'yearly',
     category: 'perfect_record',
     targetValue: 1,
@@ -5108,7 +5497,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_010',
     title: 'Ambassadeur Campus UniFlow',
-    description: 'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 10)',
+    description:
+        'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 10)',
     period: 'yearly',
     category: 'growth',
     targetValue: 5,
@@ -5121,7 +5511,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_011',
     title: 'Polytechnicien du Numérique',
-    description: 'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 11)',
+    description:
+        'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 11)',
     period: 'yearly',
     category: 'skills',
     targetValue: 1,
@@ -5134,7 +5525,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_012',
     title: 'Lecteur Assidu',
-    description: 'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 12)',
+    description:
+        'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 12)',
     period: 'yearly',
     category: 'library',
     targetValue: 25,
@@ -5147,7 +5539,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_013',
     title: 'Tableau d\'Honneur · Palier 2',
-    description: 'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 13)',
+    description:
+        'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 13)',
     period: 'yearly',
     category: 'honors',
     targetValue: 1,
@@ -5160,7 +5553,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_014',
     title: 'Pilier Inébranlable · Palier 2',
-    description: 'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 14)',
+    description:
+        'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 14)',
     period: 'yearly',
     category: 'attendance',
     targetValue: 1,
@@ -5173,7 +5567,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_015',
     title: 'Grand Maître du Forum · Palier 2',
-    description: 'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 15)',
+    description:
+        'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 15)',
     period: 'yearly',
     category: 'community',
     targetValue: 50,
@@ -5186,7 +5581,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_016',
     title: 'Validation des 60 Crédits · Palier 2',
-    description: 'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 16)',
+    description:
+        'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 16)',
     period: 'yearly',
     category: 'curriculum',
     targetValue: 60,
@@ -5199,7 +5595,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_017',
     title: 'Série Olympienne · Palier 2',
-    description: 'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 17)',
+    description:
+        'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 17)',
     period: 'yearly',
     category: 'streak',
     targetValue: 30,
@@ -5212,7 +5609,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_018',
     title: 'Passeur de Savoir · Palier 2',
-    description: 'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 18)',
+    description:
+        'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 18)',
     period: 'yearly',
     category: 'mentorship',
     targetValue: 1,
@@ -5225,7 +5623,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_019',
     title: 'Major de Promotion · Palier 2',
-    description: 'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 19)',
+    description:
+        'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 19)',
     period: 'yearly',
     category: 'excellence',
     targetValue: 1,
@@ -5238,7 +5637,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_020',
     title: 'Projet Remarquable · Palier 2',
-    description: 'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 20)',
+    description:
+        'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 20)',
     period: 'yearly',
     category: 'innovation',
     targetValue: 1,
@@ -5251,7 +5651,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_021',
     title: 'Zéro Absence Non Justifiée · Palier 2',
-    description: 'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 21)',
+    description:
+        'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 21)',
     period: 'yearly',
     category: 'perfect_record',
     targetValue: 1,
@@ -5264,7 +5665,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_022',
     title: 'Ambassadeur Campus UniFlow · Palier 2',
-    description: 'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 22)',
+    description:
+        'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 22)',
     period: 'yearly',
     category: 'growth',
     targetValue: 5,
@@ -5277,7 +5679,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_023',
     title: 'Polytechnicien du Numérique · Palier 2',
-    description: 'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 23)',
+    description:
+        'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 23)',
     period: 'yearly',
     category: 'skills',
     targetValue: 1,
@@ -5290,7 +5693,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_024',
     title: 'Lecteur Assidu · Palier 2',
-    description: 'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 24)',
+    description:
+        'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 24)',
     period: 'yearly',
     category: 'library',
     targetValue: 25,
@@ -5303,7 +5707,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_025',
     title: 'Tableau d\'Honneur · Palier 3',
-    description: 'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 25)',
+    description:
+        'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 25)',
     period: 'yearly',
     category: 'honors',
     targetValue: 1,
@@ -5316,7 +5721,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_026',
     title: 'Pilier Inébranlable · Palier 3',
-    description: 'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 26)',
+    description:
+        'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 26)',
     period: 'yearly',
     category: 'attendance',
     targetValue: 1,
@@ -5329,7 +5735,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_027',
     title: 'Grand Maître du Forum · Palier 3',
-    description: 'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 27)',
+    description:
+        'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 27)',
     period: 'yearly',
     category: 'community',
     targetValue: 50,
@@ -5342,7 +5749,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_028',
     title: 'Validation des 60 Crédits · Palier 3',
-    description: 'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 28)',
+    description:
+        'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 28)',
     period: 'yearly',
     category: 'curriculum',
     targetValue: 60,
@@ -5355,7 +5763,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_029',
     title: 'Série Olympienne · Palier 3',
-    description: 'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 29)',
+    description:
+        'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 29)',
     period: 'yearly',
     category: 'streak',
     targetValue: 30,
@@ -5368,7 +5777,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_030',
     title: 'Passeur de Savoir · Palier 3',
-    description: 'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 30)',
+    description:
+        'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 30)',
     period: 'yearly',
     category: 'mentorship',
     targetValue: 1,
@@ -5381,7 +5791,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_031',
     title: 'Major de Promotion · Palier 3',
-    description: 'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 31)',
+    description:
+        'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 31)',
     period: 'yearly',
     category: 'excellence',
     targetValue: 1,
@@ -5394,7 +5805,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_032',
     title: 'Projet Remarquable · Palier 3',
-    description: 'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 32)',
+    description:
+        'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 32)',
     period: 'yearly',
     category: 'innovation',
     targetValue: 1,
@@ -5407,7 +5819,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_033',
     title: 'Zéro Absence Non Justifiée · Palier 3',
-    description: 'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 33)',
+    description:
+        'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 33)',
     period: 'yearly',
     category: 'perfect_record',
     targetValue: 1,
@@ -5420,7 +5833,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_034',
     title: 'Ambassadeur Campus UniFlow · Palier 3',
-    description: 'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 34)',
+    description:
+        'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 34)',
     period: 'yearly',
     category: 'growth',
     targetValue: 5,
@@ -5433,7 +5847,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_035',
     title: 'Polytechnicien du Numérique · Palier 3',
-    description: 'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 35)',
+    description:
+        'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 35)',
     period: 'yearly',
     category: 'skills',
     targetValue: 1,
@@ -5446,7 +5861,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_036',
     title: 'Lecteur Assidu · Palier 3',
-    description: 'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 36)',
+    description:
+        'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 36)',
     period: 'yearly',
     category: 'library',
     targetValue: 25,
@@ -5459,7 +5875,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_037',
     title: 'Tableau d\'Honneur · Palier 4',
-    description: 'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 37)',
+    description:
+        'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 37)',
     period: 'yearly',
     category: 'honors',
     targetValue: 1,
@@ -5472,7 +5889,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_038',
     title: 'Pilier Inébranlable · Palier 4',
-    description: 'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 38)',
+    description:
+        'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 38)',
     period: 'yearly',
     category: 'attendance',
     targetValue: 1,
@@ -5485,7 +5903,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_039',
     title: 'Grand Maître du Forum · Palier 4',
-    description: 'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 39)',
+    description:
+        'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 39)',
     period: 'yearly',
     category: 'community',
     targetValue: 50,
@@ -5498,7 +5917,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_040',
     title: 'Validation des 60 Crédits · Palier 4',
-    description: 'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 40)',
+    description:
+        'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 40)',
     period: 'yearly',
     category: 'curriculum',
     targetValue: 60,
@@ -5511,7 +5931,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_041',
     title: 'Série Olympienne · Palier 4',
-    description: 'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 41)',
+    description:
+        'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 41)',
     period: 'yearly',
     category: 'streak',
     targetValue: 30,
@@ -5524,7 +5945,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_042',
     title: 'Passeur de Savoir · Palier 4',
-    description: 'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 42)',
+    description:
+        'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 42)',
     period: 'yearly',
     category: 'mentorship',
     targetValue: 1,
@@ -5537,7 +5959,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_043',
     title: 'Major de Promotion · Palier 4',
-    description: 'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 43)',
+    description:
+        'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 43)',
     period: 'yearly',
     category: 'excellence',
     targetValue: 1,
@@ -5550,7 +5973,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_044',
     title: 'Projet Remarquable · Palier 4',
-    description: 'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 44)',
+    description:
+        'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 44)',
     period: 'yearly',
     category: 'innovation',
     targetValue: 1,
@@ -5563,7 +5987,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_045',
     title: 'Zéro Absence Non Justifiée · Palier 4',
-    description: 'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 45)',
+    description:
+        'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 45)',
     period: 'yearly',
     category: 'perfect_record',
     targetValue: 1,
@@ -5576,7 +6001,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_046',
     title: 'Ambassadeur Campus UniFlow · Palier 4',
-    description: 'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 46)',
+    description:
+        'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 46)',
     period: 'yearly',
     category: 'growth',
     targetValue: 5,
@@ -5589,7 +6015,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_047',
     title: 'Polytechnicien du Numérique · Palier 4',
-    description: 'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 47)',
+    description:
+        'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 47)',
     period: 'yearly',
     category: 'skills',
     targetValue: 1,
@@ -5602,7 +6029,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_048',
     title: 'Lecteur Assidu · Palier 4',
-    description: 'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 48)',
+    description:
+        'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 48)',
     period: 'yearly',
     category: 'library',
     targetValue: 25,
@@ -5615,7 +6043,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_049',
     title: 'Tableau d\'Honneur · Palier 5',
-    description: 'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 49)',
+    description:
+        'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 49)',
     period: 'yearly',
     category: 'honors',
     targetValue: 1,
@@ -5628,7 +6057,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_050',
     title: 'Pilier Inébranlable · Palier 5',
-    description: 'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 50)',
+    description:
+        'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 50)',
     period: 'yearly',
     category: 'attendance',
     targetValue: 1,
@@ -5641,7 +6071,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_051',
     title: 'Grand Maître du Forum · Palier 5',
-    description: 'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 51)',
+    description:
+        'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 51)',
     period: 'yearly',
     category: 'community',
     targetValue: 50,
@@ -5654,7 +6085,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_052',
     title: 'Validation des 60 Crédits · Palier 5',
-    description: 'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 52)',
+    description:
+        'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 52)',
     period: 'yearly',
     category: 'curriculum',
     targetValue: 60,
@@ -5667,7 +6099,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_053',
     title: 'Série Olympienne · Palier 5',
-    description: 'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 53)',
+    description:
+        'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 53)',
     period: 'yearly',
     category: 'streak',
     targetValue: 30,
@@ -5680,7 +6113,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_054',
     title: 'Passeur de Savoir · Palier 5',
-    description: 'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 54)',
+    description:
+        'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 54)',
     period: 'yearly',
     category: 'mentorship',
     targetValue: 1,
@@ -5693,7 +6127,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_055',
     title: 'Major de Promotion · Palier 5',
-    description: 'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 55)',
+    description:
+        'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 55)',
     period: 'yearly',
     category: 'excellence',
     targetValue: 1,
@@ -5706,7 +6141,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_056',
     title: 'Projet Remarquable · Palier 5',
-    description: 'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 56)',
+    description:
+        'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 56)',
     period: 'yearly',
     category: 'innovation',
     targetValue: 1,
@@ -5719,7 +6155,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_057',
     title: 'Zéro Absence Non Justifiée · Palier 5',
-    description: 'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 57)',
+    description:
+        'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 57)',
     period: 'yearly',
     category: 'perfect_record',
     targetValue: 1,
@@ -5732,7 +6169,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_058',
     title: 'Ambassadeur Campus UniFlow · Palier 5',
-    description: 'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 58)',
+    description:
+        'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 58)',
     period: 'yearly',
     category: 'growth',
     targetValue: 5,
@@ -5745,7 +6183,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_059',
     title: 'Polytechnicien du Numérique · Palier 5',
-    description: 'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 59)',
+    description:
+        'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 59)',
     period: 'yearly',
     category: 'skills',
     targetValue: 1,
@@ -5758,7 +6197,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_060',
     title: 'Lecteur Assidu · Palier 5',
-    description: 'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 60)',
+    description:
+        'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 60)',
     period: 'yearly',
     category: 'library',
     targetValue: 25,
@@ -5771,7 +6211,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_061',
     title: 'Tableau d\'Honneur · Palier 6',
-    description: 'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 61)',
+    description:
+        'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 61)',
     period: 'yearly',
     category: 'honors',
     targetValue: 1,
@@ -5784,7 +6225,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_062',
     title: 'Pilier Inébranlable · Palier 6',
-    description: 'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 62)',
+    description:
+        'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 62)',
     period: 'yearly',
     category: 'attendance',
     targetValue: 1,
@@ -5797,7 +6239,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_063',
     title: 'Grand Maître du Forum · Palier 6',
-    description: 'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 63)',
+    description:
+        'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 63)',
     period: 'yearly',
     category: 'community',
     targetValue: 50,
@@ -5810,7 +6253,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_064',
     title: 'Validation des 60 Crédits · Palier 6',
-    description: 'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 64)',
+    description:
+        'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 64)',
     period: 'yearly',
     category: 'curriculum',
     targetValue: 60,
@@ -5823,7 +6267,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_065',
     title: 'Série Olympienne · Palier 6',
-    description: 'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 65)',
+    description:
+        'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 65)',
     period: 'yearly',
     category: 'streak',
     targetValue: 30,
@@ -5836,7 +6281,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_066',
     title: 'Passeur de Savoir · Palier 6',
-    description: 'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 66)',
+    description:
+        'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 66)',
     period: 'yearly',
     category: 'mentorship',
     targetValue: 1,
@@ -5849,7 +6295,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_067',
     title: 'Major de Promotion · Palier 6',
-    description: 'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 67)',
+    description:
+        'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 67)',
     period: 'yearly',
     category: 'excellence',
     targetValue: 1,
@@ -5862,7 +6309,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_068',
     title: 'Projet Remarquable · Palier 6',
-    description: 'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 68)',
+    description:
+        'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 68)',
     period: 'yearly',
     category: 'innovation',
     targetValue: 1,
@@ -5875,7 +6323,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_069',
     title: 'Zéro Absence Non Justifiée · Palier 6',
-    description: 'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 69)',
+    description:
+        'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 69)',
     period: 'yearly',
     category: 'perfect_record',
     targetValue: 1,
@@ -5888,7 +6337,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_070',
     title: 'Ambassadeur Campus UniFlow · Palier 6',
-    description: 'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 70)',
+    description:
+        'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 70)',
     period: 'yearly',
     category: 'growth',
     targetValue: 5,
@@ -5901,7 +6351,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_071',
     title: 'Polytechnicien du Numérique · Palier 6',
-    description: 'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 71)',
+    description:
+        'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 71)',
     period: 'yearly',
     category: 'skills',
     targetValue: 1,
@@ -5914,7 +6365,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_072',
     title: 'Lecteur Assidu · Palier 6',
-    description: 'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 72)',
+    description:
+        'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 72)',
     period: 'yearly',
     category: 'library',
     targetValue: 25,
@@ -5927,7 +6379,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_073',
     title: 'Tableau d\'Honneur · Palier 7',
-    description: 'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 73)',
+    description:
+        'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 73)',
     period: 'yearly',
     category: 'honors',
     targetValue: 1,
@@ -5940,7 +6393,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_074',
     title: 'Pilier Inébranlable · Palier 7',
-    description: 'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 74)',
+    description:
+        'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 74)',
     period: 'yearly',
     category: 'attendance',
     targetValue: 1,
@@ -5953,7 +6407,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_075',
     title: 'Grand Maître du Forum · Palier 7',
-    description: 'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 75)',
+    description:
+        'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 75)',
     period: 'yearly',
     category: 'community',
     targetValue: 50,
@@ -5966,7 +6421,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_076',
     title: 'Validation des 60 Crédits · Palier 7',
-    description: 'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 76)',
+    description:
+        'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 76)',
     period: 'yearly',
     category: 'curriculum',
     targetValue: 60,
@@ -5979,7 +6435,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_077',
     title: 'Série Olympienne · Palier 7',
-    description: 'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 77)',
+    description:
+        'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 77)',
     period: 'yearly',
     category: 'streak',
     targetValue: 30,
@@ -5992,7 +6449,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_078',
     title: 'Passeur de Savoir · Palier 7',
-    description: 'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 78)',
+    description:
+        'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 78)',
     period: 'yearly',
     category: 'mentorship',
     targetValue: 1,
@@ -6005,7 +6463,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_079',
     title: 'Major de Promotion · Palier 7',
-    description: 'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 79)',
+    description:
+        'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 79)',
     period: 'yearly',
     category: 'excellence',
     targetValue: 1,
@@ -6018,7 +6477,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_080',
     title: 'Projet Remarquable · Palier 7',
-    description: 'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 80)',
+    description:
+        'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 80)',
     period: 'yearly',
     category: 'innovation',
     targetValue: 1,
@@ -6031,7 +6491,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_081',
     title: 'Zéro Absence Non Justifiée · Palier 7',
-    description: 'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 81)',
+    description:
+        'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 81)',
     period: 'yearly',
     category: 'perfect_record',
     targetValue: 1,
@@ -6044,7 +6505,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_082',
     title: 'Ambassadeur Campus UniFlow · Palier 7',
-    description: 'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 82)',
+    description:
+        'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 82)',
     period: 'yearly',
     category: 'growth',
     targetValue: 5,
@@ -6057,7 +6519,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_083',
     title: 'Polytechnicien du Numérique · Palier 7',
-    description: 'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 83)',
+    description:
+        'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 83)',
     period: 'yearly',
     category: 'skills',
     targetValue: 1,
@@ -6070,7 +6533,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_084',
     title: 'Lecteur Assidu · Palier 7',
-    description: 'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 84)',
+    description:
+        'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 84)',
     period: 'yearly',
     category: 'library',
     targetValue: 25,
@@ -6083,7 +6547,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_085',
     title: 'Tableau d\'Honneur · Palier 8',
-    description: 'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 85)',
+    description:
+        'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 85)',
     period: 'yearly',
     category: 'honors',
     targetValue: 1,
@@ -6096,7 +6561,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_086',
     title: 'Pilier Inébranlable · Palier 8',
-    description: 'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 86)',
+    description:
+        'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 86)',
     period: 'yearly',
     category: 'attendance',
     targetValue: 1,
@@ -6109,7 +6575,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_087',
     title: 'Grand Maître du Forum · Palier 8',
-    description: 'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 87)',
+    description:
+        'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 87)',
     period: 'yearly',
     category: 'community',
     targetValue: 50,
@@ -6122,7 +6589,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_088',
     title: 'Validation des 60 Crédits · Palier 8',
-    description: 'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 88)',
+    description:
+        'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 88)',
     period: 'yearly',
     category: 'curriculum',
     targetValue: 60,
@@ -6135,7 +6603,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_089',
     title: 'Série Olympienne · Palier 8',
-    description: 'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 89)',
+    description:
+        'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 89)',
     period: 'yearly',
     category: 'streak',
     targetValue: 30,
@@ -6148,7 +6617,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_090',
     title: 'Passeur de Savoir · Palier 8',
-    description: 'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 90)',
+    description:
+        'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 90)',
     period: 'yearly',
     category: 'mentorship',
     targetValue: 1,
@@ -6161,7 +6631,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_091',
     title: 'Major de Promotion · Palier 8',
-    description: 'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 91)',
+    description:
+        'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 91)',
     period: 'yearly',
     category: 'excellence',
     targetValue: 1,
@@ -6174,7 +6645,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_092',
     title: 'Projet Remarquable · Palier 8',
-    description: 'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 92)',
+    description:
+        'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 92)',
     period: 'yearly',
     category: 'innovation',
     targetValue: 1,
@@ -6187,7 +6659,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_093',
     title: 'Zéro Absence Non Justifiée · Palier 8',
-    description: 'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 93)',
+    description:
+        'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 93)',
     period: 'yearly',
     category: 'perfect_record',
     targetValue: 1,
@@ -6200,7 +6673,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_094',
     title: 'Ambassadeur Campus UniFlow · Palier 8',
-    description: 'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 94)',
+    description:
+        'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 94)',
     period: 'yearly',
     category: 'growth',
     targetValue: 5,
@@ -6213,7 +6687,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_095',
     title: 'Polytechnicien du Numérique · Palier 8',
-    description: 'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 95)',
+    description:
+        'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 95)',
     period: 'yearly',
     category: 'skills',
     targetValue: 1,
@@ -6226,7 +6701,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_096',
     title: 'Lecteur Assidu · Palier 8',
-    description: 'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 96)',
+    description:
+        'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 96)',
     period: 'yearly',
     category: 'library',
     targetValue: 25,
@@ -6239,7 +6715,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_097',
     title: 'Tableau d\'Honneur · Palier 9',
-    description: 'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 97)',
+    description:
+        'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 97)',
     period: 'yearly',
     category: 'honors',
     targetValue: 1,
@@ -6252,7 +6729,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_098',
     title: 'Pilier Inébranlable · Palier 9',
-    description: 'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 98)',
+    description:
+        'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 98)',
     period: 'yearly',
     category: 'attendance',
     targetValue: 1,
@@ -6265,7 +6743,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_099',
     title: 'Grand Maître du Forum · Palier 9',
-    description: 'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 99)',
+    description:
+        'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 99)',
     period: 'yearly',
     category: 'community',
     targetValue: 50,
@@ -6278,7 +6757,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_100',
     title: 'Validation des 60 Crédits · Palier 9',
-    description: 'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 100)',
+    description:
+        'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 100)',
     period: 'yearly',
     category: 'curriculum',
     targetValue: 60,
@@ -6291,7 +6771,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_101',
     title: 'Série Olympienne · Palier 9',
-    description: 'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 101)',
+    description:
+        'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 101)',
     period: 'yearly',
     category: 'streak',
     targetValue: 30,
@@ -6304,7 +6785,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_102',
     title: 'Passeur de Savoir · Palier 9',
-    description: 'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 102)',
+    description:
+        'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 102)',
     period: 'yearly',
     category: 'mentorship',
     targetValue: 1,
@@ -6317,7 +6799,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_103',
     title: 'Major de Promotion · Palier 9',
-    description: 'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 103)',
+    description:
+        'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 103)',
     period: 'yearly',
     category: 'excellence',
     targetValue: 1,
@@ -6330,7 +6813,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_104',
     title: 'Projet Remarquable · Palier 9',
-    description: 'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 104)',
+    description:
+        'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 104)',
     period: 'yearly',
     category: 'innovation',
     targetValue: 1,
@@ -6343,7 +6827,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_105',
     title: 'Zéro Absence Non Justifiée · Palier 9',
-    description: 'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 105)',
+    description:
+        'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 105)',
     period: 'yearly',
     category: 'perfect_record',
     targetValue: 1,
@@ -6356,7 +6841,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_106',
     title: 'Ambassadeur Campus UniFlow · Palier 9',
-    description: 'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 106)',
+    description:
+        'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 106)',
     period: 'yearly',
     category: 'growth',
     targetValue: 5,
@@ -6369,7 +6855,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_107',
     title: 'Polytechnicien du Numérique · Palier 9',
-    description: 'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 107)',
+    description:
+        'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 107)',
     period: 'yearly',
     category: 'skills',
     targetValue: 1,
@@ -6382,7 +6869,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_108',
     title: 'Lecteur Assidu · Palier 9',
-    description: 'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 108)',
+    description:
+        'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 108)',
     period: 'yearly',
     category: 'library',
     targetValue: 25,
@@ -6395,7 +6883,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_109',
     title: 'Tableau d\'Honneur · Palier 10',
-    description: 'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 109)',
+    description:
+        'Maintiens une moyenne annuelle supérieure ou égale à 14/20 (Haut fait annuel 109)',
     period: 'yearly',
     category: 'honors',
     targetValue: 1,
@@ -6408,7 +6897,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_110',
     title: 'Pilier Inébranlable · Palier 10',
-    description: 'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 110)',
+    description:
+        'Enregistre plus de 90% d\'assiduité globale sur l\'année entière (Haut fait annuel 110)',
     period: 'yearly',
     category: 'attendance',
     targetValue: 1,
@@ -6421,7 +6911,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_111',
     title: 'Grand Maître du Forum · Palier 10',
-    description: 'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 111)',
+    description:
+        'Récolte 50 interactions positives sur tes partages pédagogiques (Haut fait annuel 111)',
     period: 'yearly',
     category: 'community',
     targetValue: 50,
@@ -6434,7 +6925,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_112',
     title: 'Validation des 60 Crédits · Palier 10',
-    description: 'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 112)',
+    description:
+        'Valide l\'ensemble des crédits académiques de ton année universitaire (Haut fait annuel 112)',
     period: 'yearly',
     category: 'curriculum',
     targetValue: 60,
@@ -6447,7 +6939,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_113',
     title: 'Série Olympienne · Palier 10',
-    description: 'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 113)',
+    description:
+        'Valide tes quêtes quotidiennes pendant 30 jours sans rupture (Haut fait annuel 113)',
     period: 'yearly',
     category: 'streak',
     targetValue: 30,
@@ -6460,7 +6953,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_114',
     title: 'Passeur de Savoir · Palier 10',
-    description: 'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 114)',
+    description:
+        'Parraine un nouvel arrivant et guide-le dans ses démarches (Haut fait annuel 114)',
     period: 'yearly',
     category: 'mentorship',
     targetValue: 1,
@@ -6473,7 +6967,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_115',
     title: 'Major de Promotion · Palier 10',
-    description: 'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 115)',
+    description:
+        'Figure parmi les trois meilleures moyennes de ta filière (Haut fait annuel 115)',
     period: 'yearly',
     category: 'excellence',
     targetValue: 1,
@@ -6486,7 +6981,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_116',
     title: 'Projet Remarquable · Palier 10',
-    description: 'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 116)',
+    description:
+        'Réalise un mémoire, TP ou projet salué par le corps enseignant (Haut fait annuel 116)',
     period: 'yearly',
     category: 'innovation',
     targetValue: 1,
@@ -6499,7 +6995,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_117',
     title: 'Zéro Absence Non Justifiée · Palier 10',
-    description: 'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 117)',
+    description:
+        'Fais preuve d\'une rigueur absolue sur toutes les séances de TD/TP (Haut fait annuel 117)',
     period: 'yearly',
     category: 'perfect_record',
     targetValue: 1,
@@ -6512,7 +7009,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_118',
     title: 'Ambassadeur Campus UniFlow · Palier 10',
-    description: 'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 118)',
+    description:
+        'Invite 5 camarades de promotion à rejoindre la communauté (Haut fait annuel 118)',
     period: 'yearly',
     category: 'growth',
     targetValue: 5,
@@ -6525,7 +7023,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_119',
     title: 'Polytechnicien du Numérique · Palier 10',
-    description: 'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 119)',
+    description:
+        'Valide l\'ensemble des travaux pratiques informatiques et scientifiques (Haut fait annuel 119)',
     period: 'yearly',
     category: 'skills',
     targetValue: 1,
@@ -6538,7 +7037,8 @@ const List<QuestCatalogItem> kAllQuests500 = [
   QuestCatalogItem(
     id: 'quest_yearly_120',
     title: 'Lecteur Assidu · Palier 10',
-    description: 'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 120)',
+    description:
+        'Consulte et exploite 25 ressources de la bibliothèque universitaire (Haut fait annuel 120)',
     period: 'yearly',
     category: 'library',
     targetValue: 25,
@@ -6562,7 +7062,8 @@ class QuestAutoAdjuster {
   static List<QuestCatalogItem> getDailyQuests(DateTime date, {int count = 6}) {
     final daily = kAllQuests500.where((q) => q.period == 'daily').toList();
     if (daily.isEmpty) return const [];
-    final dayOfYear = int.parse('${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}');
+    final dayOfYear = int.parse(
+        '${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}');
     final selected = <QuestCatalogItem>[];
     for (var i = 0; i < count; i++) {
       final idx = (dayOfYear * 7 + i * 13) % daily.length;
@@ -6572,7 +7073,8 @@ class QuestAutoAdjuster {
   }
 
   /// Quêtes mensuelles actives pour le mois en cours (ajustées au mois de l'année).
-  static List<QuestCatalogItem> getMonthlyQuests(DateTime date, {int count = 8}) {
+  static List<QuestCatalogItem> getMonthlyQuests(DateTime date,
+      {int count = 8}) {
     final currentMonth = date.month;
     final monthSpecific = kAllQuests500
         .where((q) => q.period == 'monthly' && q.monthAffinity == currentMonth)
@@ -6580,14 +7082,15 @@ class QuestAutoAdjuster {
     final general = kAllQuests500
         .where((q) => q.period == 'monthly' && q.monthAffinity == 0)
         .toList();
-    
+
     final result = [...monthSpecific, ...general];
     if (result.length <= count) return result;
     return result.take(count).toList();
   }
 
   /// Quêtes annuelles actives pour l'année universitaire courante.
-  static List<QuestCatalogItem> getYearlyQuests(DateTime date, {int count = 12}) {
+  static List<QuestCatalogItem> getYearlyQuests(DateTime date,
+      {int count = 12}) {
     final yearly = kAllQuests500.where((q) => q.period == 'yearly').toList();
     if (yearly.isEmpty) return const [];
     final yearSeed = date.year;

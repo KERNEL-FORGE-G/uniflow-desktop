@@ -38,7 +38,8 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
       (p) => p.code == _selectedPlanCode,
       orElse: () => plans[1],
     );
-    final amount = _isAnnual ? selectedPlan.annualAmount : selectedPlan.monthlyAmount;
+    final amount =
+        _isAnnual ? selectedPlan.annualAmount : selectedPlan.monthlyAmount;
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
@@ -63,7 +64,8 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
                           color: const Color(0xFFEFF6FF),
                           borderRadius: BorderRadius.circular(14),
                         ),
-                        child: const PhosphorIcon(PhosphorIconsFill.sparkle, color: Color(0xFF1E3A8A), size: 24),
+                        child: const PhosphorIcon(PhosphorIconsFill.sparkle,
+                            color: Color(0xFF1E3A8A), size: 24),
                       ),
                       const SizedBox(width: 14),
                       const Column(
@@ -79,7 +81,8 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
                           ),
                           Text(
                             'Validation immédiate et accompagnement officiel via WhatsApp (+237 6 57 63 56 44)',
-                            style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xFF64748B)),
                           ),
                         ],
                       ),
@@ -108,18 +111,27 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
                       GestureDetector(
                         onTap: () => setState(() => _isAnnual = false),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 8),
                           decoration: BoxDecoration(
-                            color: !_isAnnual ? Colors.white : Colors.transparent,
+                            color:
+                                !_isAnnual ? Colors.white : Colors.transparent,
                             borderRadius: BorderRadius.circular(999),
                             boxShadow: !_isAnnual
-                                ? [BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 6)]
+                                ? [
+                                    BoxShadow(
+                                        color: Colors.black
+                                            .withValues(alpha: 0.08),
+                                        blurRadius: 6)
+                                  ]
                                 : null,
                           ),
                           child: Text(
                             'Mensuel',
                             style: TextStyle(
-                              color: !_isAnnual ? const Color(0xFF1E3A8A) : const Color(0xFF64748B),
+                              color: !_isAnnual
+                                  ? const Color(0xFF1E3A8A)
+                                  : const Color(0xFF64748B),
                               fontWeight: FontWeight.w700,
                               fontSize: 13,
                             ),
@@ -129,12 +141,20 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
                       GestureDetector(
                         onTap: () => setState(() => _isAnnual = true),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 8),
                           decoration: BoxDecoration(
-                            color: _isAnnual ? const Color(0xFF1E3A8A) : Colors.transparent,
+                            color: _isAnnual
+                                ? const Color(0xFF1E3A8A)
+                                : Colors.transparent,
                             borderRadius: BorderRadius.circular(999),
                             boxShadow: _isAnnual
-                                ? [BoxShadow(color: const Color(0xFF1E3A8A).withValues(alpha: 0.2), blurRadius: 8)]
+                                ? [
+                                    BoxShadow(
+                                        color: const Color(0xFF1E3A8A)
+                                            .withValues(alpha: 0.2),
+                                        blurRadius: 8)
+                                  ]
                                 : null,
                           ),
                           child: Row(
@@ -142,21 +162,29 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
                               Text(
                                 'Annuel',
                                 style: TextStyle(
-                                  color: _isAnnual ? Colors.white : const Color(0xFF64748B),
+                                  color: _isAnnual
+                                      ? Colors.white
+                                      : const Color(0xFF64748B),
                                   fontWeight: FontWeight.w700,
                                   fontSize: 13,
                                 ),
                               ),
                               const SizedBox(width: 8),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 7, vertical: 2),
                                 decoration: BoxDecoration(
-                                  color: _isAnnual ? const Color(0xFFF59E0B) : const Color(0xFF10B981),
+                                  color: _isAnnual
+                                      ? const Color(0xFFF59E0B)
+                                      : const Color(0xFF10B981),
                                   borderRadius: BorderRadius.circular(999),
                                 ),
                                 child: const Text(
                                   '2 mois offerts',
-                                  style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w900),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w900),
                                 ),
                               ),
                             ],
@@ -184,17 +212,22 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const PhosphorIcon(PhosphorIconsFill.checkCircle, color: Color(0xFF16A34A), size: 54),
+                              const PhosphorIcon(PhosphorIconsFill.checkCircle,
+                                  color: Color(0xFF16A34A), size: 54),
                               const SizedBox(height: 16),
                               const Text(
                                 'Paiement Flutterwave Confirmé !',
-                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Color(0xFF15803D)),
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w800,
+                                    color: Color(0xFF15803D)),
                               ),
                               const SizedBox(height: 8),
                               Text(
                                 _successMessage!,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(fontSize: 14, color: Color(0xFF166534)),
+                                style: const TextStyle(
+                                    fontSize: 14, color: Color(0xFF166534)),
                               ),
                               const SizedBox(height: 24),
                               ElevatedButton(
@@ -202,10 +235,13 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF16A34A),
                                   foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 28, vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12)),
                                 ),
-                                child: const Text('Fermer et profiter de l\'accès Pro'),
+                                child: const Text(
+                                    'Fermer et profiter de l\'accès Pro'),
                               ),
                             ],
                           ),
@@ -218,7 +254,8 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
                           for (final plan in plans)
                             Expanded(
                               child: Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 6),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 6),
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
                                   color: _selectedPlanCode == plan.code
@@ -229,7 +266,8 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
                                     color: _selectedPlanCode == plan.code
                                         ? const Color(0xFF0D9488)
                                         : const Color(0xFFE2E8F0),
-                                    width: _selectedPlanCode == plan.code ? 2 : 1,
+                                    width:
+                                        _selectedPlanCode == plan.code ? 2 : 1,
                                   ),
                                 ),
                                 child: Column(
@@ -237,10 +275,12 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
                                   children: [
                                     if (plan.isPopular)
                                       Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 3),
                                         decoration: BoxDecoration(
                                           color: const Color(0xFF0D9488),
-                                          borderRadius: BorderRadius.circular(999),
+                                          borderRadius:
+                                              BorderRadius.circular(999),
                                         ),
                                         child: const Text(
                                           'POPULAIRE',
@@ -265,11 +305,16 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
                                       plan.description,
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                                      style: const TextStyle(
+                                          fontSize: 11,
+                                          color: Color(0xFF64748B)),
                                     ),
                                     const SizedBox(height: 10),
                                     Text(
-                                      (_isAnnual ? plan.annualAmount : plan.monthlyAmount) == 0
+                                      (_isAnnual
+                                                  ? plan.annualAmount
+                                                  : plan.monthlyAmount) ==
+                                              0
                                           ? 'Gratuit'
                                           : '${_isAnnual ? plan.annualAmount : plan.monthlyAmount} ${plan.currency} ${_isAnnual ? '/an' : '/mois'}',
                                       style: const TextStyle(
@@ -284,16 +329,25 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
                                         children: [
                                           for (final feat in plan.features)
                                             Padding(
-                                              padding: const EdgeInsets.only(bottom: 6),
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 6),
                                               child: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  const PhosphorIcon(PhosphorIconsFill.checkCircle, color: Color(0xFF0D9488), size: 14),
+                                                  const PhosphorIcon(
+                                                      PhosphorIconsFill
+                                                          .checkCircle,
+                                                      color: Color(0xFF0D9488),
+                                                      size: 14),
                                                   const SizedBox(width: 6),
                                                   Expanded(
                                                     child: Text(
                                                       feat,
-                                                      style: const TextStyle(fontSize: 11, color: Color(0xFF334155)),
+                                                      style: const TextStyle(
+                                                          fontSize: 11,
+                                                          color: Color(
+                                                              0xFF334155)),
                                                     ),
                                                   ),
                                                 ],
@@ -305,25 +359,36 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
                                     SizedBox(
                                       width: double.infinity,
                                       child: OutlinedButton(
-                                        onPressed: () => setState(() => _selectedPlanCode = plan.code),
+                                        onPressed: () => setState(() =>
+                                            _selectedPlanCode = plan.code),
                                         style: OutlinedButton.styleFrom(
-                                          backgroundColor: _selectedPlanCode == plan.code
-                                              ? const Color(0xFF1E3A8A)
-                                              : Colors.white,
-                                          foregroundColor: _selectedPlanCode == plan.code
-                                              ? Colors.white
-                                              : const Color(0xFF1E3A8A),
+                                          backgroundColor:
+                                              _selectedPlanCode == plan.code
+                                                  ? const Color(0xFF1E3A8A)
+                                                  : Colors.white,
+                                          foregroundColor:
+                                              _selectedPlanCode == plan.code
+                                                  ? Colors.white
+                                                  : const Color(0xFF1E3A8A),
                                           side: BorderSide(
-                                            color: _selectedPlanCode == plan.code
-                                                ? const Color(0xFF1E3A8A)
-                                                : const Color(0xFFCBD5E1),
+                                            color:
+                                                _selectedPlanCode == plan.code
+                                                    ? const Color(0xFF1E3A8A)
+                                                    : const Color(0xFFCBD5E1),
                                           ),
-                                          padding: const EdgeInsets.symmetric(vertical: 8),
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
                                         ),
                                         child: Text(
-                                          _selectedPlanCode == plan.code ? 'Sélectionné' : 'Choisir',
-                                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+                                          _selectedPlanCode == plan.code
+                                              ? 'Sélectionné'
+                                              : 'Choisir',
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w700),
                                         ),
                                       ),
                                     ),
@@ -335,10 +400,12 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
                       ),
               ),
 
-              if (_successMessage == null && selectedPlan.monthlyAmount > 0) ...[
+              if (_successMessage == null &&
+                  selectedPlan.monthlyAmount > 0) ...[
                 const SizedBox(height: 16),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF0FDF4),
                     borderRadius: BorderRadius.circular(16),
@@ -392,12 +459,14 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
                         ),
                         label: const Text(
                           'Activer via WhatsApp',
-                          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w800, fontSize: 13),
                         ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF16A34A),
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 14),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),

@@ -9,6 +9,8 @@ import 'uni/mascot_dialogue.dart';
 
 export 'auth_tone.dart';
 export 'uni/mascot_dialogue.dart';
+export 'uni/archlord_mascot.dart';
+export 'uni/uni_mascot.dart';
 
 /// Habillage commun des écrans d'authentification (connexion, inscription) :
 /// fond « mesh », carte blanche, panneau visuel à gauche et formulaire à
@@ -316,14 +318,15 @@ class _PortalCard extends StatelessWidget {
             Positioned(
               right: -60,
               top: -60,
-              child: _Blob(
-                  size: 220, color: Colors.white.withValues(alpha: 0.05)),
+              child:
+                  _Blob(size: 220, color: Colors.white.withValues(alpha: 0.05)),
             ),
             Positioned(
               right: formWidth * 0.55,
               bottom: -40,
               child: _Blob(
-                  size: 120, color: AppColors.tealLight.withValues(alpha: 0.10)),
+                  size: 120,
+                  color: AppColors.tealLight.withValues(alpha: 0.10)),
             ),
             // ── Formulaire ────────────────────────────────────────────────
             Positioned(
@@ -423,17 +426,17 @@ class _ArtworkPanel extends StatelessWidget {
           children: [
             Image.asset(
               'assets/brand/uniflow_logo_horizontal.png',
-              height: 34,
+              height: 52,
               fit: BoxFit.contain,
               filterQuality: FilterQuality.high,
               errorBuilder: (_, __, ___) => Image.asset(
                 'assets/brand/uniflow-wordmark.png',
-                height: 34,
+                height: 52,
                 errorBuilder: (_, __, ___) => const Text(
                   'UniFlow',
                   style: TextStyle(
                     color: AppColors.primaryBlue,
-                    fontSize: 20,
+                    fontSize: 28,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -694,7 +697,6 @@ const List<MascotLine> kAuthMascotDialogue = [
   MascotLine.uni('Connecte-toi, je te guide !'),
 ];
 
-
 /// Panneau de marque — style référence : fond dégradé navy → teal avec blob
 /// blanc organique contenant mascotte + logo. Inspiré du design université
 /// avec forme blob blanche flottant sur fond sombre.
@@ -731,19 +733,23 @@ class AuthHeroPanel extends StatelessWidget {
             // Petits cercles décoratifs
             if (!compact) ...[
               Positioned(
-                  top: 60, right: 30,
-                  child: _Blob(size: 40, color: Colors.white.withValues(alpha: 0.12))),
+                  top: 60,
+                  right: 30,
+                  child: _Blob(
+                      size: 40, color: Colors.white.withValues(alpha: 0.12))),
               Positioned(
-                  bottom: 80, left: 20,
-                  child: _Blob(size: 24, color: Colors.white.withValues(alpha: 0.15))),
+                  bottom: 80,
+                  left: 20,
+                  child: _Blob(
+                      size: 24, color: Colors.white.withValues(alpha: 0.15))),
               Positioned(
-                  top: 200, left: 10,
-                  child: _Blob(size: 16, color: Colors.white.withValues(alpha: 0.20))),
+                  top: 200,
+                  left: 10,
+                  child: _Blob(
+                      size: 16, color: Colors.white.withValues(alpha: 0.20))),
             ],
             Positioned.fill(
-              child: compact
-                  ? _compactBanner()
-                  : _fullPanel(context),
+              child: compact ? _compactBanner() : _fullPanel(context),
             ),
           ],
         ),
@@ -847,7 +853,8 @@ class AuthHeroPanel extends StatelessWidget {
                           offset: const Offset(0, 14),
                         ),
                         BoxShadow(
-                          color: const Color(0xFF0D9488).withValues(alpha: 0.16),
+                          color:
+                              const Color(0xFF0D9488).withValues(alpha: 0.16),
                           blurRadius: 20,
                           offset: const Offset(-6, 6),
                         ),
@@ -887,14 +894,14 @@ class AuthHeroPanel extends StatelessWidget {
                             ),
                             child: Image.asset(
                               'assets/brand/uniflow_logo_horizontal.png',
-                              height: 20,
+                              height: 36,
                               fit: BoxFit.contain,
                               errorBuilder: (_, __, ___) => const Text(
                                 'UniFlow',
                                 style: TextStyle(
                                   color: Color(0xFF1E3A8A),
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 13,
+                                  fontSize: 18,
                                 ),
                               ),
                             ),

@@ -131,6 +131,7 @@ class _ForgotPasswordDialogState extends ConsumerState<_ForgotPasswordDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      actionsOverflowButtonSpacing: 8,
       title: Text(switch (_step) {
         _Step.request => 'Mot de passe oublié',
         _Step.complete => 'Terminer la réinitialisation',

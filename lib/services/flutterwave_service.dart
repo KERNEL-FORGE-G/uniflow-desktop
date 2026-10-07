@@ -155,9 +155,12 @@ class DesktopFlutterwaveService {
       'customer[name]': user.name,
       'customer[phone_number]': phoneNumber ?? '',
       'customizations[title]': 'Abonnement UniFlow Desktop - ${plan.name}',
-      'customizations[description]': isAnnual ? 'Formule Annuelle (2 mois offerts)' : 'Formule Mensuelle',
-      'customizations[logo]': 'https://uniflow.kernelforge.codes/logos/uniflow_marque.png',
-      'redirect_url': 'https://uniflow.kernelforge.codes/app/abonnement?status=successful&tx_ref=$txRef',
+      'customizations[description]':
+          isAnnual ? 'Formule Annuelle (2 mois offerts)' : 'Formule Mensuelle',
+      'customizations[logo]':
+          'https://uniflow.kernelforge.codes/logos/uniflow_marque.png',
+      'redirect_url':
+          'https://uniflow.kernelforge.codes/app/abonnement?status=successful&tx_ref=$txRef',
     };
 
     final uri = Uri.https('checkout.flutterwave.com', '/v3/hosted/pay', params);
@@ -240,7 +243,8 @@ class DesktopFlutterwaveService {
     return DesktopPaymentResult(
       isSuccess: true,
       reference: txRef,
-      message: 'Paiement carte bancaire confirmé par Flutterwave. Votre compte est activé !',
+      message:
+          'Paiement carte bancaire confirmé par Flutterwave. Votre compte est activé !',
       method: DesktopFlutterwavePaymentMethod.card,
       processedAt: DateTime.now(),
     );
@@ -269,14 +273,16 @@ class DesktopFlutterwaveService {
       });
     } catch (_) {}
 
-    final text = 'Bonjour UniFlow, je souhaite régler mon abonnement Desktop ${plan.name} ($cycle) '
+    final text =
+        'Bonjour UniFlow, je souhaite régler mon abonnement Desktop ${plan.name} ($cycle) '
         'de $amount ${plan.currency}.\n'
         'Référence : $txRef\n'
         'Nom : ${user.name}\n'
         'Email : ${user.email}\n'
         'Merci de m\'indiquer les modalités de paiement.';
 
-    final uri = Uri.parse('https://wa.me/237657635644?text=${Uri.encodeComponent(text)}');
+    final uri = Uri.parse(
+        'https://wa.me/237657635644?text=${Uri.encodeComponent(text)}');
     try {
       return await launchUrl(uri, mode: LaunchMode.externalApplication);
     } catch (e) {
@@ -286,6 +292,7 @@ class DesktopFlutterwaveService {
   }
 }
 
-final desktopFlutterwaveServiceProvider = Provider<DesktopFlutterwaveService>((ref) {
+final desktopFlutterwaveServiceProvider =
+    Provider<DesktopFlutterwaveService>((ref) {
   return DesktopFlutterwaveService(ref.watch(uniflowApiProvider));
 });

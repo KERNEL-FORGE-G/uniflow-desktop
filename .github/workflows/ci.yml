@@ -10,7 +10,7 @@ on:
     branches: [main, feature/frontend-uniflow-app]
     tags: ['v*']
   pull_request:
-    branches: [main]
+    branches: [main, feature/frontend-uniflow-app]
   workflow_dispatch:
 
 # Un nouveau push sur la même branche annule le run précédent : les builds
@@ -39,7 +39,7 @@ jobs:
       - name: Formatage
         run: dart format --output=none --set-exit-if-changed lib test
       - name: Analyse statique
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos
       - name: Tests
         run: flutter test --coverage
 

@@ -318,32 +318,37 @@ class _Brand extends StatelessWidget {
         collapsed ? 0 : AppSpacing.xl,
         18,
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment:
-            collapsed ? MainAxisAlignment.center : MainAxisAlignment.start,
-        children: [
-          Image.asset(
-            'assets/brand/uniflow_marque.png',
-            height: 32,
-            width: 32,
-            fit: BoxFit.contain,
-            filterQuality: FilterQuality.high,
-            errorBuilder: (_, __, ___) => const UniFlowIcon(size: 32),
-          ),
-          if (!collapsed) ...[
-            const SizedBox(width: 10),
-            Text(
-              'UniFlow',
-              style: TextStyle(
-                fontFamily: AppTextStyles.fontFamily,
-                color: palette.brand,
-                fontSize: 19,
-                fontWeight: FontWeight.w800,
-              ),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: collapsed ? Alignment.center : Alignment.centerLeft,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment:
+              collapsed ? MainAxisAlignment.center : MainAxisAlignment.start,
+          children: [
+            Image.asset(
+              'assets/brand/uniflow_marque.png',
+              height: 42,
+              width: 42,
+              fit: BoxFit.contain,
+              filterQuality: FilterQuality.high,
+              errorBuilder: (_, __, ___) => const UniFlowIcon(size: 42),
             ),
+            if (!collapsed) ...[
+              const SizedBox(width: 12),
+              Text(
+                'UniFlow',
+                style: TextStyle(
+                  fontFamily: AppTextStyles.fontFamily,
+                  color: palette.brand,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.3,
+                ),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

@@ -12,6 +12,7 @@ import '../widgets/uni_icons.dart';
 import '../widgets/app_text_field.dart';
 import '../widgets/auth_chrome.dart';
 import '../widgets/motion.dart';
+import '../ui/app_button.dart';
 import 'forgot_password_dialog.dart';
 import 'main_shell.dart';
 import 'onboarding_screen.dart';
@@ -168,8 +169,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         Text(
           'Connectez-vous à votre compte UniFlow',
           textAlign: TextAlign.center,
-          style:
-              AppTextStyles.body.copyWith(fontSize: scale.body, color: p.textSoft),
+          style: AppTextStyles.body
+              .copyWith(fontSize: scale.body, color: p.textSoft),
         ),
         const SizedBox(height: 22),
         AccountTypeSelector(
@@ -261,30 +262,37 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           onPressed: _isLoading ? null : _handleLogin,
         ),
         const SizedBox(height: 18),
-        // « Pas encore de compte ? Créer un compte » — comme la maquette.
-        Center(
-          child: Text('Pas encore de compte ?',
-              style: AppTextStyles.body.copyWith(
-                  fontSize: 13, color: p.textSoft)),
-        ),
-        const SizedBox(height: 2),
-        Center(
-          child: InkWell(
-            key: const Key('login-open-register'),
-            onTap: _isLoading ? null : _openRegister,
-            borderRadius: BorderRadius.circular(6),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
-              child: Text(
-                'Créer un compte',
-                style: p.linkStyle.copyWith(
-                  fontSize: 13.5,
-                  decoration: TextDecoration.underline,
-                  decorationColor: p.link,
+        Row(
+          children: [
+            Expanded(child: Divider(color: p.divider)),
+            Flexible(
+              flex: 3,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  'Pas encore de compte ?',
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.body.copyWith(
+                    fontSize: 12.0,
+                    color: p.textSoft,
+                  ),
                 ),
               ),
             ),
-          ),
+            Expanded(child: Divider(color: p.divider)),
+          ],
+        ),
+        const SizedBox(height: 14),
+        AppButton.secondary(
+          label: _accountType == AccountType.university
+              ? 'Créer un compte étudiant'
+              : 'Créer un compte indépendant',
+          icon: UniIcons.addPerson(UniIconStyle.bold),
+          expand: true,
+          height: scale.field - 4,
+          onPressed: _isLoading ? null : _openRegister,
         ),
         const SizedBox(height: 16),
         Row(children: [
@@ -304,19 +312,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ),
         const SizedBox(height: 12),
         Center(
-          child: TextButton.icon(
-            onPressed: () {
+          child: InkWell(
+            onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const OnboardingScreen()),
               );
             },
-            icon: Icon(Icons.auto_awesome_rounded, size: 16, color: p.link),
-            label: Text(
-              'Découvrir UniFlow (visite guidée)',
-              style: TextStyle(
-                fontSize: 12.5,
-                color: p.link,
-                fontWeight: FontWeight.w600,
+            borderRadius: BorderRadius.circular(6),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.auto_awesome_rounded, size: 16, color: p.link),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Découvrir UniFlow (visite guidée)',
+                      style: TextStyle(
+                        fontSize: 12.5,
+                        color: p.link,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -326,7 +347,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _handleGoogleLogin() async {
-    setState(() { _isLoading = true; _errorMessage = null; _notice = null; });
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+      _notice = null;
+    });
     try {
       final authRepo = ref.read(authRepositoryProvider);
       await authRepo.loginWithGoogle();
@@ -335,25 +360,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (user == null) {
         setState(() {
           _isLoading = false;
-          _errorMessage = 'Connexion Google réussie, mais le compte n\'a pas pu être relu. '
+          _errorMessage =
+              'Connexion Google réussie, mais le compte n\'a pas pu être relu. '
               'Vérifiez la connexion réseau et réessayez.';
         });
         return;
       }
-      // Un compte universitaire sans programme : on entre quand même,
-      // le dashboard affichera une bannière pour compléter le profil.
       ref.read(currentUserProvider.notifier).state = user;
       ref.read(currentDestinationProvider.notifier).state = null;
-      unawaited(ref.read(authRepositoryProvider).retryAcademicProvisioning(user));
+      unawaited(
+          ref.read(authRepositoryProvider).retryAcademicProvisioning(user));
       setState(() => _isLoading = false);
-      showFeedback(context, message: 'Bienvenue, ${user.name}.', detail: user.userRole.scope);
+      showFeedback(context,
+          message: 'Bienvenue, ${user.name}.', detail: user.userRole.scope);
       Navigator.of(context).pushReplacement(softRoute(const MainShell()));
     } on AppwriteException catch (e) {
       if (!mounted) return;
-      setState(() { _isLoading = false; _errorMessage = readableAuthError(e); });
+      setState(() {
+        _isLoading = false;
+        _errorMessage = readableAuthError(e);
+      });
     } catch (e) {
       if (!mounted) return;
-      setState(() { _isLoading = false; _errorMessage = 'Connexion Google impossible : $e'; });
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Connexion Google impossible : $e';
+      });
     }
   }
 }
@@ -367,37 +399,52 @@ class _GoogleSignInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = AuthTone.of(context).dark;
-    return SizedBox(
-      width: double.infinity,
-      height: 44,
-      child: OutlinedButton(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(dark ? 999 : 10)),
-          side: BorderSide(
-              color: dark ? Colors.transparent : AppColors.inputBorder),
-          backgroundColor: AppColors.cardWhite,
-          foregroundColor: AppColors.textPrimary,
-        ),
-        child: isLoading
-            ? const SizedBox(width: 18, height: 18,
-                child: CircularProgressIndicator(strokeWidth: 2))
-            : FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 20, height: 20,
-                      child: CustomPaint(painter: _GoogleLogoPainter()),
+    return Material(
+      color: AppColors.cardWhite,
+      borderRadius: BorderRadius.circular(dark ? 999 : 10),
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(dark ? 999 : 10),
+        child: Container(
+          width: double.infinity,
+          height: 44,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(dark ? 999 : 10),
+            border: Border.all(
+              color: dark ? Colors.transparent : AppColors.inputBorder,
+            ),
+          ),
+          child: Center(
+            child: isLoading
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CustomPaint(painter: _GoogleLogoPainter()),
+                        ),
+                        const SizedBox(width: 10),
+                        const Text(
+                          'Continuer avec Google',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 10),
-                    const Text('Continuer avec Google',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-                  ],
-                ),
-              ),
+                  ),
+          ),
+        ),
       ),
     );
   }
@@ -413,16 +460,24 @@ class _GoogleLogoPainter extends CustomPainter {
       ..strokeWidth = r * 0.35
       ..strokeCap = StrokeCap.round;
     p.color = const Color(0xFF4285F4);
-    canvas.drawArc(Rect.fromCircle(center: c, radius: r * 0.65), -0.30, 1.55, false, p);
+    canvas.drawArc(
+        Rect.fromCircle(center: c, radius: r * 0.65), -0.30, 1.55, false, p);
     p.color = const Color(0xFFEA4335);
-    canvas.drawArc(Rect.fromCircle(center: c, radius: r * 0.65), -1.90, 1.00, false, p);
+    canvas.drawArc(
+        Rect.fromCircle(center: c, radius: r * 0.65), -1.90, 1.00, false, p);
     p.color = const Color(0xFFFBBC05);
-    canvas.drawArc(Rect.fromCircle(center: c, radius: r * 0.65),  2.10, 0.90, false, p);
+    canvas.drawArc(
+        Rect.fromCircle(center: c, radius: r * 0.65), 2.10, 0.90, false, p);
     p.color = const Color(0xFF34A853);
-    canvas.drawArc(Rect.fromCircle(center: c, radius: r * 0.65),  3.00, 0.45, false, p);
-    p..style = PaintingStyle.fill..color = const Color(0xFF4285F4);
-    canvas.drawRect(Rect.fromLTWH(c.dx, c.dy - r * 0.12, r * 0.65, r * 0.24), p);
+    canvas.drawArc(
+        Rect.fromCircle(center: c, radius: r * 0.65), 3.00, 0.45, false, p);
+    p
+      ..style = PaintingStyle.fill
+      ..color = const Color(0xFF4285F4);
+    canvas.drawRect(
+        Rect.fromLTWH(c.dx, c.dy - r * 0.12, r * 0.65, r * 0.24), p);
   }
+
   @override
   bool shouldRepaint(covariant CustomPainter old) => false;
 }

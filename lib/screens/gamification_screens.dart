@@ -26,7 +26,8 @@ class BadgesDesktopScreen extends ConsumerStatefulWidget {
   const BadgesDesktopScreen({super.key});
 
   @override
-  ConsumerState<BadgesDesktopScreen> createState() => _BadgesDesktopScreenState();
+  ConsumerState<BadgesDesktopScreen> createState() =>
+      _BadgesDesktopScreenState();
 }
 
 class _BadgesDesktopScreenState extends ConsumerState<BadgesDesktopScreen> {
@@ -64,8 +65,10 @@ class _BadgesDesktopScreenState extends ConsumerState<BadgesDesktopScreen> {
     final userXpAsync = ref.watch(userXpProvider);
 
     // Données par défaut ou réelles (résilience absolue via valueOrNull)
-    final studentBadges = studentBadgesAsync.valueOrNull ?? const <BadgeProgress>[];
-    final catalogBadges = catalogBadgesAsync.valueOrNull ?? const <BadgeWithProgress>[];
+    final studentBadges =
+        studentBadgesAsync.valueOrNull ?? const <BadgeProgress>[];
+    final catalogBadges =
+        catalogBadgesAsync.valueOrNull ?? const <BadgeWithProgress>[];
     final userXp = userXpAsync.valueOrNull?.totalXp ?? 0;
 
     // Statistiques combinées
@@ -77,13 +80,13 @@ class _BadgesDesktopScreenState extends ConsumerState<BadgesDesktopScreen> {
 
     final totalUnlocked = unlockedStudent + unlockedCatalog;
     final totalBadges = totalStudent + totalCatalog;
-    final overallPercent = totalBadges > 0
-        ? ((totalUnlocked / totalBadges) * 100).round()
-        : 0;
+    final overallPercent =
+        totalBadges > 0 ? ((totalUnlocked / totalBadges) * 100).round() : 0;
 
     // Filtrer le catalogue étendu
     final filteredCatalog = catalogBadges.where((b) {
-      if (_selectedCategory != 'all' && b.definition.category.name != _selectedCategory) {
+      if (_selectedCategory != 'all' &&
+          b.definition.category.name != _selectedCategory) {
         return false;
       }
       if (_statusFilter == 'unlocked' && !b.unlocked) {
@@ -145,7 +148,8 @@ class _BadgesDesktopScreenState extends ConsumerState<BadgesDesktopScreen> {
                       badges: studentBadges.isNotEmpty
                           ? studentBadges
                           : _defaultStudentBadges(),
-                      onTapBadge: (badge) => _showStudentBadgeModal(context, badge),
+                      onTapBadge: (badge) =>
+                          _showStudentBadgeModal(context, badge),
                     ),
 
                   const SizedBox(height: 36),
@@ -165,8 +169,10 @@ class _BadgesDesktopScreenState extends ConsumerState<BadgesDesktopScreen> {
                     searchCtrl: _searchCtrl,
                     selectedCategory: _selectedCategory,
                     statusFilter: _statusFilter,
-                    onCategoryChanged: (cat) => setState(() => _selectedCategory = cat),
-                    onStatusChanged: (status) => setState(() => _statusFilter = status),
+                    onCategoryChanged: (cat) =>
+                        setState(() => _selectedCategory = cat),
+                    onStatusChanged: (status) =>
+                        setState(() => _statusFilter = status),
                   ),
                   const SizedBox(height: 20),
 
@@ -188,7 +194,8 @@ class _BadgesDesktopScreenState extends ConsumerState<BadgesDesktopScreen> {
                   else
                     _CatalogBadgesGrid(
                       items: filteredCatalog,
-                      onTapBadge: (badge) => _showCatalogBadgeModal(context, badge),
+                      onTapBadge: (badge) =>
+                          _showCatalogBadgeModal(context, badge),
                     ),
 
                   const SizedBox(height: 48),
@@ -225,7 +232,8 @@ class _BadgesDesktopScreenState extends ConsumerState<BadgesDesktopScreen> {
 
   void _showCatalogBadgeModal(BuildContext context, BadgeWithProgress item) {
     final criteria = item.definition.criteria;
-    final target = criteria['target'] ?? criteria['threshold'] ?? criteria['count'] ?? '1';
+    final target =
+        criteria['target'] ?? criteria['threshold'] ?? criteria['count'] ?? '1';
     showDialog<void>(
       context: context,
       builder: (ctx) => _BadgeDetailDialog(
@@ -234,8 +242,10 @@ class _BadgesDesktopScreenState extends ConsumerState<BadgesDesktopScreen> {
         isUnlocked: item.unlocked,
         percent: item.progressPercent,
         detailText: item.definition.description,
-        ruleText: 'Condition : $target ${_targetUnit(item.definition.category)}',
-        congratsMessage: 'Félicitations ! Vous avez accompli cette distinction.',
+        ruleText:
+            'Condition : $target ${_targetUnit(item.definition.category)}',
+        congratsMessage:
+            'Félicitations ! Vous avez accompli cette distinction.',
         isAcademic: false,
         xpReward: item.definition.xpReward,
       ),
@@ -317,7 +327,8 @@ class _BadgesHeroBanner extends StatelessWidget {
                         const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(PhosphorIconsBold.medal, color: Color(0xFFFFD700), size: 24),
+                            Icon(PhosphorIconsBold.medal,
+                                color: Color(0xFFFFD700), size: 24),
                             SizedBox(width: 8),
                             Text(
                               'Trophées & Badges d\'Excellence',
@@ -331,11 +342,13 @@ class _BadgesHeroBanner extends StatelessWidget {
                           ],
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.18),
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                            border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.3)),
                           ),
                           child: Text(
                             '$unlockedAcademic / $totalAcademic académiques',
@@ -373,9 +386,11 @@ class _BadgesHeroBanner extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.16),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.25)),
+                      border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.25)),
                     ),
-                    child: const Icon(PhosphorIconsBold.arrowsClockwise, color: Colors.white, size: 20),
+                    child: const Icon(PhosphorIconsBold.arrowsClockwise,
+                        color: Colors.white, size: 20),
                   ),
                 ),
               ),
@@ -524,7 +539,8 @@ class _SectionHeader extends StatelessWidget {
               decoration: BoxDecoration(
                 color: const Color(0xFF8B5CF6).withValues(alpha: 0.10),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF8B5CF6).withValues(alpha: 0.25)),
+                border: Border.all(
+                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.25)),
               ),
               child: Text(
                 badgeCount,
@@ -657,7 +673,9 @@ class _StudentBadgeCard extends StatelessWidget {
                     errorBuilder: (_, __, ___) => Icon(
                       PhosphorIconsFill.medal,
                       size: 56,
-                      color: unlocked ? const Color(0xFFF59E0B) : const Color(0xFF94A3B8),
+                      color: unlocked
+                          ? const Color(0xFFF59E0B)
+                          : const Color(0xFF94A3B8),
                     ),
                   ),
                   if (!unlocked)
@@ -698,7 +716,8 @@ class _StudentBadgeCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
-                color: unlocked ? AppColors.textPrimary : const Color(0xFF64748B),
+                color:
+                    unlocked ? AppColors.textPrimary : const Color(0xFF64748B),
               ),
             ),
             const SizedBox(height: 4),
@@ -720,7 +739,8 @@ class _StudentBadgeCard extends StatelessWidget {
             // Statut ou Barre de progression
             if (unlocked)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                 decoration: BoxDecoration(
                   color: const Color(0xFFD1FAE5),
                   borderRadius: BorderRadius.circular(10),
@@ -728,7 +748,8 @@ class _StudentBadgeCard extends StatelessWidget {
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(PhosphorIconsBold.checkCircle, size: 12, color: Color(0xFF047857)),
+                    Icon(PhosphorIconsBold.checkCircle,
+                        size: 12, color: Color(0xFF047857)),
                     SizedBox(width: 4),
                     Text(
                       'Débloqué',
@@ -748,7 +769,8 @@ class _StudentBadgeCard extends StatelessWidget {
                   value: progress.progress.clamp(0.0, 1.0),
                   minHeight: 5,
                   backgroundColor: const Color(0xFFE2E8F0),
-                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF8B5CF6)),
+                  valueColor:
+                      const AlwaysStoppedAnimation<Color>(Color(0xFF8B5CF6)),
                 ),
               ),
               const SizedBox(height: 4),
@@ -760,7 +782,8 @@ class _StudentBadgeCard extends StatelessWidget {
                       progress.detail,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 10, color: Color(0xFF94A3B8)),
+                      style: const TextStyle(
+                          fontSize: 10, color: Color(0xFF94A3B8)),
                     ),
                   ),
                   Text(
@@ -847,7 +870,8 @@ class _CatalogFiltersBar extends StatelessWidget {
                     style: const TextStyle(fontSize: 13),
                     decoration: InputDecoration(
                       hintText: 'Rechercher un badge ou un mot-clé...',
-                      hintStyle: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+                      hintStyle: const TextStyle(
+                          color: Color(0xFF94A3B8), fontSize: 13),
                       prefixIcon: const Icon(PhosphorIconsBold.magnifyingGlass,
                           size: 16, color: Color(0xFF64748B)),
                       suffixIcon: searchCtrl.text.isNotEmpty
@@ -902,13 +926,19 @@ class _CatalogFiltersBar extends StatelessWidget {
                     selectedColor: const Color(0xFFEDE9FE),
                     labelStyle: TextStyle(
                       fontSize: 12,
-                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                      color: isSelected ? const Color(0xFF7C3AED) : const Color(0xFF475569),
+                      fontWeight:
+                          isSelected ? FontWeight.w700 : FontWeight.w500,
+                      color: isSelected
+                          ? const Color(0xFF7C3AED)
+                          : const Color(0xFF475569),
                     ),
                     side: BorderSide(
-                      color: isSelected ? const Color(0xFF8B5CF6) : const Color(0xFFE2E8F0),
+                      color: isSelected
+                          ? const Color(0xFF8B5CF6)
+                          : const Color(0xFFE2E8F0),
                     ),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
                   ),
                 );
               }).toList(),
@@ -1057,7 +1087,8 @@ class _CatalogBadgeCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF1F5F9),
                     borderRadius: BorderRadius.circular(6),
@@ -1072,7 +1103,8 @@ class _CatalogBadgeCard extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFFBEB),
                     borderRadius: BorderRadius.circular(6),
@@ -1105,7 +1137,9 @@ class _CatalogBadgeCard extends StatelessWidget {
                 child: Icon(
                   unlocked ? PhosphorIconsFill.medal : PhosphorIconsFill.lock,
                   size: 26,
-                  color: unlocked ? const Color(0xFF8B5CF6) : const Color(0xFF94A3B8),
+                  color: unlocked
+                      ? const Color(0xFF8B5CF6)
+                      : const Color(0xFF94A3B8),
                 ),
               ),
             ),
@@ -1120,7 +1154,8 @@ class _CatalogBadgeCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12.5,
                 fontWeight: FontWeight.w700,
-                color: unlocked ? AppColors.textPrimary : const Color(0xFF64748B),
+                color:
+                    unlocked ? AppColors.textPrimary : const Color(0xFF64748B),
               ),
             ),
             const SizedBox(height: 3),
@@ -1165,7 +1200,8 @@ class _CatalogBadgeCard extends StatelessWidget {
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(PhosphorIconsBold.check, size: 11, color: Color(0xFF047857)),
+                    Icon(PhosphorIconsBold.check,
+                        size: 11, color: Color(0xFF047857)),
                     SizedBox(width: 3),
                     Text(
                       'Acquis',
@@ -1214,7 +1250,8 @@ class _CatalogEmptyState extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 40),
         child: Column(
           children: [
-            const Icon(PhosphorIconsBold.funnel, size: 40, color: Color(0xFF94A3B8)),
+            const Icon(PhosphorIconsBold.funnel,
+                size: 40, color: Color(0xFF94A3B8)),
             const SizedBox(height: 12),
             const Text(
               'Aucun trophée ne correspond à vos filtres',
@@ -1235,7 +1272,8 @@ class _CatalogEmptyState extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF1E3A8A),
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
               ),
               child: const Text('Réinitialiser les filtres'),
             ),
@@ -1317,7 +1355,9 @@ class _BadgeDetailDialog extends StatelessWidget {
                           ),
                         )
                       : Icon(
-                          isUnlocked ? PhosphorIconsFill.medal : PhosphorIconsFill.lock,
+                          isUnlocked
+                              ? PhosphorIconsFill.medal
+                              : PhosphorIconsFill.lock,
                           size: 48,
                           color: isUnlocked
                               ? const Color(0xFF7C3AED)
@@ -1343,24 +1383,32 @@ class _BadgeDetailDialog extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                     decoration: BoxDecoration(
-                      color: isUnlocked ? const Color(0xFFD1FAE5) : const Color(0xFFFEF3C7),
+                      color: isUnlocked
+                          ? const Color(0xFFD1FAE5)
+                          : const Color(0xFFFEF3C7),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      isUnlocked ? 'Débloqué & Actif' : 'En progression ($percent%)',
+                      isUnlocked
+                          ? 'Débloqué & Actif'
+                          : 'En progression ($percent%)',
                       style: TextStyle(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w700,
-                        color: isUnlocked ? const Color(0xFF047857) : const Color(0xFFB45309),
+                        color: isUnlocked
+                            ? const Color(0xFF047857)
+                            : const Color(0xFFB45309),
                       ),
                     ),
                   ),
                   if (xpReward != null) ...[
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 3),
                       decoration: BoxDecoration(
                         color: const Color(0xFFFFFBEB),
                         borderRadius: BorderRadius.circular(12),
@@ -1481,7 +1529,8 @@ class _BadgeDetailDialog extends StatelessWidget {
                     backgroundColor: const Color(0xFF1E3A8A),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
                   ),
                   child: const Text(
                     'Compris !',
@@ -1505,7 +1554,8 @@ class QuestsDesktopScreen extends ConsumerStatefulWidget {
   const QuestsDesktopScreen({super.key});
 
   @override
-  ConsumerState<QuestsDesktopScreen> createState() => _QuestsDesktopScreenState();
+  ConsumerState<QuestsDesktopScreen> createState() =>
+      _QuestsDesktopScreenState();
 }
 
 class _QuestsDesktopScreenState extends ConsumerState<QuestsDesktopScreen>
@@ -1556,7 +1606,8 @@ class _QuestsDesktopScreenState extends ConsumerState<QuestsDesktopScreen>
                     children: [
                       Row(
                         children: [
-                          const Icon(PhosphorIconsBold.trophy, color: Color(0xFFFFD700), size: 22),
+                          const Icon(PhosphorIconsBold.trophy,
+                              color: Color(0xFFFFD700), size: 22),
                           const SizedBox(width: 8),
                           const Text(
                             'Quêtes & Défis Académiques',
@@ -1569,11 +1620,13 @@ class _QuestsDesktopScreenState extends ConsumerState<QuestsDesktopScreen>
                           ),
                           const SizedBox(width: 12),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 3),
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.18),
                               borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                              border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.3)),
                             ),
                             child: const Text(
                               '250 quêtes auto-ajustées',
@@ -1606,7 +1659,8 @@ class _QuestsDesktopScreenState extends ConsumerState<QuestsDesktopScreen>
                     final totalXp = userXp?.totalXp ?? 450;
                     final level = XpLevel.fromXp(totalXp);
                     return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18, vertical: 12),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(16),
@@ -1626,7 +1680,8 @@ class _QuestsDesktopScreenState extends ConsumerState<QuestsDesktopScreen>
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 2),
                                 decoration: BoxDecoration(
                                   color: AppColors.primary50,
                                   borderRadius: BorderRadius.circular(8),
@@ -1655,7 +1710,8 @@ class _QuestsDesktopScreenState extends ConsumerState<QuestsDesktopScreen>
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.star_rounded, size: 16, color: Color(0xFFF59E0B)),
+                              const Icon(Icons.star_rounded,
+                                  size: 16, color: Color(0xFFF59E0B)),
                               const SizedBox(width: 4),
                               Text(
                                 '$totalXp XP',
@@ -1668,7 +1724,8 @@ class _QuestsDesktopScreenState extends ConsumerState<QuestsDesktopScreen>
                               const SizedBox(width: 8),
                               Text(
                                 '• ${level.xpInLevel}/${level.xpForNextLevel}',
-                                style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+                                style: const TextStyle(
+                                    fontSize: 11, color: AppColors.textMuted),
                               ),
                             ],
                           ),
@@ -1681,7 +1738,8 @@ class _QuestsDesktopScreenState extends ConsumerState<QuestsDesktopScreen>
                                 value: level.progress,
                                 minHeight: 6,
                                 backgroundColor: const Color(0xFFE2E8F0),
-                                valueColor: const AlwaysStoppedAnimation(Color(0xFF0D9488)),
+                                valueColor: const AlwaysStoppedAnimation(
+                                    Color(0xFF0D9488)),
                               ),
                             ),
                           ),
@@ -1708,8 +1766,10 @@ class _QuestsDesktopScreenState extends ConsumerState<QuestsDesktopScreen>
               unselectedLabelColor: const Color(0xFF64748B),
               indicatorColor: const Color(0xFF0D9488),
               indicatorWeight: 3,
-              labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-              unselectedLabelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+              labelStyle:
+                  const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+              unselectedLabelStyle:
+                  const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               tabs: const [
                 Tab(
                   icon: Icon(PhosphorIconsBold.sun, size: 16),
@@ -1743,19 +1803,22 @@ class _QuestsDesktopScreenState extends ConsumerState<QuestsDesktopScreen>
                 _PeriodQuestsView(
                   provider: dailyQuestsProvider,
                   periodTitle: 'Quêtes du jour',
-                  periodSubtitle: '6 quêtes renouvelées chaque matin automatiquement pour dynamiser ton quotidien universitaire',
+                  periodSubtitle:
+                      '6 quêtes renouvelées chaque matin automatiquement pour dynamiser ton quotidien universitaire',
                   badgeColor: const Color(0xFFF59E0B),
                 ),
                 _PeriodQuestsView(
                   provider: monthlyQuestsProvider,
                   periodTitle: 'Quêtes du mois',
-                  periodSubtitle: '8 quêtes adaptées au calendrier universitaire et aux examens du mois en cours',
+                  periodSubtitle:
+                      '8 quêtes adaptées au calendrier universitaire et aux examens du mois en cours',
                   badgeColor: const Color(0xFF0D9488),
                 ),
                 _PeriodQuestsView(
                   provider: yearlyQuestsProvider,
                   periodTitle: 'Quêtes annuelles',
-                  periodSubtitle: '12 jalons majeurs de ton année académique : projets, assiduité d\'élite et stages',
+                  periodSubtitle:
+                      '12 jalons majeurs de ton année académique : projets, assiduité d\'élite et stages',
                   badgeColor: const Color(0xFF8B5CF6),
                 ),
                 const _All250QuestsView(),
@@ -1796,7 +1859,8 @@ class _PeriodQuestsView extends ConsumerWidget {
       data: (quests) {
         final completedCount = quests.where((q) => q.completed).length;
         final totalCount = quests.length;
-        final totalXpAvailable = quests.fold(0, (acc, q) => acc + q.definition.xpReward);
+        final totalXpAvailable =
+            quests.fold(0, (acc, q) => acc + q.definition.xpReward);
 
         return ListView(
           padding: const EdgeInsets.all(24),
@@ -1826,7 +1890,8 @@ class _PeriodQuestsView extends ConsumerWidget {
                       color: badgeColor.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(PhosphorIconsBold.target, color: badgeColor, size: 22),
+                    child: Icon(PhosphorIconsBold.target,
+                        color: badgeColor, size: 22),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
@@ -1835,12 +1900,16 @@ class _PeriodQuestsView extends ConsumerWidget {
                       children: [
                         Text(
                           periodTitle,
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+                          style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.textPrimary),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           periodSubtitle,
-                          style: const TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
+                          style: const TextStyle(
+                              fontSize: 12.5, color: AppColors.textSecondary),
                         ),
                       ],
                     ),
@@ -1851,12 +1920,18 @@ class _PeriodQuestsView extends ConsumerWidget {
                     children: [
                       Text(
                         '$completedCount / $totalCount terminées',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: badgeColor),
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                            color: badgeColor),
                       ),
                       const SizedBox(height: 3),
                       Text(
                         '+$totalXpAvailable XP disponibles',
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFFF59E0B)),
+                        style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFFF59E0B)),
                       ),
                     ],
                   ),
@@ -1868,7 +1943,8 @@ class _PeriodQuestsView extends ConsumerWidget {
               const Center(
                 child: Padding(
                   padding: EdgeInsets.all(40),
-                  child: Text('Aucune quête disponible pour cette période.', style: TextStyle(color: Color(0xFF64748B))),
+                  child: Text('Aucune quête disponible pour cette période.',
+                      style: TextStyle(color: Color(0xFF64748B))),
                 ),
               )
             else
@@ -1952,37 +2028,49 @@ class _All250QuestsViewState extends ConsumerState<_All250QuestsView> {
                       Expanded(
                         child: TextField(
                           decoration: InputDecoration(
-                            hintText: 'Rechercher parmi les 250 quêtes (titre, sujet, objectif)...',
-                            prefixIcon: const Icon(PhosphorIconsBold.magnifyingGlass, size: 18, color: Color(0xFF64748B)),
+                            hintText:
+                                'Rechercher parmi les 250 quêtes (titre, sujet, objectif)...',
+                            prefixIcon: const Icon(
+                                PhosphorIconsBold.magnifyingGlass,
+                                size: 18,
+                                color: Color(0xFF64748B)),
                             suffixIcon: _searchQuery.isNotEmpty
                                 ? IconButton(
                                     icon: const Icon(Icons.clear, size: 16),
-                                    onPressed: () => setState(() => _searchQuery = ''),
+                                    onPressed: () =>
+                                        setState(() => _searchQuery = ''),
                                   )
                                 : null,
                             isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 12),
                             filled: true,
                             fillColor: const Color(0xFFF8FAFC),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                              borderSide:
+                                  const BorderSide(color: Color(0xFFE2E8F0)),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                              borderSide:
+                                  const BorderSide(color: Color(0xFFE2E8F0)),
                             ),
                           ),
-                          onChanged: (val) => setState(() => _searchQuery = val),
+                          onChanged: (val) =>
+                              setState(() => _searchQuery = val),
                         ),
                       ),
                       const SizedBox(width: 16),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 10),
                         decoration: BoxDecoration(
                           color: const Color(0xFF0D9488).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFF0D9488).withValues(alpha: 0.2)),
+                          border: Border.all(
+                              color: const Color(0xFF0D9488)
+                                  .withValues(alpha: 0.2)),
                         ),
                         child: Text(
                           '${filtered.length} / ${allQuests.length} quêtes',
@@ -2009,7 +2097,9 @@ class _All250QuestsViewState extends ConsumerState<_All250QuestsView> {
                             avatar: Icon(
                               f.$3,
                               size: 15,
-                              color: isSelected ? Colors.white : const Color(0xFF1E3A8A),
+                              color: isSelected
+                                  ? Colors.white
+                                  : const Color(0xFF1E3A8A),
                             ),
                             label: Text(f.$2),
                             selectedColor: const Color(0xFF1E3A8A),
@@ -2017,9 +2107,12 @@ class _All250QuestsViewState extends ConsumerState<_All250QuestsView> {
                             labelStyle: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
-                              color: isSelected ? Colors.white : const Color(0xFF334155),
+                              color: isSelected
+                                  ? Colors.white
+                                  : const Color(0xFF334155),
                             ),
-                            onSelected: (_) => setState(() => _selectedCategory = f.$1),
+                            onSelected: (_) =>
+                                setState(() => _selectedCategory = f.$1),
                           ),
                         );
                       }).toList(),
@@ -2035,14 +2128,16 @@ class _All250QuestsViewState extends ConsumerState<_All250QuestsView> {
                   ? const Center(
                       child: Text(
                         'Aucune quête ne correspond à votre filtre.',
-                        style: TextStyle(color: Color(0xFF64748B), fontSize: 14),
+                        style:
+                            TextStyle(color: Color(0xFF64748B), fontSize: 14),
                       ),
                     )
                   : ListView.separated(
                       padding: const EdgeInsets.all(24),
                       itemCount: filtered.length,
                       separatorBuilder: (_, __) => const SizedBox(height: 10),
-                      itemBuilder: (_, i) => _QuestRowDesktop(item: filtered[i]),
+                      itemBuilder: (_, i) =>
+                          _QuestRowDesktop(item: filtered[i]),
                     ),
             ),
           ],
@@ -2061,18 +2156,20 @@ class _LeaderboardDesktopView extends ConsumerStatefulWidget {
   const _LeaderboardDesktopView({required this.currentUserId});
 
   @override
-  ConsumerState<_LeaderboardDesktopView> createState() => _LeaderboardDesktopViewState();
+  ConsumerState<_LeaderboardDesktopView> createState() =>
+      _LeaderboardDesktopViewState();
 }
 
-class _LeaderboardDesktopViewState extends ConsumerState<_LeaderboardDesktopView> {
+class _LeaderboardDesktopViewState
+    extends ConsumerState<_LeaderboardDesktopView> {
   String _period = 'weekly'; // 'weekly', 'monthly', 'annual'
 
   @override
   Widget build(BuildContext context) {
     final provider = switch (_period) {
       'monthly' => monthlyLeaderboardProvider,
-      'annual'  => annualLeaderboardProvider,
-      _         => weeklyLeaderboardProvider,
+      'annual' => annualLeaderboardProvider,
+      _ => weeklyLeaderboardProvider,
     };
 
     final lbAsync = ref.watch(provider);
@@ -2085,11 +2182,15 @@ class _LeaderboardDesktopViewState extends ConsumerState<_LeaderboardDesktopView
           color: Colors.white,
           child: Row(
             children: [
-              const Icon(PhosphorIconsBold.trophy, color: Color(0xFFF59E0B), size: 20),
+              const Icon(PhosphorIconsBold.trophy,
+                  color: Color(0xFFF59E0B), size: 20),
               const SizedBox(width: 10),
               const Text(
                 'Classement des étudiants',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.textPrimary),
               ),
               const Spacer(),
               SegmentedButton<String>(
@@ -2119,7 +2220,8 @@ class _LeaderboardDesktopViewState extends ConsumerState<_LeaderboardDesktopView
             data: (entries) {
               if (entries.isEmpty) {
                 return const Center(
-                  child: Text('Aucun étudiant classé pour cette période pour le moment.',
+                  child: Text(
+                      'Aucun étudiant classé pour cette période pour le moment.',
                       style: TextStyle(color: Color(0xFF64748B))),
                 );
               }
@@ -2127,7 +2229,9 @@ class _LeaderboardDesktopViewState extends ConsumerState<_LeaderboardDesktopView
               final top1 = entries.isNotEmpty ? entries[0] : null;
               final top2 = entries.length > 1 ? entries[1] : null;
               final top3 = entries.length > 2 ? entries[2] : null;
-              final rest = entries.length > 3 ? entries.sublist(3) : <LeaderboardEntry>[];
+              final rest = entries.length > 3
+                  ? entries.sublist(3)
+                  : <LeaderboardEntry>[];
 
               return ListView(
                 padding: const EdgeInsets.all(24),
@@ -2141,7 +2245,8 @@ class _LeaderboardDesktopViewState extends ConsumerState<_LeaderboardDesktopView
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF1E3A8A).withValues(alpha: 0.08),
+                          color:
+                              const Color(0xFF1E3A8A).withValues(alpha: 0.08),
                           blurRadius: 18,
                           offset: const Offset(0, 4),
                         ),
@@ -2170,7 +2275,8 @@ class _LeaderboardDesktopViewState extends ConsumerState<_LeaderboardDesktopView
                                 rank: 2,
                                 medalColor: const Color(0xFF94A3B8),
                                 podiumHeight: 100,
-                                isCurrentUser: top2.userId == widget.currentUserId,
+                                isCurrentUser:
+                                    top2.userId == widget.currentUserId,
                               )
                             else
                               const SizedBox(width: 140),
@@ -2184,7 +2290,8 @@ class _LeaderboardDesktopViewState extends ConsumerState<_LeaderboardDesktopView
                                 rank: 1,
                                 medalColor: const Color(0xFFFFD700),
                                 podiumHeight: 140,
-                                isCurrentUser: top1.userId == widget.currentUserId,
+                                isCurrentUser:
+                                    top1.userId == widget.currentUserId,
                               ),
 
                             const SizedBox(width: 16),
@@ -2196,7 +2303,8 @@ class _LeaderboardDesktopViewState extends ConsumerState<_LeaderboardDesktopView
                                 rank: 3,
                                 medalColor: const Color(0xFFCD7F32),
                                 podiumHeight: 80,
-                                isCurrentUser: top3.userId == widget.currentUserId,
+                                isCurrentUser:
+                                    top3.userId == widget.currentUserId,
                               )
                             else
                               const SizedBox(width: 140),
@@ -2212,7 +2320,10 @@ class _LeaderboardDesktopViewState extends ConsumerState<_LeaderboardDesktopView
                       padding: EdgeInsets.only(bottom: 12),
                       child: Text(
                         'Tous les participants classés',
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Color(0xFF1E293B)),
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF1E293B)),
                       ),
                     ),
                     Container(
@@ -2227,12 +2338,18 @@ class _LeaderboardDesktopViewState extends ConsumerState<_LeaderboardDesktopView
                           final entry = item.value;
                           final isMe = entry.userId == widget.currentUserId;
                           return Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 12),
                             decoration: BoxDecoration(
-                              color: isMe ? const Color(0xFF0D9488).withValues(alpha: 0.08) : Colors.transparent,
+                              color: isMe
+                                  ? const Color(0xFF0D9488)
+                                      .withValues(alpha: 0.08)
+                                  : Colors.transparent,
                               border: Border(
                                 bottom: BorderSide(
-                                  color: item.key < rest.length - 1 ? const Color(0xFFF1F5F9) : Colors.transparent,
+                                  color: item.key < rest.length - 1
+                                      ? const Color(0xFFF1F5F9)
+                                      : Colors.transparent,
                                 ),
                               ),
                             ),
@@ -2244,51 +2361,70 @@ class _LeaderboardDesktopViewState extends ConsumerState<_LeaderboardDesktopView
                                     '#$rankNumber',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w800,
-                                      color: isMe ? const Color(0xFF0D9488) : const Color(0xFF64748B),
+                                      color: isMe
+                                          ? const Color(0xFF0D9488)
+                                          : const Color(0xFF64748B),
                                       fontSize: 14,
                                     ),
                                   ),
                                 ),
                                 CircleAvatar(
                                   radius: 18,
-                                  backgroundColor: isMe ? const Color(0xFF0D9488) : const Color(0xFF1E3A8A),
+                                  backgroundColor: isMe
+                                      ? const Color(0xFF0D9488)
+                                      : const Color(0xFF1E3A8A),
                                   child: Text(
-                                    entry.displayName.isNotEmpty ? entry.displayName[0].toUpperCase() : '?',
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                    entry.displayName.isNotEmpty
+                                        ? entry.displayName[0].toUpperCase()
+                                        : '?',
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 const SizedBox(width: 14),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         entry.displayName,
                                         style: TextStyle(
-                                          fontWeight: isMe ? FontWeight.w800 : FontWeight.w600,
+                                          fontWeight: isMe
+                                              ? FontWeight.w800
+                                              : FontWeight.w600,
                                           fontSize: 14,
-                                          color: isMe ? const Color(0xFF0D9488) : const Color(0xFF1E293B),
+                                          color: isMe
+                                              ? const Color(0xFF0D9488)
+                                              : const Color(0xFF1E293B),
                                         ),
                                       ),
                                       if (isMe)
                                         const Text(
                                           'Votre position',
-                                          style: TextStyle(fontSize: 11, color: Color(0xFF0D9488), fontWeight: FontWeight.w600),
+                                          style: TextStyle(
+                                              fontSize: 11,
+                                              color: Color(0xFF0D9488),
+                                              fontWeight: FontWeight.w600),
                                         ),
                                     ],
                                   ),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 4),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFFFFBEB),
                                     borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(color: const Color(0xFFFDE68A)),
+                                    border: Border.all(
+                                        color: const Color(0xFFFDE68A)),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Icon(Icons.star_rounded, size: 14, color: Color(0xFFF59E0B)),
+                                      const Icon(Icons.star_rounded,
+                                          size: 14, color: Color(0xFFF59E0B)),
                                       const SizedBox(width: 4),
                                       Text(
                                         '${entry.score} XP',
@@ -2352,7 +2488,9 @@ class _PodiumStep extends StatelessWidget {
               radius: rank == 1 ? 28 : 22,
               backgroundColor: medalColor,
               child: Text(
-                entry.displayName.isNotEmpty ? entry.displayName[0].toUpperCase() : '?',
+                entry.displayName.isNotEmpty
+                    ? entry.displayName[0].toUpperCase()
+                    : '?',
                 style: TextStyle(
                   color: rank == 1 ? const Color(0xFF78350F) : Colors.white,
                   fontWeight: FontWeight.w800,
@@ -2370,7 +2508,9 @@ class _PodiumStep extends StatelessWidget {
             style: TextStyle(
               fontSize: rank == 1 ? 14 : 12.5,
               fontWeight: FontWeight.w700,
-              color: isCurrentUser ? const Color(0xFF0D9488) : const Color(0xFF1E293B),
+              color: isCurrentUser
+                  ? const Color(0xFF0D9488)
+                  : const Color(0xFF1E293B),
             ),
           ),
           const SizedBox(height: 3),
@@ -2379,7 +2519,9 @@ class _PodiumStep extends StatelessWidget {
             style: TextStyle(
               fontSize: rank == 1 ? 13 : 11.5,
               fontWeight: FontWeight.w800,
-              color: medalColor == const Color(0xFFFFD700) ? const Color(0xFFB45309) : medalColor,
+              color: medalColor == const Color(0xFFFFD700)
+                  ? const Color(0xFFB45309)
+                  : medalColor,
             ),
           ),
           const SizedBox(height: 8),
@@ -2389,7 +2531,8 @@ class _PodiumStep extends StatelessWidget {
             width: double.infinity,
             decoration: BoxDecoration(
               color: medalColor.withValues(alpha: 0.15),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(12)),
               border: Border.all(color: medalColor.withValues(alpha: 0.35)),
             ),
             child: Center(
@@ -2398,7 +2541,9 @@ class _PodiumStep extends StatelessWidget {
                 style: TextStyle(
                   fontSize: rank == 1 ? 28 : 22,
                   fontWeight: FontWeight.w900,
-                  color: medalColor == const Color(0xFFFFD700) ? const Color(0xFFB45309) : medalColor,
+                  color: medalColor == const Color(0xFFFFD700)
+                      ? const Color(0xFFB45309)
+                      : medalColor,
                 ),
               ),
             ),
@@ -2422,16 +2567,17 @@ class _QuestRowDesktop extends StatelessWidget {
     final q = item.definition;
     final isCompleted = item.completed;
     final current = item.currentValue;
-    final target  = item.targetValue;
-    final pct     = item.ratio;
+    final target = item.targetValue;
+    final pct = item.ratio;
 
-    final color = isCompleted ? const Color(0xFF10B981) : const Color(0xFF0D9488);
+    final color =
+        isCompleted ? const Color(0xFF10B981) : const Color(0xFF0D9488);
 
     final periodBadge = switch (q.period) {
-      QuestPeriod.daily   => ('JOUR', const Color(0xFFF59E0B)),
+      QuestPeriod.daily => ('JOUR', const Color(0xFFF59E0B)),
       QuestPeriod.monthly => ('MOIS', const Color(0xFF0D9488)),
-      QuestPeriod.yearly  => ('ANNÉE', const Color(0xFF8B5CF6)),
-      _                   => ('DÉFI', const Color(0xFF3B82F6)),
+      QuestPeriod.yearly => ('ANNÉE', const Color(0xFF8B5CF6)),
+      _ => ('DÉFI', const Color(0xFF3B82F6)),
     };
 
     return Container(
@@ -2447,7 +2593,9 @@ class _QuestRowDesktop extends StatelessWidget {
           ),
         ],
         border: Border.all(
-          color: isCompleted ? const Color(0xFF10B981).withValues(alpha: 0.3) : const Color(0xFFE2E8F0),
+          color: isCompleted
+              ? const Color(0xFF10B981).withValues(alpha: 0.3)
+              : const Color(0xFFE2E8F0),
           width: isCompleted ? 1.5 : 1.0,
         ),
       ),
@@ -2462,7 +2610,9 @@ class _QuestRowDesktop extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
-              isCompleted ? Icons.check_circle_rounded : Icons.emoji_events_rounded,
+              isCompleted
+                  ? Icons.check_circle_rounded
+                  : Icons.emoji_events_rounded,
               color: color,
               size: 24,
             ),
@@ -2477,7 +2627,8 @@ class _QuestRowDesktop extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: periodBadge.$2.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(6),
@@ -2498,8 +2649,11 @@ class _QuestRowDesktop extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
-                          color: isCompleted ? const Color(0xFF10B981) : const Color(0xFF1E293B),
-                          decoration: isCompleted ? TextDecoration.lineThrough : null,
+                          color: isCompleted
+                              ? const Color(0xFF10B981)
+                              : const Color(0xFF1E293B),
+                          decoration:
+                              isCompleted ? TextDecoration.lineThrough : null,
                         ),
                       ),
                     ),
@@ -2508,7 +2662,8 @@ class _QuestRowDesktop extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   q.description,
-                  style: const TextStyle(fontSize: 12.5, color: Color(0xFF64748B)),
+                  style:
+                      const TextStyle(fontSize: 12.5, color: Color(0xFF64748B)),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -2529,7 +2684,10 @@ class _QuestRowDesktop extends StatelessWidget {
                     const SizedBox(width: 12),
                     Text(
                       '$current / $target',
-                      style: TextStyle(fontSize: 11.5, color: color, fontWeight: FontWeight.w700),
+                      style: TextStyle(
+                          fontSize: 11.5,
+                          color: color,
+                          fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),
@@ -2543,7 +2701,8 @@ class _QuestRowDesktop extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFFBEB),
                   borderRadius: BorderRadius.circular(12),
@@ -2552,7 +2711,8 @@ class _QuestRowDesktop extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.star_rounded, size: 14, color: Color(0xFFF59E0B)),
+                    const Icon(Icons.star_rounded,
+                        size: 14, color: Color(0xFFF59E0B)),
                     const SizedBox(width: 4),
                     Text(
                       '+${q.xpReward} XP',
@@ -2570,18 +2730,25 @@ class _QuestRowDesktop extends StatelessWidget {
                 const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.check_circle_rounded, size: 14, color: Color(0xFF10B981)),
+                    Icon(Icons.check_circle_rounded,
+                        size: 14, color: Color(0xFF10B981)),
                     SizedBox(width: 4),
                     Text(
                       'Terminée',
-                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFF10B981)),
+                      style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF10B981)),
                     ),
                   ],
                 )
               else
                 Text(
                   '${(pct * 100).toInt()}%',
-                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF94A3B8)),
+                  style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF94A3B8)),
                 ),
             ],
           ),
@@ -2605,7 +2772,8 @@ class _ErrorView extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          const Icon(Icons.error_outline_rounded, size: 48, color: Color(0xFFEF4444)),
+          const Icon(Icons.error_outline_rounded,
+              size: 48, color: Color(0xFFEF4444)),
           const SizedBox(height: 12),
           const Text('Impossible de charger les données',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),

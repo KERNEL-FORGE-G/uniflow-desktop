@@ -164,12 +164,12 @@ class DashboardScreen extends ConsumerWidget {
                             _DesktopHeroBanner(user: user, role: role),
                             const SizedBox(height: AppSpacing.lg),
                             _RoleStats(role: role),
-                            const SizedBox(height: AppSpacing.lg),
-                            const _CoursesSectionModern(),
                             if (actions.isNotEmpty) ...[
                               const SizedBox(height: AppSpacing.lg),
                               _QuickActions(destinations: actions),
                             ],
+                            const SizedBox(height: AppSpacing.lg),
+                            const _CoursesSectionModern(),
                           ],
                         ),
                       ),
@@ -181,15 +181,21 @@ class DashboardScreen extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             QuestSummaryWidget(
-                              onViewAll: () => ref.read(currentDestinationProvider.notifier).state = AppDestination.quests,
+                              onViewAll: () => ref
+                                  .read(currentDestinationProvider.notifier)
+                                  .state = AppDestination.quests,
                             ),
                             const SizedBox(height: AppSpacing.md),
                             DailyReminderCard(
-                              onViewSchedule: () => ref.read(currentDestinationProvider.notifier).state = AppDestination.schedule,
+                              onViewSchedule: () => ref
+                                  .read(currentDestinationProvider.notifier)
+                                  .state = AppDestination.schedule,
                             ),
                             const SizedBox(height: AppSpacing.md),
                             BadgeHighlightWidget(
-                              onSeeAll: () => ref.read(currentDestinationProvider.notifier).state = AppDestination.badges,
+                              onSeeAll: () => ref
+                                  .read(currentDestinationProvider.notifier)
+                                  .state = AppDestination.badges,
                             ),
                             const SizedBox(height: AppSpacing.md),
                             const _BadgesSection(),
@@ -218,15 +224,21 @@ class DashboardScreen extends ConsumerWidget {
                       const _CoursesSectionModern(),
                       const SizedBox(height: AppSpacing.lg),
                       QuestSummaryWidget(
-                        onViewAll: () => ref.read(currentDestinationProvider.notifier).state = AppDestination.quests,
+                        onViewAll: () => ref
+                            .read(currentDestinationProvider.notifier)
+                            .state = AppDestination.quests,
                       ),
                       const SizedBox(height: AppSpacing.md),
                       DailyReminderCard(
-                        onViewSchedule: () => ref.read(currentDestinationProvider.notifier).state = AppDestination.schedule,
+                        onViewSchedule: () => ref
+                            .read(currentDestinationProvider.notifier)
+                            .state = AppDestination.schedule,
                       ),
                       const SizedBox(height: AppSpacing.md),
                       BadgeHighlightWidget(
-                        onSeeAll: () => ref.read(currentDestinationProvider.notifier).state = AppDestination.badges,
+                        onSeeAll: () => ref
+                            .read(currentDestinationProvider.notifier)
+                            .state = AppDestination.badges,
                       ),
                       const SizedBox(height: AppSpacing.md),
                       const _BadgesSection(),
@@ -263,10 +275,7 @@ class _DesktopHeroBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final firstName = _DashboardHeader.firstNameOf(user?.name);
-    final greeting = firstName.isEmpty
-        ? 'Bienvenue sur UniFlow'
-        : 'Bonjour, $firstName';
+    const greeting = 'Bienvenue sur UniFlow';
     final subtitle = switch (role) {
       UserRole.student => 'Prêt pour vos cours du jour ?',
       UserRole.delegate => 'Votre journée et celle de la classe',
@@ -274,113 +283,138 @@ class _DesktopHeroBanner extends StatelessWidget {
       UserRole.admin => 'Vue d\'ensemble de l\'établissement',
     };
 
-    return Container(
-      height: 160,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF1E3A8A), Color(0xFF2D4FA8), Color(0xFF0D9488)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        boxShadow: AppShadows.card,
-      ),
-      child: Stack(
-        clipBehavior: Clip.antiAlias,
-        children: [
-          // Cercles décoratifs
-          Positioned(
-            right: -30,
-            top: -30,
-            child: Container(
-              width: 180,
-              height: 180,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.06),
-                shape: BoxShape.circle,
-              ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final w = constraints.maxWidth;
+        final isCompact = w < 540;
+        final rightInset = isCompact ? 100.0 : 210.0;
+        final leftInset = isCompact ? AppSpacing.md : AppSpacing.xxl;
+
+        return Container(
+          height: isCompact ? 140 : 160,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF1E3A8A), Color(0xFF2D4FA8), Color(0xFF0D9488)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+            boxShadow: AppShadows.card,
           ),
-          Positioned(
-            right: 110,
-            bottom: -20,
-            child: Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          // Texte à gauche
-          Positioned(
-            left: AppSpacing.xxl,
-            top: 0,
-            bottom: 0,
-            right: 250,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  greeting,
-                  style: const TextStyle(
-                    fontFamily: AppTextStyles.fontFamily,
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.5,
+          child: Stack(
+            clipBehavior: Clip.antiAlias,
+            children: [
+              // Cercles décoratifs
+              Positioned(
+                right: -30,
+                top: -30,
+                child: Container(
+                  width: 180,
+                  height: 180,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.06),
+                    shape: BoxShape.circle,
                   ),
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontFamily: AppTextStyles.fontFamily,
-                    color: Colors.white.withValues(alpha: 0.78),
-                    fontSize: 13.5,
+              ),
+              Positioned(
+                right: 110,
+                bottom: -20,
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.05),
+                    shape: BoxShape.circle,
                   ),
                 ),
-                const SizedBox(height: 16),
-                OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.white54),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 18, vertical: 9),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.pill)),
-                    textStyle: const TextStyle(
-                      fontFamily: AppTextStyles.fontFamily,
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w600,
+              ),
+              // Texte à gauche
+              Positioned(
+                left: leftInset,
+                top: 8,
+                bottom: 8,
+                right: rightInset,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: ConstrainedBox(
+                    constraints:
+                        BoxConstraints(maxWidth: isCompact ? 280 : 440),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          greeting,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontFamily: AppTextStyles.fontFamily,
+                            color: Colors.white,
+                            fontSize: isCompact ? 18 : 22,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.5,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          subtitle,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontFamily: AppTextStyles.fontFamily,
+                            color: Colors.white.withValues(alpha: 0.78),
+                            fontSize: isCompact ? 12 : 13.5,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        OutlinedButton(
+                          onPressed: () {},
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            side: const BorderSide(color: Colors.white54),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: isCompact ? 14 : 18,
+                              vertical: isCompact ? 6 : 9,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(AppRadius.pill),
+                            ),
+                            textStyle: TextStyle(
+                              fontFamily: AppTextStyles.fontFamily,
+                              fontSize: isCompact ? 11.5 : 12.5,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          child: const Text('Explorer →'),
+                        ),
+                      ],
                     ),
                   ),
-                  child: const Text('Explorer →'),
                 ),
-              ],
-            ),
-          ),
-          // Mascotte cartoon Archlord & Uni à droite
-          Positioned(
-            right: 10,
-            bottom: 0,
-            child: Image.asset(
-              'assets/mascot/archlord_uni_duo_solid.webp',
-              height: 155,
-              fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => Image.asset(
-                'assets/mascot/uni_graduate.webp',
-                height: 155,
-                fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) => const SizedBox(width: 155),
               ),
-            ),
+              // Mascotte cartoon Archlord & Uni à droite
+              Positioned(
+                right: 10,
+                bottom: 0,
+                child: Image.asset(
+                  'assets/mascot/archlord_uni_duo_solid.webp',
+                  height: isCompact ? 130 : 155,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, __, ___) => Image.asset(
+                    'assets/mascot/uni_graduate.webp',
+                    height: isCompact ? 130 : 155,
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, __, ___) => const SizedBox(width: 120),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -1471,9 +1505,13 @@ class _CoursesSectionModern extends ConsumerWidget {
                   ],
                 ),
                 TextButton.icon(
-                  onPressed: () => ref.read(currentDestinationProvider.notifier).state = AppDestination.schedule,
-                  icon: const Text('Tout voir', style: TextStyle(fontWeight: FontWeight.w600)),
-                  label: const PhosphorIcon(PhosphorIconsBold.arrowRight, size: 14),
+                  onPressed: () => ref
+                      .read(currentDestinationProvider.notifier)
+                      .state = AppDestination.schedule,
+                  icon: const Text('Tout voir',
+                      style: TextStyle(fontWeight: FontWeight.w600)),
+                  label: const PhosphorIcon(PhosphorIconsBold.arrowRight,
+                      size: 14),
                 ),
               ],
             ),
@@ -1496,7 +1534,9 @@ class _CoursesSectionModern extends ConsumerWidget {
                     final theme = _themes[i % _themes.length];
 
                     return InkWell(
-                      onTap: () => ref.read(currentDestinationProvider.notifier).state = AppDestination.schedule,
+                      onTap: () => ref
+                          .read(currentDestinationProvider.notifier)
+                          .state = AppDestination.schedule,
                       borderRadius: BorderRadius.circular(16),
                       child: Container(
                         decoration: BoxDecoration(
@@ -1522,7 +1562,8 @@ class _CoursesSectionModern extends ConsumerWidget {
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                 ),
-                                borderRadius: const BorderRadius.horizontal(left: Radius.circular(15)),
+                                borderRadius: const BorderRadius.horizontal(
+                                    left: Radius.circular(15)),
                               ),
                               child: Center(
                                 child: PhosphorIcon(
@@ -1543,15 +1584,18 @@ class _CoursesSectionModern extends ConsumerWidget {
                                     Row(
                                       children: [
                                         Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 7, vertical: 2),
                                           decoration: BoxDecoration(
                                             color: AppColors.primary50,
-                                            borderRadius: BorderRadius.circular(6),
+                                            borderRadius:
+                                                BorderRadius.circular(6),
                                           ),
                                           child: Text(
                                             ue.code,
                                             style: const TextStyle(
-                                              fontFamily: AppTextStyles.fontFamily,
+                                              fontFamily:
+                                                  AppTextStyles.fontFamily,
                                               fontSize: 10.5,
                                               fontWeight: FontWeight.w700,
                                               color: AppColors.primaryBlue,
@@ -1560,15 +1604,18 @@ class _CoursesSectionModern extends ConsumerWidget {
                                         ),
                                         const Spacer(),
                                         Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 6, vertical: 2),
                                           decoration: BoxDecoration(
                                             color: AppColors.teal50,
-                                            borderRadius: BorderRadius.circular(6),
+                                            borderRadius:
+                                                BorderRadius.circular(6),
                                           ),
                                           child: Text(
                                             '${ue.credits} ECTS',
                                             style: const TextStyle(
-                                              fontFamily: AppTextStyles.fontFamily,
+                                              fontFamily:
+                                                  AppTextStyles.fontFamily,
                                               fontSize: 10.5,
                                               fontWeight: FontWeight.w600,
                                               color: AppColors.teal,
@@ -1601,13 +1648,15 @@ class _CoursesSectionModern extends ConsumerWidget {
                                         const SizedBox(width: 4),
                                         Expanded(
                                           child: Text(
-                                            (ue.teacherName != null && ue.teacherName!.isNotEmpty)
+                                            (ue.teacherName != null &&
+                                                    ue.teacherName!.isNotEmpty)
                                                 ? ue.teacherName!
                                                 : 'Enseignant référent',
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
-                                              fontFamily: AppTextStyles.fontFamily,
+                                              fontFamily:
+                                                  AppTextStyles.fontFamily,
                                               fontSize: 11,
                                               color: colors.muted,
                                             ),
@@ -1630,7 +1679,9 @@ class _CoursesSectionModern extends ConsumerWidget {
           ],
         );
       },
-      loading: () => const Center(child: Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator())),
+      loading: () => const Center(
+          child: Padding(
+              padding: EdgeInsets.all(20), child: CircularProgressIndicator())),
       error: (_, __) => const SizedBox.shrink(),
     );
   }

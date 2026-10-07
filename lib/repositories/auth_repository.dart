@@ -127,10 +127,8 @@ class AuthRepository {
     } catch (_) {}
     await _account.createOAuth2Session(
       provider: OAuthProvider.google,
-      success:
-          'uniflow://auth/oauth2/success',
-      failure:
-          'uniflow://auth/oauth2/failure',
+      success: 'uniflow://auth/oauth2/success',
+      failure: 'uniflow://auth/oauth2/failure',
     );
   }
 

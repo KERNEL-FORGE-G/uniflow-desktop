@@ -2,35 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../widgets/uni/uni_mascot.dart';
-import '../widgets/uni/archlord_mascot.dart';
-import '../widgets/uni/mascot_dialogue.dart';
+import '../theme/app_theme.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  DONNÉES
+//  DONNÉES ONBOARDING PLEIN ÉCRAN (MODÈLE ÉPURÉ 2D SANS DIALOGUE)
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _OnboardPage {
+  final String tagline;
   final String title;
   final String subtitle;
   final String bgImage;
-  final Color accentColor;   // couleur de la sidebar gauche
-  final Color buttonColor;   // couleur du bouton Suivant / Commencer
-  final UniPose uniPose;
-  final ArchlordPose archlordPose;
-  final List<DialogueLine> dialogue;
-  final String tagline;
+  final String buttonLabel;
 
   const _OnboardPage({
+    required this.tagline,
     required this.title,
     required this.subtitle,
     required this.bgImage,
-    required this.accentColor,
-    required this.buttonColor,
-    required this.uniPose,
-    required this.archlordPose,
-    required this.dialogue,
-    required this.tagline,
+    required this.buttonLabel,
   });
 }
 
@@ -38,72 +28,41 @@ const _kPages = [
   _OnboardPage(
     tagline: 'BIENVENUE',
     title: 'Bienvenue sur\nUniFlow',
-    subtitle: 'La plateforme universitaire tout-en-un — cours, présences,\n'
-        'notes et communication en un seul endroit.',
+    subtitle:
+        'La plateforme universitaire tout-en-un — cours, présences QR code, '
+        'notes et communication en un seul endroit fluide et performant.',
     bgImage: 'assets/onboarding/onboarding_desk_1.webp',
-    accentColor: Color(0xFF1E3A8A),
-    buttonColor: Color(0xFF1E3A8A),
-    uniPose: UniPose.wave,
-    archlordPose: ArchlordPose.wave,
-    dialogue: [
-      DialogueLine.archlord(
-          'UniFlow est né dans notre propre fac. On a résolu nos propres problèmes.'),
-      DialogueLine.uni(
-          'Salut ! Moi c\'est Uni. Je suis là pour vous guider tout au long de l\'aventure !'),
-      DialogueLine.archlord('On vous prépare un espace de travail sur mesure. Bienvenue !'),
-    ],
+    buttonLabel: 'Suivant →',
   ),
   _OnboardPage(
     tagline: 'FONCTIONNALITÉS',
     title: 'Tout ce dont vous\navez besoin',
-    subtitle: 'Étudiants, enseignants, programmes et salles.\n'
-        'Présences QR code, devoirs, notes et bulletins automatisés.',
+    subtitle: 'Étudiants, délégués et enseignants connectés. '
+        'Émargement instantané par QR code, suivi des notes en temps réel et organisation globale.',
     bgImage: 'assets/onboarding/onboarding_desk_2.webp',
-    accentColor: Color(0xFF0D9488),
-    buttonColor: Color(0xFF0D9488),
-    uniPose: UniPose.celebrate,
-    archlordPose: ArchlordPose.explain,
-    dialogue: [
-      DialogueLine.uni('Multi-rôles, offline-first, et toujours synchronisé !'),
-      DialogueLine.archlord(
-          'Gestion de présences en QR code, notes en temps réel, bulletins auto…'),
-      DialogueLine.uni(
-          'Et tout fonctionne même sans Internet — on a pensé à tout !'),
-    ],
+    buttonLabel: 'Continuer →',
   ),
   _OnboardPage(
     tagline: 'PRÊT ?',
     title: 'Transformez\nvotre campus',
-    subtitle: 'Connectez-vous avec votre compte universitaire ou créez un\n'
-        'espace indépendant. UniFlow fonctionne même sans Internet.',
+    subtitle:
+        'Connectez-vous avec votre compte académique ou votre espace indépendant. '
+        'UniFlow vous accompagne chaque jour, même hors-ligne.',
     bgImage: 'assets/onboarding/onboarding_desk_3.webp',
-    accentColor: Color(0xFF7C3AED),
-    buttonColor: Color(0xFF7C3AED),
-    uniPose: UniPose.pointing,
-    archlordPose: ArchlordPose.thumbs,
-    dialogue: [
-      DialogueLine.archlord(
-          'KERNEL FORGE — UniFlow est notre premier produit, pas le dernier.'),
-      DialogueLine.uni(
-          'Cliquez sur Commencer — je serai toujours là si vous avez besoin !'),
-      DialogueLine.archlord('Vos retours font le produit. On construit ça ensemble.'),
-    ],
+    buttonLabel: 'Commencer !',
   ),
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  ÉCRAN PRINCIPAL
+//  ÉCRAN ONBOARDING PLEIN ÉCRAN (ADAPTÉ À TOUTE LA FENÊTRE)
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// Onboarding desktop — layout deux colonnes :
-/// • Colonne gauche (40%) : card colorée avec tagline, titre, description,
-///   dialogue mascotte et bouton Suivant/Commencer.
-/// • Colonne droite (60%) : image plein cadre avec fondu doux.
-///
-/// Thème : card solide colorée — zéro glassmorphism, zéro blur.
+/// Onboarding desktop pleine fenêtre :
+/// S'adapte à toute la taille de l'écran (zéro boîte étriquée au centre).
+/// • Gauche : illustration 2D officielle cartoon Archlord & Uni occupant la hauteur
+/// • Droite : grand titre épuré (style « Say hello! »), description, bouton pilule et dots
+/// • Zéro dialogue ni bulle de texte
 class OnboardingScreen extends ConsumerStatefulWidget {
-  /// Callback appelé quand l'utilisateur termine ou passe l'onboarding.
-  /// Si null, on fait un pop() de la navigation.
   final VoidCallback? onFinished;
   const OnboardingScreen({super.key, this.onFinished});
 
@@ -111,27 +70,8 @@ class OnboardingScreen extends ConsumerStatefulWidget {
   ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
-    with SingleTickerProviderStateMixin {
-  final _controller = PageController();
+class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   int _page = 0;
-  late final AnimationController _anim;
-
-  @override
-  void initState() {
-    super.initState();
-    _anim = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    )..forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _anim.dispose();
-    super.dispose();
-  }
 
   Future<void> _finish() async {
     final prefs = await SharedPreferences.getInstance();
@@ -140,168 +80,280 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
     if (widget.onFinished != null) {
       widget.onFinished!();
     } else {
-      Navigator.of(context).pop();
+      Navigator.of(context).maybePop();
     }
   }
 
   void _next() {
     if (_page < _kPages.length - 1) {
-      _controller.nextPage(
-        duration: const Duration(milliseconds: 420),
-        curve: Curves.easeInOutCubic,
-      );
+      setState(() {
+        _page++;
+      });
     } else {
       _finish();
+    }
+  }
+
+  void _prev() {
+    if (_page > 0) {
+      setState(() {
+        _page--;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final page = _kPages[_page];
+
     return Scaffold(
-      backgroundColor: page.accentColor,
-      body: Row(
-        children: [
-          // ── Colonne gauche : card solide ──────────────────────────
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.easeInOut,
-            width: 420,
-            color: page.accentColor,
-            padding: const EdgeInsets.all(40),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final w = constraints.maxWidth;
+            final h = constraints.maxHeight;
+            final isNarrow = w < 850;
+
+            return Stack(
               children: [
-                // Logo + bouton Passer
-                Row(
-                  children: [
-                    Image.asset(
-                      'assets/brand/uniflow_logo_horizontal.png',
-                      height: 28,
-                      color: Colors.white,
-                      colorBlendMode: BlendMode.srcIn,
-                      errorBuilder: (_, __, ___) => const Text(
-                        'UniFlow',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
+                // ── Barre supérieure pleine largeur avec logo bien visible ──
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: 84,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: (w * 0.05).clamp(24.0, 64.0),
+                      vertical: 14,
                     ),
-                    const Spacer(),
-                    if (_page < _kPages.length - 1)
-                      TextButton(
-                        onPressed: _finish,
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.white.withValues(alpha: 0.20),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 7),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                        ),
-                        child: const Text('Passer',
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          'assets/brand/uniflow_logo_horizontal.png',
+                          height: 52,
+                          fit: BoxFit.contain,
+                          filterQuality: FilterQuality.high,
+                          errorBuilder: (_, __, ___) => const Text(
+                            'UniFlow',
                             style: TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.w600)),
-                      ),
-                  ],
+                              fontSize: 28,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.primaryBlue,
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        if (_page < _kPages.length - 1)
+                          TextButton(
+                            onPressed: _finish,
+                            style: TextButton.styleFrom(
+                              foregroundColor: const Color(0xFF64748B),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 22,
+                                vertical: 11,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(
+                                  color: Color(0xFFE2E8F0),
+                                  width: 1.5,
+                                ),
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                            ),
+                            child: const Text(
+                              'Passer',
+                              style: TextStyle(
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
 
-                const Spacer(),
+                // ── Corps principal adapté à toute la fenêtre ─────────────
+                Positioned.fill(
+                  top: 84,
+                  child: isNarrow
+                      ? _buildVerticalLayout(page, w, h)
+                      : _buildHorizontalLayout(page, w, h),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
 
-                // Tag pill
+  Widget _buildHorizontalLayout(_OnboardPage page, double w, double h) {
+    final titleSize = (w * 0.034).clamp(32.0, 52.0);
+
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: (w * 0.06).clamp(32.0, 80.0),
+        vertical: 24,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // ── Moitié gauche : Grande illustration cartoon ───────────────────
+          Expanded(
+            flex: 5,
+            child: Center(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 400),
+                child: Image.asset(
+                  page.bgImage,
+                  key: ValueKey(page.bgImage),
+                  fit: BoxFit.contain,
+                  filterQuality: FilterQuality.high,
+                ),
+              ),
+            ),
+          ),
+
+          SizedBox(width: (w * 0.06).clamp(32.0, 72.0)),
+
+          // ── Moitié droite : Titre style « Say hello! », description, CTA ──
+          Expanded(
+            flex: 5,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Tagline chip
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.22),
-                    borderRadius: BorderRadius.circular(20),
+                    color: const Color(0xFFF1F5F9),
+                    borderRadius: BorderRadius.circular(999),
                   ),
                   child: Text(
                     page.tagline,
                     style: const TextStyle(
-                      fontSize: 11,
-                      color: Colors.white,
+                      fontSize: 11.5,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 1.4,
+                      color: AppColors.primaryBlue,
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
 
-                // Titre
+                // Grand Titre épuré
                 AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 350),
+                  duration: const Duration(milliseconds: 320),
                   child: Text(
                     page.title,
                     key: ValueKey(page.title),
-                    style: const TextStyle(
-                      fontSize: 34,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                      height: 1.15,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                // Sous-titre
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 350),
-                  child: Text(
-                    page.subtitle,
-                    key: ValueKey(page.subtitle),
                     style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.white.withValues(alpha: 0.85),
-                      height: 1.6,
-                      fontWeight: FontWeight.w500,
+                      fontSize: titleSize,
+                      fontWeight: FontWeight.w900,
+                      color: const Color(0xFF0F172A),
+                      height: 1.15,
+                      letterSpacing: -0.8,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 18),
+
+                // Sous-titre épuré et lisible
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 480),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 320),
+                    child: Text(
+                      page.subtitle,
+                      key: ValueKey(page.subtitle),
+                      style: const TextStyle(
+                        fontSize: 16.5,
+                        color: Color(0xFF64748B),
+                        height: 1.6,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 36),
 
-                // Dialogue mascotte
-                if (page.dialogue.isNotEmpty)
-                  MascotDialogue(
-                    lines: page.dialogue,
-                    uniPose: page.uniPose,
-                    archlordPose: page.archlordPose,
-                    figureHeight: 120,
-                    interval: const Duration(milliseconds: 4000),
-                  ),
-
-                const Spacer(),
-
-                // Dots + bouton
-                Row(
+                // Actions : Boutons de navigation (Précédent / Suivant) + indicateurs
+                Wrap(
+                  spacing: 14,
+                  runSpacing: 14,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    // Dots cliquables
+                    // Bouton Précédent (si on n'est pas sur la première page)
+                    if (_page > 0)
+                      OutlinedButton(
+                        onPressed: _prev,
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: const Color(0xFF0F172A),
+                          side: const BorderSide(
+                            color: Color(0xFFCBD5E1),
+                            width: 1.5,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 14,
+                          ),
+                          shape: const StadiumBorder(),
+                          textStyle: const TextStyle(
+                            fontSize: 14.5,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        child: const Text('← Précédent'),
+                      ),
+
+                    // Bouton Pilule principal
+                    ElevatedButton(
+                      onPressed: _next,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF0F172A),
+                        foregroundColor: Colors.white,
+                        elevation: 2,
+                        shadowColor: Colors.black26,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 32,
+                          vertical: 15,
+                        ),
+                        shape: const StadiumBorder(),
+                        textStyle: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.2,
+                        ),
+                      ),
+                      child: Text(page.buttonLabel),
+                    ),
+
+                    const SizedBox(width: 10),
+
+                    // Indicateurs de page (dots cliquables)
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: List.generate(_kPages.length, (i) {
                         final active = i == _page;
                         return MouseRegion(
                           cursor: SystemMouseCursors.click,
                           child: GestureDetector(
-                            onTap: () {
-                              _controller.animateToPage(
-                                i,
-                                duration: const Duration(milliseconds: 380),
-                                curve: Curves.easeInOutCubic,
-                              );
-                            },
+                            onTap: () => setState(() => _page = i),
                             child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 280),
-                              margin: const EdgeInsets.only(right: 6),
-                              width: active ? 24.0 : 7.0,
-                              height: 7,
+                              duration: const Duration(milliseconds: 250),
+                              margin: const EdgeInsets.only(right: 8),
+                              width: active ? 28 : 8,
+                              height: 8,
                               decoration: BoxDecoration(
                                 color: active
-                                    ? Colors.white
-                                    : Colors.white.withValues(alpha: 0.40),
+                                    ? const Color(0xFF0F172A)
+                                    : const Color(0xFFCBD5E1),
                                 borderRadius: BorderRadius.circular(999),
                               ),
                             ),
@@ -309,122 +361,139 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                         );
                       }),
                     ),
-                    const Spacer(),
-                    // Bouton blanc arrondi
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: _next,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 28, vertical: 14),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(50),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.18),
-                                blurRadius: 14,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Text(
-                            _page < _kPages.length - 1 ? 'Suivant →' : 'Commencer',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w800,
-                              color: page.accentColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ],
-            ),
-          ),
-
-          // ── Colonne droite : image ────────────────────────────────
-          Expanded(
-            child: PageView.builder(
-              controller: _controller,
-              itemCount: _kPages.length,
-              physics: const PageScrollPhysics(),
-              onPageChanged: (i) => setState(() => _page = i),
-              itemBuilder: (_, i) => _ImagePane(page: _kPages[i]),
             ),
           ),
         ],
       ),
     );
   }
-}
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  VOLET IMAGE
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _ImagePane extends StatelessWidget {
-  final _OnboardPage page;
-  const _ImagePane({required this.page});
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        // Image principale
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 500),
-          child: Image.asset(
-            page.bgImage,
-            key: ValueKey(page.bgImage),
-            fit: BoxFit.cover,
-            filterQuality: FilterQuality.high,
-            errorBuilder: (_, error, __) {
-              return Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      page.accentColor,
-                      page.accentColor.withValues(alpha: 0.7),
-                      const Color(0xFF0F172A),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: Center(
-                  child: Image.asset(
-                    'assets/mascot/archlord_uni_duo_solid.webp',
-                    width: 320,
-                    fit: BoxFit.contain,
-                    errorBuilder: (_, __, ___) => const SizedBox(),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        // Fondu gauche pour se fondre avec la card
-        Positioned(
-          left: 0, top: 0, bottom: 0, width: 80,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
-                  page.accentColor,
-                  page.accentColor.withValues(alpha: 0.0),
-                ],
+  Widget _buildVerticalLayout(_OnboardPage page, double w, double h) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: SizedBox(
+              height: (h * 0.42).clamp(180.0, 320.0),
+              child: Image.asset(
+                page.bgImage,
+                key: ValueKey(page.bgImage),
+                fit: BoxFit.contain,
               ),
             ),
           ),
-        ),
-      ],
+          const SizedBox(height: 24),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1F5F9),
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Text(
+              page.tagline,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
+                color: AppColors.primaryBlue,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            page.title,
+            style: const TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.w900,
+              color: Color(0xFF0F172A),
+              height: 1.2,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            page.subtitle,
+            style: const TextStyle(
+              fontSize: 15,
+              color: Color(0xFF64748B),
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 28),
+          Row(
+            children: [
+              if (_page > 0) ...[
+                OutlinedButton(
+                  onPressed: _prev,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: const Color(0xFF0F172A),
+                    side: const BorderSide(
+                      color: Color(0xFFCBD5E1),
+                      width: 1.5,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    shape: const StadiumBorder(),
+                    textStyle: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  child: const Text('←'),
+                ),
+                const SizedBox(width: 10),
+              ],
+              ElevatedButton(
+                onPressed: _next,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF0F172A),
+                  foregroundColor: Colors.white,
+                  elevation: 2,
+                  shadowColor: Colors.black26,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 26,
+                    vertical: 14,
+                  ),
+                  shape: const StadiumBorder(),
+                  textStyle: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                child: Text(page.buttonLabel),
+              ),
+              const Spacer(),
+              Row(
+                children: List.generate(_kPages.length, (i) {
+                  final active = i == _page;
+                  return MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () => setState(() => _page = i),
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 6),
+                        width: active ? 22 : 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: active
+                              ? const Color(0xFF0F172A)
+                              : const Color(0xFFCBD5E1),
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
