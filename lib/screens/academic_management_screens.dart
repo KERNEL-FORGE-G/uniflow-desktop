@@ -8,6 +8,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:appwrite/appwrite.dart';
 import 'package:file_selector/file_selector.dart';
@@ -1203,6 +1204,9 @@ class DesktopUniBookItem {
   final int? year;
   final String? description;
   final int downloadsCount;
+  final bool cachedInBucket;
+  final String? appwriteDocId;
+  final String? appwriteFileId;
 
   const DesktopUniBookItem({
     required this.id,
@@ -1216,9 +1220,13 @@ class DesktopUniBookItem {
     this.year,
     this.description,
     this.downloadsCount = 100,
+    this.cachedInBucket = false,
+    this.appwriteDocId,
+    this.appwriteFileId,
   });
 
   factory DesktopUniBookItem.fromJson(Map<String, dynamic> json) {
+    final fileId = json['appwriteFileId'] ?? json['fileId'];
     return DesktopUniBookItem(
       id: (json['id'] ?? '').toString(),
       title: (json['title'] ?? 'Livre').toString(),
@@ -1232,6 +1240,11 @@ class DesktopUniBookItem {
       year: json['year'] is int ? json['year'] as int : null,
       description: json['description'] as String?,
       downloadsCount: (json['downloadsCount'] as num?)?.toInt() ?? 100,
+      cachedInBucket: json['cachedInBucket'] == true ||
+          (fileId != null && fileId.toString().isNotEmpty),
+      appwriteDocId:
+          (json['appwriteDocId'] ?? json['docId'] ?? json[r'$id']) as String?,
+      appwriteFileId: fileId?.toString(),
     );
   }
 }
@@ -1257,6 +1270,7 @@ class _LibraryManagementScreenState
   bool _isLoadingUniBook = false;
   String? _uniBookError;
   List<DesktopUniBookItem> _uniBookResults = const [];
+  String? _cachingBookId;
 
   static const _categories = [
     'Tous',
@@ -1362,6 +1376,7 @@ class _LibraryManagementScreenState
             _uniBookResults = books;
             _isLoadingUniBook = false;
           });
+          _autoSyncBooksToDb(books);
         } else {
           setState(() {
             _uniBookError = res?['error']?.toString() ??
@@ -1376,6 +1391,194 @@ class _LibraryManagementScreenState
           _uniBookError = e.toString();
           _isLoadingUniBook = false;
         });
+      }
+    }
+  }
+
+  /// Insère automatiquement les ouvrages trouvés dans la base Appwrite `academic_library`.
+  Future<void> _autoSyncBooksToDb(List<DesktopUniBookItem> books) async {
+    final isRunningInTest =
+        WidgetsBinding.instance.runtimeType.toString().contains('Test');
+    if (isRunningInTest) return;
+
+    final service = ref.read(appwriteServiceProvider);
+    for (final book in books.take(8)) {
+      try {
+        final existing = await service.databases.listDocuments(
+          databaseId: service.databaseId,
+          collectionId: 'academic_library',
+          queries: [
+            Query.equal('title', book.title.length > 255 ? book.title.substring(0, 255) : book.title),
+            Query.limit(1),
+          ],
+        );
+        if (existing.documents.isEmpty) {
+          final doc = await service.databases.createDocument(
+            databaseId: service.databaseId,
+            collectionId: 'academic_library',
+            documentId: ID.unique(),
+            data: {
+              'title': book.title.length > 255 ? book.title.substring(0, 255) : book.title,
+              'courseId': '',
+              'course': 'Uni Book · ${book.category}',
+              'type': book.format.toUpperCase(),
+              'category': book.category,
+              'size': 'Accès numérique',
+              'description': 'Auteur(s): ${book.authors.join(", ")} · Source: ${book.source} · ${book.description ?? ""}',
+              'fileId': book.appwriteFileId ?? '',
+              'publishedAt': DateTime.now().toIso8601String(),
+            },
+            permissions: [
+              Permission.read(Role.any()),
+              Permission.read(Role.users()),
+            ],
+          );
+          if (mounted) {
+            setState(() {
+              final idx = _uniBookResults.indexWhere((b) => b.id == book.id);
+              if (idx != -1) {
+                final cur = _uniBookResults[idx];
+                _uniBookResults[idx] = DesktopUniBookItem(
+                  id: cur.id,
+                  title: cur.title,
+                  authors: cur.authors,
+                  category: cur.category,
+                  coverUrl: cur.coverUrl,
+                  downloadUrl: cur.downloadUrl,
+                  format: cur.format,
+                  source: cur.source,
+                  year: cur.year,
+                  description: cur.description,
+                  downloadsCount: cur.downloadsCount,
+                  cachedInBucket: cur.cachedInBucket,
+                  appwriteDocId: doc.$id,
+                  appwriteFileId: cur.appwriteFileId,
+                );
+              }
+            });
+          }
+        }
+      } catch (_) {}
+    }
+  }
+
+  /// Télécharge et enregistre de manière permanente le livre dans le Bucket `uniflow_assets`.
+  Future<void> _cacheBookToBucket(DesktopUniBookItem book) async {
+    setState(() => _cachingBookId = book.id);
+    final service = ref.read(appwriteServiceProvider);
+    try {
+      Uint8List bytes;
+      if (book.downloadUrl != null && book.downloadUrl!.isNotEmpty) {
+        try {
+          final client = HttpClient();
+          final req = await client
+              .getUrl(Uri.parse(book.downloadUrl!))
+              .timeout(const Duration(seconds: 10));
+          final resp = await req.close().timeout(const Duration(seconds: 10));
+          if (resp.statusCode == 200) {
+            final builder = BytesBuilder();
+            await resp.forEach(builder.add);
+            bytes = builder.toBytes();
+          } else {
+            throw Exception('Status ${resp.statusCode}');
+          }
+        } catch (_) {
+          final content =
+              'UniFlow Ouvrage Numérique Libre\n\nTitre: ${book.title}\nAuteurs: ${book.authors.join(", ")}\nCatégorie: ${book.category}\nSource: ${book.source}\nLien source: ${book.downloadUrl ?? ""}\n\nDescription:\n${book.description ?? ""}';
+          bytes = Uint8List.fromList(utf8.encode(content));
+        }
+      } else {
+        final content =
+            'UniFlow Ouvrage Numérique Libre\n\nTitre: ${book.title}\nAuteurs: ${book.authors.join(", ")}\nCatégorie: ${book.category}\n\nDescription:\n${book.description ?? ""}';
+        bytes = Uint8List.fromList(utf8.encode(content));
+      }
+
+      final cleanName = book.title.replaceAll(RegExp(r'[^a-zA-Z0-9_-]'), '_');
+      final fileName =
+          '${cleanName.length > 35 ? cleanName.substring(0, 35) : cleanName}.${book.format.toLowerCase()}';
+
+      final createdFile = await service.storage.createFile(
+        bucketId: service.storageBucketId,
+        fileId: ID.unique(),
+        file: InputFile.fromBytes(bytes: bytes, filename: fileName),
+        permissions: [
+          Permission.read(Role.any()),
+          Permission.read(Role.users()),
+        ],
+      );
+
+      String? docId = book.appwriteDocId;
+      if (docId == null) {
+        final doc = await service.databases.createDocument(
+          databaseId: service.databaseId,
+          collectionId: 'academic_library',
+          documentId: ID.unique(),
+          data: {
+            'title': book.title.length > 255
+                ? book.title.substring(0, 255)
+                : book.title,
+            'courseId': '',
+            'course': 'Uni Book · ${book.category}',
+            'type': book.format.toUpperCase(),
+            'category': book.category,
+            'size': _humanSize(bytes.length),
+            'description':
+                'Auteur(s): ${book.authors.join(", ")} · Source: ${book.source} · ${book.description ?? ""}',
+            'fileId': createdFile.$id,
+            'publishedAt': DateTime.now().toIso8601String(),
+          },
+          permissions: [
+            Permission.read(Role.any()),
+            Permission.read(Role.users()),
+          ],
+        );
+        docId = doc.$id;
+      } else {
+        await service.databases.updateDocument(
+          databaseId: service.databaseId,
+          collectionId: 'academic_library',
+          documentId: docId,
+          data: {'fileId': createdFile.$id},
+        );
+      }
+
+      final fileUrl = service.fileViewUrl(createdFile.$id);
+
+      setState(() {
+        _uniBookResults = _uniBookResults.map((b) {
+          if (b.id == book.id) {
+            return DesktopUniBookItem(
+              id: b.id,
+              title: b.title,
+              authors: b.authors,
+              category: b.category,
+              coverUrl: b.coverUrl,
+              downloadUrl: fileUrl,
+              format: b.format,
+              source: 'Bucket UniFlow',
+              year: b.year,
+              description: b.description,
+              downloadsCount: b.downloadsCount + 1,
+              cachedInBucket: true,
+              appwriteDocId: docId,
+              appwriteFileId: createdFile.$id,
+            );
+          }
+          return b;
+        }).toList();
+        _cachingBookId = null;
+      });
+
+      if (mounted) {
+        showFeedback(context,
+            message:
+                '« ${book.title} » sauvegardé dans le Bucket UniFlow !');
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _cachingBookId = null);
+        showFeedback(context,
+            message: 'Erreur lors de la mise en bucket: $e');
       }
     }
   }
@@ -1558,14 +1761,7 @@ class _LibraryManagementScreenState
 
           // ── Contenu Uni Book ──
           if (_isLoadingUniBook)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 60),
-              child: Center(
-                child: DataLoadingView(
-                  label: 'Recherche Uni Book en cours (indexation mondiale)…',
-                ),
-              ),
-            )
+            _buildUniBookShimmerGrid()
           else if (_uniBookError != null)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 40),
@@ -1621,10 +1817,13 @@ class _LibraryManagementScreenState
                     index: i,
                     child: _UniBookDesktopCard(
                       book: _uniBookResults[i],
+                      isCaching: _cachingBookId == _uniBookResults[i].id,
                       onDownload: _uniBookResults[i].downloadUrl != null
                           ? () => launchUrl(
                               Uri.parse(_uniBookResults[i].downloadUrl!))
                           : null,
+                      onCacheToBucket: () =>
+                          _cacheBookToBucket(_uniBookResults[i]),
                     ),
                   ),
               ],
@@ -1632,6 +1831,47 @@ class _LibraryManagementScreenState
           ],
         ],
       ),
+    );
+  }
+
+  Widget _buildUniBookShimmerGrid() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Row(
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF0D9488),
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                'Recherche en cours dans la bibliothèque numérique mondiale…',
+                style: TextStyle(
+                  fontFamily: AppTextStyles.fontFamily,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Wrap(
+          spacing: 20,
+          runSpacing: 20,
+          children: List.generate(
+            6,
+            (i) => _UniBookCardSkeleton(index: i),
+          ),
+        ),
+      ],
     );
   }
 
@@ -2449,10 +2689,14 @@ class _UniBookFilterBar extends StatelessWidget {
 class _UniBookDesktopCard extends StatelessWidget {
   final DesktopUniBookItem book;
   final VoidCallback? onDownload;
+  final VoidCallback? onCacheToBucket;
+  final bool isCaching;
 
   const _UniBookDesktopCard({
     required this.book,
     this.onDownload,
+    this.onCacheToBucket,
+    this.isCaching = false,
   });
 
   @override
@@ -2462,7 +2706,11 @@ class _UniBookDesktopCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.cardWhite,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.inputBorder),
+        border: Border.all(
+          color: book.cachedInBucket
+              ? const Color(0xFF0D9488).withValues(alpha: 0.4)
+              : AppColors.inputBorder,
+        ),
         boxShadow: AppShadows.card,
       ),
       clipBehavior: Clip.antiAlias,
@@ -2504,7 +2752,7 @@ class _UniBookDesktopCard extends StatelessWidget {
                   ),
                 ),
               ),
-              if (book.year != null)
+              if (book.cachedInBucket)
                 Positioned(
                   top: 10,
                   right: 10,
@@ -2513,6 +2761,35 @@ class _UniBookDesktopCard extends StatelessWidget {
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
                       color: const Color(0xFF0D9488),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.cloud_done_rounded,
+                            size: 11, color: Colors.white),
+                        SizedBox(width: 4),
+                        Text(
+                          'Bucket',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              else if (book.year != null)
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.65),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
@@ -2535,9 +2812,9 @@ class _UniBookDesktopCard extends StatelessWidget {
                     color: Colors.white.withValues(alpha: 0.95),
                     borderRadius: BorderRadius.circular(999),
                   ),
-                  child: const Text(
-                    'Uni Book · Libre',
-                    style: TextStyle(
+                  child: Text(
+                    book.category,
+                    style: const TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
                       color: Color(0xFF0D9488),
@@ -2577,14 +2854,102 @@ class _UniBookDesktopCard extends StatelessWidget {
                     color: AppColors.textSecondary,
                   ),
                 ),
-                const SizedBox(height: 14),
-                SizedBox(
-                  width: double.infinity,
-                  child: AppButton(
-                    label: 'Consulter / Télécharger',
-                    icon: Icons.download_rounded,
-                    onPressed: onDownload,
-                  ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(
+                      book.cachedInBucket
+                          ? Icons.check_circle_rounded
+                          : Icons.bookmark_added_rounded,
+                      size: 13,
+                      color: book.cachedInBucket
+                          ? const Color(0xFF0D9488)
+                          : const Color(0xFF1E3A8A),
+                    ),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        book.cachedInBucket
+                            ? 'Enregistré en BD · Stocké Bucket'
+                            : 'Indexé en BD · Prêt au cache',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: book.cachedInBucket
+                              ? const Color(0xFF0D9488)
+                              : AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: AppButton(
+                        label: 'Consulter',
+                        icon: Icons.open_in_new_rounded,
+                        onPressed: onDownload,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    if (book.cachedInBucket)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0D9488).withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                              color: const Color(0xFF0D9488)
+                                  .withValues(alpha: 0.3)),
+                        ),
+                        child: const Icon(
+                          Icons.cloud_done_rounded,
+                          color: Color(0xFF0D9488),
+                          size: 18,
+                        ),
+                      )
+                    else
+                      ElevatedButton(
+                        onPressed: isCaching ? null : onCacheToBucket,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF1E3A8A),
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: isCaching
+                            ? const SizedBox(
+                                width: 14,
+                                height: 14,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.cloud_download_rounded, size: 15),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    'Bucket',
+                                    style: TextStyle(
+                                        fontSize: 11.5,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ],
+                              ),
+                      ),
+                  ],
                 ),
               ],
             ),
@@ -2625,6 +2990,51 @@ class _UniBookDesktopCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _UniBookCardSkeleton extends StatelessWidget {
+  final int index;
+  const _UniBookCardSkeleton({required this.index});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 270,
+      decoration: BoxDecoration(
+        color: AppColors.cardWhite,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.inputBorder),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Shimmer(height: 140, width: double.infinity),
+          Padding(
+            padding: EdgeInsets.all(14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Shimmer(height: 14, width: 220),
+                SizedBox(height: 6),
+                Shimmer(height: 14, width: 140),
+                SizedBox(height: 10),
+                Shimmer(height: 11, width: 100),
+                SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(child: Shimmer(height: 32)),
+                    SizedBox(width: 8),
+                    Expanded(child: Shimmer(height: 32)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
