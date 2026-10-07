@@ -51,6 +51,11 @@ const List<TimetableScanInfo> kDesktopTimetableScans = [
   TimetableScanInfo(program: 'BCH', level: 'L3', fileId: 'edt_scan_bch_l3', label: 'Biochimie L3', classroom: 'P1 / P2 / AI / AII'),
   TimetableScanInfo(program: 'BIOS', level: 'L2', fileId: 'edt_scan_bios_l2', label: 'Biosciences L2', classroom: 'A1002 / A250 / R101'),
   TimetableScanInfo(program: 'BIOS', level: 'L1', fileId: 'edt_scan_bios_l1', label: 'Biosciences L1 & Géosciences L1 (Groupes)', classroom: 'A1001 / A1002'),
+  TimetableScanInfo(program: 'ICT4D', level: 'L1', fileId: 'edt_scan_ict4d_l1', label: 'ICT4D L1 (Licence Pro)', classroom: 'Salle R101'),
+  TimetableScanInfo(program: 'ICT4D', level: 'L2', fileId: 'edt_scan_ict4d_l2', label: 'ICT4D L2 (Licence Pro)', classroom: 'Salle S003 / S008'),
+  TimetableScanInfo(program: 'ICT4D', level: 'L3', fileId: 'edt_scan_ict4d_l3', label: 'ICT4D L3 (Licence Pro)', classroom: 'Salle S107'),
+  TimetableScanInfo(program: 'SIGL', level: 'M1', fileId: 'edt_scan_sigl_m1', label: 'Master SIGL M1 (Professionnel)', classroom: 'Salle S111'),
+  TimetableScanInfo(program: 'SIGL', level: 'M2', fileId: 'edt_scan_sigl_m2', label: 'Master SIGL M2 (Professionnel)', classroom: 'Salle S105'),
 ];
 
 class TimetableScanDialog extends StatefulWidget {
@@ -314,17 +319,21 @@ class _TimetableScanDialogState extends State<TimetableScanDialog> {
                           );
                         },
                         errorBuilder: (context, error, stackTrace) {
-                          return Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.broken_image_outlined, size: 48, color: Colors.white54),
-                                const SizedBox(height: 12),
-                                Text(
-                                  'Impossible de charger le scan (${_selected.fileId})',
-                                  style: const TextStyle(color: Colors.white70, fontSize: 13),
-                                ),
-                              ],
+                          return Image.asset(
+                            'assets/emplois_du_temps/${_selected.fileId}.jpg',
+                            fit: BoxFit.contain,
+                            errorBuilder: (_, __, ___) => Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.broken_image_outlined, size: 48, color: Colors.white54),
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    'Impossible de charger le scan (${_selected.fileId})',
+                                    style: const TextStyle(color: Colors.white70, fontSize: 13),
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },

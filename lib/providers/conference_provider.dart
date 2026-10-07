@@ -88,15 +88,11 @@ class ConferenceHostController extends Notifier<ConferenceHostState> {
     state = const ConferenceHostState(status: HostState.starting);
 
     try {
-      // 1. Le serveur média doit exister sur la machine.
+      // 1. Détection du serveur média LiveKit (si absent, ex. sous Windows,
+      // bascule automatique sur le serveur autonome embarqué en pur Dart pour
+      // gérer la salle, les tickets d'accès, les invitations et la feuille de présence).
       final executable = await LiveKitServerProcess.locateBinary();
-      if (executable == null) {
-        state = state.copyWith(
-          status: HostState.unavailable,
-          binaryHint: ConferenceHostState.installHint,
-        );
-        return false;
-      }
+      final hasMediaDaemon = executable != null;
 
       // 2. Une réunion se tient sur un réseau : sans adresse locale, aucun
       //    participant ne pourrait nous joindre.
@@ -125,21 +121,23 @@ class ConferenceHostController extends Notifier<ConferenceHostState> {
       );
       final roomId = generator.roomId();
 
-      // 5. Lancement du serveur média. Il postera ses événements (arrivées,
-      //    départs) à l'API de jonction, sur la boucle locale : c'est la
-      //    source de la feuille de présence.
-      final process = LiveKitServerProcess();
-      await process.start(
-        executable: executable,
-        credentials: credentials,
-        apiPort: mediaPort,
-        rtcTcpPort: rtcTcpPort,
-        rtcUdpPort: rtcUdpPort,
-        workingDirectory: conferenceHomeDirectory(),
-        webhookUrl:
-            'http://127.0.0.1:$joinPort${ConferenceHostServer.webhookPath}',
-      );
-      _process = process;
+      // 5. Lancement du serveur média si le binaire est présent.
+      // S'il est absent (notamment sous Windows), l'application utilise son propre
+      // serveur autonome embarqué en pur Dart pour gérer la salle et la présence.
+      if (hasMediaDaemon) {
+        final process = LiveKitServerProcess();
+        await process.start(
+          executable: executable,
+          credentials: credentials,
+          apiPort: mediaPort,
+          rtcTcpPort: rtcTcpPort,
+          rtcUdpPort: rtcUdpPort,
+          workingDirectory: conferenceHomeDirectory(),
+          webhookUrl:
+              'http://127.0.0.1:$joinPort${ConferenceHostServer.webhookPath}',
+        );
+        _process = process;
+      }
 
       // 6. Ouverture de l'API de jonction, qui signe les jetons et relaie à
       //    la feuille de présence les tickets délivrés et les webhooks.
@@ -158,7 +156,9 @@ class ConferenceHostController extends Notifier<ConferenceHostState> {
         code: generator.roomCode(),
         hostId: hostId,
         hostName: hostName,
-        serverUrl: 'ws://$localIp:$mediaPort',
+        serverUrl: hasMediaDaemon
+            ? 'ws://$localIp:$mediaPort'
+            : 'http://$localIp:$joinPort',
         apiUrl: 'http://$localIp:$joinPort',
         hostToken: generator.hostToken(),
         maxParticipants: maxParticipants,
@@ -180,7 +180,7 @@ class ConferenceHostController extends Notifier<ConferenceHostState> {
         conference: conference,
         localIp: localIp,
         apiPort: joinPort,
-        mediaPort: mediaPort,
+        mediaPort: hasMediaDaemon ? mediaPort : null,
         published: _registryDocumentId != null,
         clearError: true,
       );
