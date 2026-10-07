@@ -4,7 +4,6 @@ import 'package:uniflow/screens/login_screen.dart';
 import 'package:uniflow/screens/register_screen.dart';
 import 'package:uniflow/widgets/auth_chrome.dart';
 import 'package:uniflow/widgets/uni/archlord_mascot.dart';
-import 'package:uniflow/widgets/uni/mascot_dialogue.dart';
 import 'package:uniflow/widgets/uni/uni_mascot.dart';
 
 import 'layout_test_support.dart';

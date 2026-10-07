@@ -5,8 +5,10 @@ import '../theme/app_theme.dart';
 import 'uni_icons.dart';
 import 'motion.dart';
 import 'auth_tone.dart';
+import 'uni/mascot_dialogue.dart';
 
 export 'auth_tone.dart';
+export 'uni/mascot_dialogue.dart';
 
 /// Habillage commun des écrans d'authentification (connexion, inscription) :
 /// fond « mesh », carte blanche, panneau visuel à gauche et formulaire à
@@ -680,6 +682,18 @@ final List<({IconData icon, String title, String desc, Color color})>
     color: const Color(0xFFC084FC),
   ),
 ];
+
+/// Échange d'accueil entre Archlord et Uni sur le panneau de marque : court,
+/// parce que la bulle tient entre les deux personnages dans 45 % d'une fenêtre
+/// de 900 px, soit ~140 px de large.
+const List<MascotLine> kAuthMascotDialogue = [
+  MascotLine.archlord(
+      'Bienvenue ! UniFlow, c’est l’université dans une seule application.'),
+  MascotLine.uni('Cours, devoirs, notes, emploi du temps : tout est là.'),
+  MascotLine.archlord('Et ça marche même sans Internet.'),
+  MascotLine.uni('Connecte-toi, je te guide !'),
+];
+
 
 /// Panneau de marque — style référence : fond dégradé navy → teal avec blob
 /// blanc organique contenant mascotte + logo. Inspiré du design université

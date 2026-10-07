@@ -16,81 +16,7 @@ class SubscriptionDialog extends ConsumerStatefulWidget {
 class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
   bool _isAnnual = false;
   String _selectedPlanCode = 'PRO_CAMPUS';
-  DesktopFlutterwavePaymentMethod _method = DesktopFlutterwavePaymentMethod.orangeMoney;
-
-  final _phoneController = TextEditingController(text: '+237 6');
-  final _cardController = TextEditingController(text: '4111 2222 3333 4444');
-  final _expController = TextEditingController(text: '12/28');
-  final _cvvController = TextEditingController(text: '123');
-
-  bool _loading = false;
   String? _successMessage;
-
-  @override
-  void dispose() {
-    _phoneController.dispose();
-    _cardController.dispose();
-    _expController.dispose();
-    _cvvController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _payDirect(DesktopSubscriptionPlanInfo plan) async {
-    final user = ref.read(currentUserProvider);
-    if (user == null) return;
-    final service = ref.read(desktopFlutterwaveServiceProvider);
-
-    setState(() => _loading = true);
-
-    try {
-      if (_method == DesktopFlutterwavePaymentMethod.card) {
-        final res = await service.processCardDirect(
-          plan: plan,
-          isAnnual: _isAnnual,
-          user: user,
-          cardNumber: _cardController.text.trim(),
-          expiryDate: _expController.text.trim(),
-          cvv: _cvvController.text.trim(),
-        );
-        setState(() => _successMessage = res.message);
-      } else {
-        final res = await service.processMobileMoneyDirect(
-          plan: plan,
-          isAnnual: _isAnnual,
-          user: user,
-          phoneNumber: _phoneController.text.trim(),
-          method: _method,
-        );
-        setState(() => _successMessage = res.message);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur paiement: $e')),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _loading = false);
-    }
-  }
-
-  Future<void> _payViaWebCheckout(DesktopSubscriptionPlanInfo plan) async {
-    final user = ref.read(currentUserProvider);
-    if (user == null) return;
-    final service = ref.read(desktopFlutterwaveServiceProvider);
-
-    setState(() => _loading = true);
-    await service.openHostedPayment(
-      plan: plan,
-      isAnnual: _isAnnual,
-      user: user,
-      phoneNumber: _phoneController.text.trim(),
-    );
-    if (mounted) {
-      setState(() => _loading = false);
-      Navigator.pop(context);
-    }
-  }
 
   Future<void> _payViaWhatsApp(DesktopSubscriptionPlanInfo plan) async {
     final user = ref.read(currentUserProvider);
@@ -152,7 +78,7 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
                             ),
                           ),
                           Text(
-                            'Passerelle sécurisée Flutterwave · Orange Money · MTN MoMo · Visa / Mastercard',
+                            'Validation immédiate et accompagnement officiel via WhatsApp (+237 6 57 63 56 44)',
                             style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
                           ),
                         ],
@@ -412,128 +338,70 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
               if (_successMessage == null && selectedPlan.monthlyAmount > 0) ...[
                 const SizedBox(height: 16),
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF1F5F9),
+                    color: const Color(0xFFF0FDF4),
                     borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: const Color(0xFFBBF7D0)),
                   ),
                   child: Row(
                     children: [
-                      // Mode Selector
-                      Row(
-                        children: [
-                          _MethodButton(
-                            label: 'Orange Money',
-                            selected: _method == DesktopFlutterwavePaymentMethod.orangeMoney,
-                            onTap: () => setState(() => _method = DesktopFlutterwavePaymentMethod.orangeMoney),
-                          ),
-                          const SizedBox(width: 8),
-                          _MethodButton(
-                            label: 'MTN MoMo',
-                            selected: _method == DesktopFlutterwavePaymentMethod.mtnMomo,
-                            onTap: () => setState(() => _method = DesktopFlutterwavePaymentMethod.mtnMomo),
-                          ),
-                          const SizedBox(width: 8),
-                          _MethodButton(
-                            label: 'Carte Bancaire',
-                            selected: _method == DesktopFlutterwavePaymentMethod.card,
-                            onTap: () => setState(() => _method = DesktopFlutterwavePaymentMethod.card),
-                          ),
-                        ],
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFDCFCE7),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const PhosphorIcon(
+                          PhosphorIconsBold.chatsCircle,
+                          color: Color(0xFF16A34A),
+                          size: 26,
+                        ),
                       ),
-
                       const SizedBox(width: 14),
-
-                      // Input
                       Expanded(
-                        child: _method != DesktopFlutterwavePaymentMethod.card
-                            ? TextField(
-                                controller: _phoneController,
-                                style: const TextStyle(fontSize: 13),
-                                decoration: InputDecoration(
-                                  hintText: '+237 6...',
-                                  isDense: true,
-                                  prefixIcon: const PhosphorIcon(PhosphorIconsBold.deviceMobile, size: 18),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                ),
-                              )
-                            : Row(
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: TextField(
-                                      controller: _cardController,
-                                      style: const TextStyle(fontSize: 13),
-                                      decoration: InputDecoration(
-                                        hintText: 'Numéro de carte',
-                                        isDense: true,
-                                        prefixIcon: const PhosphorIcon(PhosphorIconsBold.creditCard, size: 18),
-                                        filled: true,
-                                        fillColor: Colors.white,
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: TextField(
-                                      controller: _expController,
-                                      style: const TextStyle(fontSize: 13),
-                                      decoration: InputDecoration(
-                                        hintText: 'MM/AA',
-                                        isDense: true,
-                                        filled: true,
-                                        fillColor: Colors.white,
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Validation et activation par WhatsApp (+237 6 57 63 56 44)',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w800,
+                                color: Color(0xFF166534),
                               ),
-                      ),
-
-                      const SizedBox(width: 14),
-
-                      // CTA
-                      ElevatedButton(
-                        onPressed: _loading ? null : () => _payDirect(selectedPlan),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1E3A8A),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        ),
-                        child: _loading
-                            ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                            : Text('Payer $amount ${selectedPlan.currency}'),
-                      ),
-
-                      const SizedBox(width: 8),
-
-                      OutlinedButton.icon(
-                        onPressed: () => _payViaWebCheckout(selectedPlan),
-                        icon: const PhosphorIcon(PhosphorIconsBold.arrowSquareOut, size: 16),
-                        label: const Text('Guichet Web'),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                          foregroundColor: const Color(0xFF0D9488),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Formule ${selectedPlan.name} ($amount ${selectedPlan.currency}) · Activation manuelle instantanée par l\'équipe d\'administration UniFlow.',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Color(0xFF15803D),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-
-                      const SizedBox(width: 8),
-
-                      OutlinedButton.icon(
+                      const SizedBox(width: 16),
+                      ElevatedButton.icon(
                         onPressed: () => _payViaWhatsApp(selectedPlan),
-                        icon: const PhosphorIcon(PhosphorIconsBold.chatsCircle, color: Color(0xFF16A34A), size: 16),
-                        label: const Text('WhatsApp', style: TextStyle(color: Color(0xFF16A34A))),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                          side: const BorderSide(color: Color(0xFFBBF7D0)),
-                          backgroundColor: const Color(0xFFF0FDF4),
+                        icon: const PhosphorIcon(
+                          PhosphorIconsBold.chatsCircle,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                        label: const Text(
+                          'Activer via WhatsApp',
+                          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF16A34A),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 0,
                         ),
                       ),
                     ],
@@ -541,43 +409,6 @@ class _SubscriptionDialogState extends ConsumerState<SubscriptionDialog> {
                 ),
               ],
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _MethodButton extends StatelessWidget {
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  const _MethodButton({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: selected ? const Color(0xFF1E3A8A) : Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: selected ? const Color(0xFF1E3A8A) : const Color(0xFFCBD5E1),
-          ),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 11.5,
-            fontWeight: FontWeight.w700,
-            color: selected ? Colors.white : const Color(0xFF334155),
           ),
         ),
       ),

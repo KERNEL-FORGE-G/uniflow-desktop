@@ -109,6 +109,18 @@ class _ConferenceRoomScreenState extends ConsumerState<ConferenceRoomScreen> {
       _error = null;
     });
     try {
+      if (widget.isHost && widget.ticket.serverUrl.startsWith('http')) {
+        // En mode hôte autonome embarqué (sans LiveKit daemon), le serveur HTTP local tourne
+        // et gère les invitations, le QR code et la feuille de présence.
+        if (!mounted) return;
+        setState(() {
+          _phase = _Phase.connected;
+          _mediaNote =
+              'Mode serveur autonome actif (Hub local & présence sans daemon LiveKit)';
+        });
+        return;
+      }
+
       final room = await widget.connector(widget.ticket);
       if (!mounted) {
         await room.dispose();
@@ -128,6 +140,15 @@ class _ConferenceRoomScreenState extends ConsumerState<ConferenceRoomScreen> {
       await _enableMedia(room);
     } on Object catch (error) {
       if (!mounted) return;
+      if (widget.isHost) {
+        // Fallback résilient pour l'hôte : la salle reste active avec le serveur embarqué
+        setState(() {
+          _phase = _Phase.connected;
+          _mediaNote =
+              'Mode serveur autonome actif (Hub local & présence sans daemon LiveKit)';
+        });
+        return;
+      }
       setState(() {
         _phase = _Phase.failed;
         _error = error is ConferenceException

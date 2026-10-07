@@ -6,6 +6,9 @@
 // globale.
 // ignore_for_file: deprecated_member_use
 
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:appwrite/appwrite.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
@@ -1305,18 +1308,42 @@ class _LibraryManagementScreenState
     });
 
     try {
-      final res = await ref.read(uniflowApiProvider).call(
-        ApiPaths.openLibrary,
-        {
-          'action': 'search',
-          'query': searchTerm,
-          'limit': 35,
-        },
-      );
+      Map<String, dynamic>? res;
+      try {
+        final raw = await ref.read(uniflowApiProvider).call(
+          ApiPaths.openLibrary,
+          {
+            'action': 'search',
+            'query': searchTerm,
+            'limit': 35,
+          },
+        );
+        res = raw;
+      } catch (_) {
+        res = null;
+      }
+
+      // Le web UniFlow retransmet l'API book si le BaaS local/cloud tarde ou échoue
+      if (res == null || res['ok'] != true) {
+        try {
+          final client = HttpClient();
+          final uri = Uri.parse('https://uniflow.kernelforge.codes/api/books').replace(queryParameters: {
+            'q': searchTerm,
+            'limit': '35',
+          });
+          final req = await client.getUrl(uri).timeout(const Duration(seconds: 6));
+          final resp = await req.close().timeout(const Duration(seconds: 6));
+          if (resp.statusCode == 200) {
+            final body = await resp.transform(utf8.decoder).join();
+            res = jsonDecode(body) as Map<String, dynamic>;
+          }
+        } catch (_) {}
+      }
 
       if (mounted) {
-        if (res['ok'] == true && res['books'] is List) {
-          final books = (res['books'] as List)
+        final rawList = res?['books'] ?? res?['results'];
+        if (res != null && res['ok'] == true && rawList is List) {
+          final books = rawList
               .whereType<Map>()
               .map((m) => DesktopUniBookItem.fromJson(Map<String, dynamic>.from(m)))
               .toList();
@@ -1326,7 +1353,7 @@ class _LibraryManagementScreenState
           });
         } else {
           setState(() {
-            _uniBookError = res['error']?.toString() ?? 'Erreur lors de la recherche Uni Book';
+            _uniBookError = res?['error']?.toString() ?? 'Erreur lors de la recherche Uni Book';
             _isLoadingUniBook = false;
           });
         }
