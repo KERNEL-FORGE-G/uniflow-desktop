@@ -52,7 +52,8 @@ class SignOutButton extends ConsumerWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              PhosphorIcon(UniIcons.signOut(UniIconStyle.bold), size: 18, color: tint),
+              PhosphorIcon(UniIcons.signOut(UniIconStyle.bold),
+                  size: 18, color: tint),
               const SizedBox(width: 8),
               Flexible(
                 child: Text(

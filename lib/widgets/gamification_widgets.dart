@@ -24,7 +24,7 @@ class DailyReminderCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final questsAsync = ref.watch(activeQuestsProvider);
-    final xpAsync    = ref.watch(currentXpProvider);
+    final xpAsync = ref.watch(currentXpProvider);
 
     return questsAsync.when(
       loading: () => const _ReminderSkeleton(),
@@ -62,13 +62,12 @@ class _ReminderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final done   = todayQuests.where((q) => q.completed).length;
-    final total  = todayQuests.length;
-    final pct    = total == 0 ? 0.0 : done / total;
-    final pose   = done == total && total > 0 ? UniPose.wave : UniPose.pointing;
-    final arch   = done == total && total > 0
-        ? ArchlordPose.thumbs
-        : ArchlordPose.explain;
+    final done = todayQuests.where((q) => q.completed).length;
+    final total = todayQuests.length;
+    final pct = total == 0 ? 0.0 : done / total;
+    final pose = done == total && total > 0 ? UniPose.wave : UniPose.pointing;
+    final arch =
+        done == total && total > 0 ? ArchlordPose.thumbs : ArchlordPose.explain;
 
     return Container(
       decoration: BoxDecoration(
@@ -89,7 +88,7 @@ class _ReminderCard extends StatelessWidget {
           // ── Contenu principal ─────────────────────────────────────────
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 12, 16),
+              padding: const EdgeInsets.fromLTRB(16, 14, 8, 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -100,17 +99,22 @@ class _ReminderCard extends StatelessWidget {
                       const Icon(PhosphorIconsBold.sparkle,
                           size: 16, color: AppColors.primaryBlue),
                       const SizedBox(width: 6),
-                      const Text(
-                        'Programme du jour',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.primaryBlue,
+                      const Expanded(
+                        child: Text(
+                          'Programme du jour',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.primaryBlue,
+                          ),
                         ),
                       ),
-                      const Spacer(),
-                      if (level != null)
+                      if (level != null) ...[
+                        const SizedBox(width: 4),
                         _LevelChip(level: level!),
+                      ],
                     ],
                   ),
                   // Barre XP
@@ -149,23 +153,27 @@ class _ReminderCard extends StatelessWidget {
                   if (todayQuests.isEmpty)
                     const Text(
                       'Toutes tes quêtes du jour sont terminées 🎉',
-                      style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                      style: TextStyle(
+                          fontSize: 12, color: AppColors.textSecondary),
                     )
                   else
                     ...todayQuests.take(4).map(
-                      (q) => _QuestLine(quest: q),
-                    ),
+                          (q) => _QuestLine(quest: q),
+                        ),
                   // Bouton voir emploi du temps
                   if (onViewSchedule != null) ...[
                     const SizedBox(height: 12),
                     TextButton.icon(
                       onPressed: onViewSchedule,
-                      icon: const Icon(PhosphorIconsBold.calendarBlank, size: 14),
+                      icon:
+                          const Icon(PhosphorIconsBold.calendarBlank, size: 14),
                       label: const Text('Voir l\'emploi du temps'),
                       style: TextButton.styleFrom(
                         foregroundColor: AppColors.primaryBlue,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        textStyle: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ],
@@ -178,10 +186,11 @@ class _ReminderCard extends StatelessWidget {
             padding: const EdgeInsets.only(right: 8),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                ArchlordMascot(pose: arch, size: 80),
+                ArchlordMascot(pose: arch, size: 60),
                 const SizedBox(width: 4),
-                UniMascot(pose: pose, size: 80),
+                UniMascot(pose: pose, size: 60),
               ],
             ),
           ),
@@ -244,7 +253,8 @@ class _XpBar extends StatelessWidget {
           children: [
             Text(
               '$xp / ${level.xpForNext} XP',
-              style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+              style:
+                  const TextStyle(fontSize: 11, color: AppColors.textSecondary),
             ),
             Text(
               '${level.progressPercent.toStringAsFixed(0)} %',
@@ -273,7 +283,7 @@ class _QuestLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final done = quest.completed;
-    final pct  = quest.progressPercent;
+    final pct = quest.progressPercent;
     return Padding(
       padding: const EdgeInsets.only(bottom: 5),
       child: Row(
@@ -299,7 +309,10 @@ class _QuestLine extends StatelessWidget {
           const SizedBox(width: 6),
           Text(
             '${pct.toInt()} %',
-            style: const TextStyle(fontSize: 11, color: AppColors.teal, fontWeight: FontWeight.w600),
+            style: const TextStyle(
+                fontSize: 11,
+                color: AppColors.teal,
+                fontWeight: FontWeight.w600),
           ),
         ],
       ),
@@ -333,15 +346,19 @@ class _QuestSummaryBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final daily   = quests.where((q) => q.definition.period == QuestPeriod.daily).toList();
-    final monthly = quests.where((q) => q.definition.period == QuestPeriod.monthly).toList();
-    final yearly  = quests.where((q) => q.definition.period == QuestPeriod.yearly).toList();
+    final daily =
+        quests.where((q) => q.definition.period == QuestPeriod.daily).toList();
+    final monthly = quests
+        .where((q) => q.definition.period == QuestPeriod.monthly)
+        .toList();
+    final yearly =
+        quests.where((q) => q.definition.period == QuestPeriod.yearly).toList();
 
-    final doneJour  = daily.where((q) => q.completed).length;
-    final doneMois  = monthly.where((q) => q.completed).length;
+    final doneJour = daily.where((q) => q.completed).length;
+    final doneMois = monthly.where((q) => q.completed).length;
     final doneAnnee = yearly.where((q) => q.completed).length;
 
-    final totalJour  = daily.length;
+    final totalJour = daily.length;
     final totalMois = monthly.length;
     final totalAnnee = yearly.length;
 
@@ -365,31 +382,53 @@ class _QuestSummaryBody extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 14, 12, 8),
             child: Row(
               children: [
-                const Icon(PhosphorIconsBold.trophy, size: 16, color: AppColors.teal),
+                const Icon(PhosphorIconsBold.trophy,
+                    size: 16, color: AppColors.teal),
                 const SizedBox(width: 6),
-                const Text('Quêtes actives',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-                const SizedBox(width: 8),
+                const Flexible(
+                  child: Text(
+                    'Quêtes actives',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: AppColors.teal50,
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: const Text(
-                    '250 au catalogue',
-                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.teal),
+                    '250',
+                    style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.teal),
                   ),
                 ),
                 const Spacer(),
                 if (onViewAll != null)
-                  TextButton(
-                    onPressed: onViewAll,
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      textStyle: const TextStyle(fontSize: 11),
+                  InkWell(
+                    onTap: onViewAll,
+                    borderRadius: BorderRadius.circular(4),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                      child: Text(
+                        'Voir tout →',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primaryBlue,
+                        ),
+                      ),
                     ),
-                    child: const Text('Voir tout →'),
                   ),
               ],
             ),
@@ -399,11 +438,26 @@ class _QuestSummaryBody extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
-                Expanded(child: _PeriodStat(label: 'Aujourd\'hui', done: doneJour, total: totalJour > 0 ? totalJour : 6, color: const Color(0xFFF59E0B))),
+                Expanded(
+                    child: _PeriodStat(
+                        label: 'Aujourd\'hui',
+                        done: doneJour,
+                        total: totalJour > 0 ? totalJour : 6,
+                        color: const Color(0xFFF59E0B))),
                 const SizedBox(width: 8),
-                Expanded(child: _PeriodStat(label: 'Ce mois', done: doneMois, total: totalMois > 0 ? totalMois : 8, color: AppColors.teal)),
+                Expanded(
+                    child: _PeriodStat(
+                        label: 'Ce mois',
+                        done: doneMois,
+                        total: totalMois > 0 ? totalMois : 8,
+                        color: AppColors.teal)),
                 const SizedBox(width: 8),
-                Expanded(child: _PeriodStat(label: 'Cette année', done: doneAnnee, total: totalAnnee > 0 ? totalAnnee : 12, color: const Color(0xFF8B5CF6))),
+                Expanded(
+                    child: _PeriodStat(
+                        label: 'Cette année',
+                        done: doneAnnee,
+                        total: totalAnnee > 0 ? totalAnnee : 12,
+                        color: const Color(0xFF8B5CF6))),
               ],
             ),
           ),
@@ -413,7 +467,8 @@ class _QuestSummaryBody extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
-                children: quests.take(3).map((q) => _QuestRow(quest: q)).toList(),
+                children:
+                    quests.take(3).map((q) => _QuestRow(quest: q)).toList(),
               ),
             ),
           ],
@@ -429,7 +484,11 @@ class _PeriodStat extends StatelessWidget {
   final int done;
   final int total;
   final Color color;
-  const _PeriodStat({required this.label, required this.done, required this.total, required this.color});
+  const _PeriodStat(
+      {required this.label,
+      required this.done,
+      required this.total,
+      required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -444,11 +503,14 @@ class _PeriodStat extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+          Text(label,
+              style: const TextStyle(
+                  fontSize: 11, color: AppColors.textSecondary)),
           const SizedBox(height: 4),
           Text(
             '$done / $total',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: color),
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.w800, color: color),
           ),
           const SizedBox(height: 4),
           ClipRRect(
@@ -503,7 +565,10 @@ class _QuestRow extends StatelessWidget {
             ),
             child: Text(
               '+${quest.definition.xpReward} XP',
-              style: const TextStyle(fontSize: 10, color: AppColors.teal, fontWeight: FontWeight.w700),
+              style: const TextStyle(
+                  fontSize: 10,
+                  color: AppColors.teal,
+                  fontWeight: FontWeight.w700),
             ),
           ),
         ],
@@ -556,12 +621,12 @@ class _BadgeHighlightCard extends StatelessWidget {
   const _BadgeHighlightCard({required this.badge, this.onSeeAll});
 
   Color _rarityColor(BadgeRarity r) => switch (r) {
-    BadgeRarity.common    => const Color(0xFF6B7280),
-    BadgeRarity.uncommon  => const Color(0xFF10B981),
-    BadgeRarity.rare      => const Color(0xFF3B82F6),
-    BadgeRarity.epic      => const Color(0xFF8B5CF6),
-    BadgeRarity.legendary => const Color(0xFFF59E0B),
-  };
+        BadgeRarity.common => const Color(0xFF6B7280),
+        BadgeRarity.uncommon => const Color(0xFF10B981),
+        BadgeRarity.rare => const Color(0xFF3B82F6),
+        BadgeRarity.epic => const Color(0xFF8B5CF6),
+        BadgeRarity.legendary => const Color(0xFFF59E0B),
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -597,7 +662,10 @@ class _BadgeHighlightCard extends StatelessWidget {
                     child: Image.network(
                       'https://cloud.appwrite.io/v1/storage/buckets/uniflow_assets/files/$imageId/view',
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Icon(PhosphorIconsBold.trophy, size: 28, color: color),
+                      errorBuilder: (_, __, ___) => Icon(
+                          PhosphorIconsBold.trophy,
+                          size: 28,
+                          color: color),
                     ),
                   )
                 : Icon(PhosphorIconsBold.trophy, size: 28, color: color),
@@ -611,28 +679,41 @@ class _BadgeHighlightCard extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: color.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         badge.definition.rarity.name.toUpperCase(),
-                        style: TextStyle(fontSize: 9, fontWeight: FontWeight.w800, color: color, letterSpacing: 0.5),
+                        style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w800,
+                            color: color,
+                            letterSpacing: 0.5),
                       ),
                     ),
                     const SizedBox(width: 6),
-                    const Text('NOUVEAU BADGE', style: TextStyle(fontSize: 9, color: AppColors.textMuted, letterSpacing: 0.5)),
+                    const Text('NOUVEAU BADGE',
+                        style: TextStyle(
+                            fontSize: 9,
+                            color: AppColors.textMuted,
+                            letterSpacing: 0.5)),
                   ],
                 ),
                 const SizedBox(height: 4),
                 Text(
                   badge.definition.name,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+                  style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary),
                 ),
                 Text(
                   badge.definition.description,
-                  style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                  style: const TextStyle(
+                      fontSize: 11, color: AppColors.textSecondary),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -645,8 +726,10 @@ class _BadgeHighlightCard extends StatelessWidget {
               onPressed: onSeeAll,
               style: TextButton.styleFrom(
                 foregroundColor: color,
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                textStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                textStyle:
+                    const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
               ),
               child: const Text('Voir tout →'),
             ),

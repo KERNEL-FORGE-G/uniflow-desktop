@@ -205,12 +205,9 @@ class _AppHeaderState extends ConsumerState<AppHeader> {
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          // Trois paliers : sous 720 px la recherche se replie en icône ;
-          // sous 900, l'état de synchronisation et le nom se réduisent —
-          // avec le texte agrandi ×1.3, la rangée débordait de 29 px en
-          // 1024×720 (barre latérale dépliée).
-          final wide = constraints.maxWidth >= 720;
-          final roomy = constraints.maxWidth >= 900;
+          final wide = constraints.maxWidth >= 800;
+          final roomy = constraints.maxWidth >= 980;
+          final showLive = constraints.maxWidth >= 920;
           final showName = roomy;
           return Row(
             children: [
@@ -244,7 +241,7 @@ class _AppHeaderState extends ConsumerState<AppHeader> {
                 CompositedTransformTarget(
                   link: _searchLink,
                   child: SizedBox(
-                    width: (constraints.maxWidth * 0.32).clamp(200.0, 360.0),
+                    width: (constraints.maxWidth * 0.24).clamp(160.0, 300.0),
                     child: SearchField(
                       hint: 'Rechercher un écran…',
                       controller: _searchController,
@@ -253,69 +250,88 @@ class _AppHeaderState extends ConsumerState<AppHeader> {
                     ),
                   ),
                 ),
-                const SizedBox(width: AppSpacing.lg),
+                const SizedBox(width: AppSpacing.md),
               ],
-              // Badge « Live » style SkillSet
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEF4444).withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(AppRadius.pill),
-                  border: Border.all(
-                    color: const Color(0xFFEF4444).withValues(alpha: 0.25),
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Badge « Live » style SkillSet
+                      if (showLive) ...[
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color:
+                                const Color(0xFFEF4444).withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(AppRadius.pill),
+                            border: Border.all(
+                              color: const Color(0xFFEF4444)
+                                  .withValues(alpha: 0.25),
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.circle,
+                                  size: 7, color: Color(0xFFEF4444)),
+                              SizedBox(width: 5),
+                              Text(
+                                'Live',
+                                style: TextStyle(
+                                  fontFamily: AppTextStyles.fontFamily,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFFEF4444),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                      ],
+                      // Bouton bascule jour/nuit (lune) — style SkillSet
+                      Consumer(
+                        builder: (context, ref, _) {
+                          final prefs = ref.watch(preferencesProvider);
+                          return _HeaderIconButton(
+                            icon: prefs.darkMode
+                                ? PhosphorIconsFill.sun
+                                : PhosphorIconsBold.moon,
+                            tooltip:
+                                prefs.darkMode ? 'Mode clair' : 'Mode sombre',
+                            onTap: () => ref
+                                .read(preferencesProvider.notifier)
+                                .setDarkMode(!prefs.darkMode),
+                          );
+                        },
+                      ),
+                      const SizedBox(width: AppSpacing.xs),
+                      SyncIndicator(state: sync, compact: !roomy),
+                      const SizedBox(width: AppSpacing.xs),
+                      _HeaderIconButton(
+                        icon: UniIcons.notifications(UniIconStyle.bold),
+                        tooltip: 'Notifications',
+                        badge: unread,
+                        onTap: () =>
+                            widget.onSelect(AppDestination.notifications),
+                      ),
+                      const SizedBox(width: AppSpacing.md),
+                      _AvatarMenu(
+                        name: user?.name ?? '',
+                        roleLabel: user?.isPlatform == true
+                            ? 'Admin plateforme'
+                            : ref.watch(currentRoleProvider).label,
+                        avatarFileId: user?.avatarFileId,
+                        showName: showName,
+                        onSelect: widget.onSelect,
+                      ),
+                    ],
                   ),
                 ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.circle, size: 7, color: Color(0xFFEF4444)),
-                    SizedBox(width: 5),
-                    Text(
-                      'Live',
-                      style: TextStyle(
-                        fontFamily: AppTextStyles.fontFamily,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFFEF4444),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              // Bouton bascule jour/nuit (lune) — style SkillSet
-              Consumer(
-                builder: (context, ref, _) {
-                  final prefs = ref.watch(preferencesProvider);
-                  return _HeaderIconButton(
-                    icon: prefs.darkMode
-                        ? PhosphorIconsFill.sun
-                        : PhosphorIconsBold.moon,
-                    tooltip: prefs.darkMode ? 'Mode clair' : 'Mode sombre',
-                    onTap: () => ref
-                        .read(preferencesProvider.notifier)
-                        .setDarkMode(!prefs.darkMode),
-                  );
-                },
-              ),
-              const SizedBox(width: AppSpacing.xs),
-              SyncIndicator(state: sync, compact: !roomy),
-              const SizedBox(width: AppSpacing.xs),
-              _HeaderIconButton(
-                icon: UniIcons.notifications(UniIconStyle.bold),
-                tooltip: 'Notifications',
-                badge: unread,
-                onTap: () => widget.onSelect(AppDestination.notifications),
-              ),
-              const SizedBox(width: AppSpacing.md),
-              _AvatarMenu(
-                name: user?.name ?? '',
-                roleLabel: user?.isPlatform == true
-                    ? 'Admin plateforme'
-                    : ref.watch(currentRoleProvider).label,
-                avatarFileId: user?.avatarFileId,
-                showName: showName,
-                onSelect: widget.onSelect,
               ),
             ],
           );

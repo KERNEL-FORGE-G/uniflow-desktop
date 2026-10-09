@@ -133,6 +133,18 @@ class _TeamsScreenState extends ConsumerState<TeamsScreen> {
                   onGithub: (membre) =>
                       _ouvrir('https://github.com/${membre.github}'),
                   onMail: (membre) => _ouvrir('mailto:${membre.email}'),
+                  onWebsite: (membre) {
+                    final url = membre.website.startsWith('http')
+                        ? membre.website
+                        : 'https://${membre.website}';
+                    _ouvrir(url);
+                  },
+                  onLinkedin: (membre) {
+                    final url = membre.linkedin.startsWith('http')
+                        ? membre.linkedin
+                        : 'https://${membre.linkedin}';
+                    _ouvrir(url);
+                  },
                 ),
               const SizedBox(height: 24),
               const _BandeauTechnologies(technologies: _technologies),
@@ -158,12 +170,16 @@ class _Grille extends StatelessWidget {
   final int colonnes;
   final void Function(TeamMember) onGithub;
   final void Function(TeamMember) onMail;
+  final void Function(TeamMember) onWebsite;
+  final void Function(TeamMember) onLinkedin;
 
   const _Grille({
     required this.membres,
     required this.colonnes,
     required this.onGithub,
     required this.onMail,
+    required this.onWebsite,
+    required this.onLinkedin,
   });
 
   @override
@@ -185,6 +201,8 @@ class _Grille extends StatelessWidget {
                           membre: tranche[j],
                           onGithub: () => onGithub(tranche[j]),
                           onMail: () => onMail(tranche[j]),
+                          onWebsite: () => onWebsite(tranche[j]),
+                          onLinkedin: () => onLinkedin(tranche[j]),
                         )
                       // Colonne vide en fin de liste : sans elle, la dernière
                       // carte d'un nombre non multiple s'étalerait sur toute la
@@ -211,11 +229,15 @@ class _CarteMembre extends StatelessWidget {
   final TeamMember membre;
   final VoidCallback onGithub;
   final VoidCallback onMail;
+  final VoidCallback onWebsite;
+  final VoidCallback onLinkedin;
 
   const _CarteMembre({
     required this.membre,
     required this.onGithub,
     required this.onMail,
+    required this.onWebsite,
+    required this.onLinkedin,
   });
 
   @override
@@ -301,7 +323,19 @@ class _CarteMembre extends StatelessWidget {
               color: AppColors.primaryBlue,
             ),
           ),
-          if (membre.subTeam.isNotEmpty) ...[
+          if (membre.bio.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(
+              membre.bio,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppColors.textSecondary,
+                height: 1.3,
+              ),
+            ),
+          ] else if (membre.subTeam.isNotEmpty) ...[
             const SizedBox(height: 2),
             Text(
               membre.subTeam,
@@ -324,9 +358,23 @@ class _CarteMembre extends StatelessWidget {
                     onTap: onGithub,
                   ),
                 ),
-              // `Spacer` pousse le bouton mail à droite même quand le pseudo
-              // GitHub est absent — c'est la disposition du web.
               const Spacer(),
+              if (membre.website.isNotEmpty) ...[
+                _BoutonIcone(
+                  icone: UniIcons.globe(UniIconStyle.bold),
+                  tooltip: membre.website,
+                  onTap: onWebsite,
+                ),
+                const SizedBox(width: 6),
+              ],
+              if (membre.linkedin.isNotEmpty) ...[
+                _BoutonIcone(
+                  icone: PhosphorIconsBold.link,
+                  tooltip: 'LinkedIn',
+                  onTap: onLinkedin,
+                ),
+                const SizedBox(width: 6),
+              ],
               if (membre.email.isNotEmpty)
                 _BoutonIcone(
                   icone: UniIcons.mail(UniIconStyle.bold),

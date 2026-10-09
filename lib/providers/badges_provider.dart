@@ -29,11 +29,18 @@ final _myRawAttendanceProvider =
 });
 
 /// Devoirs et soumissions de l'apprenant connecté, format badge.
-final _myBadgeAssignmentsProvider =
-    FutureProvider<({List<BadgeAssignment> assignments, List<BadgeSubmission> submissions})>(
-        (ref) async {
+final _myBadgeAssignmentsProvider = FutureProvider<
+    ({
+      List<BadgeAssignment> assignments,
+      List<BadgeSubmission> submissions
+    })>((ref) async {
   final user = ref.watch(currentUserProvider);
-  if (user == null) return (assignments: const <BadgeAssignment>[], submissions: const <BadgeSubmission>[]);
+  if (user == null) {
+    return (
+      assignments: const <BadgeAssignment>[],
+      submissions: const <BadgeSubmission>[]
+    );
+  }
   final service = ref.read(appwriteServiceProvider);
   try {
     // Soumissions de cet apprenant
@@ -59,12 +66,18 @@ final _myBadgeAssignmentsProvider =
     }).toList();
 
     if (submissions.isEmpty) {
-      return (assignments: const <BadgeAssignment>[], submissions: const <BadgeSubmission>[]);
+      return (
+        assignments: const <BadgeAssignment>[],
+        submissions: const <BadgeSubmission>[]
+      );
     }
 
     // Devoirs référencés par les soumissions
-    final assignmentIds =
-        submissions.map((s) => s.assignmentId).where((id) => id.isNotEmpty).toSet().toList();
+    final assignmentIds = submissions
+        .map((s) => s.assignmentId)
+        .where((id) => id.isNotEmpty)
+        .toSet()
+        .toList();
     final assignments = <BadgeAssignment>[];
     // Requêtes par lots de 25 (limite Appwrite)
     for (var i = 0; i < assignmentIds.length; i += 25) {
@@ -97,7 +110,10 @@ final _myBadgeAssignmentsProvider =
     }
     return (assignments: assignments, submissions: submissions);
   } catch (_) {
-    return (assignments: const <BadgeAssignment>[], submissions: const <BadgeSubmission>[]);
+    return (
+      assignments: const <BadgeAssignment>[],
+      submissions: const <BadgeSubmission>[]
+    );
   }
 });
 

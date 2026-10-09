@@ -83,6 +83,8 @@ flutter:
     - assets/illustrations/
     # Scans officiels des emplois du temps (ICT4D, SIGL, Faculté des Sciences)
     - assets/emplois_du_temps/
+    # Photos et mascottes des membres de l'équipe KERNEL FORGE
+    - assets/team/
     - .env
   # Inter (SIL OFL 1.1, licence dans assets/fonts/) : la police du web.
   # Le thème la nommait sans l'embarquer et Flutter retombait sur la police

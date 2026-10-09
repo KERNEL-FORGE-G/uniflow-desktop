@@ -1828,16 +1828,17 @@ class SentinelleManagementScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return _ManagementPage(
       title: 'UniFlow Sentinelle',
-      subtitle: 'Robots motorisés en format pavé (kiosques mobiles) · Surveillance Edge AI & Santé',
+      subtitle:
+          'Robots motorisés en format pavé (kiosques mobiles) · Surveillance Edge AI & Santé',
       stats: const [],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // ── Vitrine des robots kiosques motorisés ───────────────────────
-          _Panel(
+          const _Panel(
             title: 'Parc de Robots Kiosques Motorisés (Format Pavé)',
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
+              padding: EdgeInsets.symmetric(vertical: 8),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -1846,27 +1847,30 @@ class SentinelleManagementScreen extends StatelessWidget {
                       imagePath: 'assets/illustrations/sentinel_hero.jpg',
                       tag: 'PATROL-01 · ACTIF',
                       title: 'Kiosque Mobile Autonome',
-                      desc: 'Format pavé vertical sur roues omnidirectionnelles. Écran tactile 21", scanner LiDAR et thermomètre IR.',
+                      desc:
+                          'Format pavé vertical sur roues omnidirectionnelles. Écran tactile 21", scanner LiDAR et thermomètre IR.',
                       tagColor: AppColors.teal,
                     ),
                   ),
-                  const SizedBox(width: 14),
+                  SizedBox(width: 14),
                   Expanded(
                     child: _RobotCard(
                       imagePath: 'assets/illustrations/sentinel_checkup.jpg',
                       tag: 'TRIAGE EN COURS',
                       title: 'Bilan de Santé Étudiant',
-                      desc: 'Auto-mesure SpO2, fréquence cardiaque et température sans contact en 30 secondes.',
-                      tagColor: const Color(0xFF0284C7),
+                      desc:
+                          'Auto-mesure SpO2, fréquence cardiaque et température sans contact en 30 secondes.',
+                      tagColor: Color(0xFF0284C7),
                     ),
                   ),
-                  const SizedBox(width: 14),
+                  SizedBox(width: 14),
                   Expanded(
                     child: _RobotCard(
                       imagePath: 'assets/illustrations/sentinel_patrol.jpg',
                       tag: 'FLOTTE R1-R2 · LAN',
                       title: 'Patrouille Amphi & Bibliothèque',
-                      desc: 'Détection de chute Vigie 100% hors-ligne, cartographie campus et analyse de l\'air.',
+                      desc:
+                          'Détection de chute Vigie 100% hors-ligne, cartographie campus et analyse de l\'air.',
                       tagColor: AppColors.amber,
                     ),
                   ),
@@ -1893,8 +1897,10 @@ class SentinelleManagementScreen extends StatelessWidget {
                         PhosphorIcon(UniIcons.videoOff(),
                             color: Colors.white54, size: 40),
                         const SizedBox(height: 10),
-                        const Text('Flux sécurisé Edge AI · Réseau local uniquement',
-                            style: TextStyle(color: Colors.white54, fontSize: 12)),
+                        const Text(
+                            'Flux sécurisé Edge AI · Réseau local uniquement',
+                            style:
+                                TextStyle(color: Colors.white54, fontSize: 12)),
                       ],
                     ),
                   ),
@@ -1960,7 +1966,8 @@ class _RobotCard extends StatelessWidget {
                   errorBuilder: (_, __, ___) => Container(
                     color: Colors.black12,
                     child: const Center(
-                      child: Icon(Icons.smart_toy, size: 40, color: Colors.grey),
+                      child:
+                          Icon(Icons.smart_toy, size: 40, color: Colors.grey),
                     ),
                   ),
                 ),
@@ -1969,7 +1976,8 @@ class _RobotCard extends StatelessWidget {
                 top: 8,
                 left: 8,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
                     color: Colors.black.withValues(alpha: 0.75),
                     borderRadius: BorderRadius.circular(6),
@@ -2005,7 +2013,7 @@ class _RobotCard extends StatelessWidget {
                   desc,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: AppTextStyles.fontFamily,
                     fontSize: 11,
                     color: AppColors.textSecondary,

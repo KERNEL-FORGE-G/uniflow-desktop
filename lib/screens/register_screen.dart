@@ -14,6 +14,7 @@ import '../widgets/uni_icons.dart';
 import '../widgets/app_text_field.dart';
 import '../widgets/auth_chrome.dart';
 import '../widgets/motion.dart';
+import '../ui/app_button.dart';
 import 'login_screen.dart';
 import 'main_shell.dart';
 
@@ -181,11 +182,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             IconButton(
               tooltip: 'Retour à la connexion',
               onPressed: _busy ? null : () => Navigator.of(context).pop(false),
-              icon: PhosphorIcon(UniIcons.back(UniIconStyle.bold), color: p.text),
+              icon:
+                  PhosphorIcon(UniIcons.back(UniIconStyle.bold), color: p.text),
             ),
             Expanded(
               child: Text(
-                'Créer un compte',
+                'Rejoindre UniFlow',
                 key: const Key('auth-title'),
                 textAlign: TextAlign.center,
                 maxLines: 1,
@@ -300,27 +302,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         ),
         const SizedBox(height: 12),
         Center(
-          child: InkWell(
-            onTap: _busy ? null : _openWebRegistration,
-            borderRadius: BorderRadius.circular(6),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    PhosphorIcon(UniIcons.openExternal(UniIconStyle.bold),
-                        size: 14, color: p.link),
-                    const SizedBox(width: 6),
-                    Text(
-                      'S\'inscrire sur le web',
-                      style: p.linkStyle.copyWith(fontSize: 12.5),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+          child: AppButton.ghost(
+            label: 'S\'inscrire sur le web',
+            icon: UniIcons.openExternal(UniIconStyle.bold),
+            onPressed: _busy ? null : _openWebRegistration,
           ),
         ),
       ],

@@ -168,8 +168,7 @@ BadgeProgress _premierPas(List<BadgeSubmission> submissions) => BadgeProgress(
 BadgeProgress _assidu(List<AttendanceMark> marks) {
   final bySession = <String, AttendanceMark>{};
   for (final mark in marks) {
-    final key =
-        mark.sessionId.isEmpty ? '${bySession.length}' : mark.sessionId;
+    final key = mark.sessionId.isEmpty ? '${bySession.length}' : mark.sessionId;
     bySession[key] = mark;
   }
   final counted = bySession.values.where((m) => !m.excused).toList();
@@ -235,10 +234,9 @@ BadgeProgress _major(List<AcademicGrade> grades) {
   final average = weighted / weights;
   final volume = (usable.length / kMajorMinGrades).clamp(0.0, 1.0);
   final quality = (average / kMajorAverage).clamp(0.0, 1.0);
-  final progress =
-      usable.length >= kMajorMinGrades && average >= kMajorAverage
-          ? 1.0
-          : (volume < quality ? volume : quality).clamp(0.0, 0.99);
+  final progress = usable.length >= kMajorMinGrades && average >= kMajorAverage
+      ? 1.0
+      : (volume < quality ? volume : quality).clamp(0.0, 0.99);
   return BadgeProgress(
     badge: StudentBadge.major,
     progress: progress,

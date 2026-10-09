@@ -84,7 +84,8 @@ class _SplashScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(28),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.25), width: 1.5),
+                  border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.25), width: 1.5),
                 ),
                 child: const UniMascot(pose: UniPose.wave, size: 100),
               ),
@@ -117,7 +118,8 @@ class _SplashScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                   child: LinearProgressIndicator(
                     backgroundColor: Colors.white.withValues(alpha: 0.20),
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.white),
                     minHeight: 3,
                   ),
                 ),

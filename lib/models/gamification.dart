@@ -16,20 +16,20 @@ import 'package:appwrite/models.dart' as models;
 
 /// Catégorie d'un badge.
 enum BadgeCategory {
-  assiduite,    // présences, ponctualité
-  academique,   // notes, devoirs, quiz
-  social,       // forum, messages, entraide
-  special,      // événements, saisonniers
-  communaute,   // classements, meilleur du mois/semaine
-  progression,  // milestones de parcours
+  assiduite, // présences, ponctualité
+  academique, // notes, devoirs, quiz
+  social, // forum, messages, entraide
+  special, // événements, saisonniers
+  communaute, // classements, meilleur du mois/semaine
+  progression, // milestones de parcours
 }
 
 /// Rareté d'un badge — détermine la couleur de l'anneau et le poids XP.
 enum BadgeRarity {
-  common,   // bronze
+  common, // bronze
   uncommon, // vert
-  rare,     // argent
-  epic,     // or
+  rare, // argent
+  epic, // or
   legendary, // arc-en-ciel
 }
 
@@ -110,7 +110,9 @@ class BadgeDefinition {
     if (raw == null) return {};
     if (raw is Map<String, dynamic>) return raw;
     try {
-      return (const JsonDecoder().convert('$raw') as Map?)?.cast<String, dynamic>() ?? {};
+      return (const JsonDecoder().convert('$raw') as Map?)
+              ?.cast<String, dynamic>() ??
+          {};
     } catch (_) {
       return {};
     }
@@ -147,7 +149,8 @@ class UserBadge {
       id: doc.$id,
       userId: '${d['userId'] ?? ''}',
       badgeId: '${d['badgeId'] ?? ''}',
-      unlockedAt: DateTime.tryParse('${d['unlockedAt'] ?? ''}') ?? DateTime.now(),
+      unlockedAt:
+          DateTime.tryParse('${d['unlockedAt'] ?? ''}') ?? DateTime.now(),
       progressPercent: (d['progressPercent'] as int?) ?? 0,
       progressDetail: '${d['progressDetail'] ?? ''}',
     );
@@ -172,31 +175,31 @@ class BadgeWithProgress {
 
 /// Période d'une quête.
 enum QuestPeriod {
-  daily,   // réinitialisation quotidienne
-  weekly,  // réinitialisation le lundi
+  daily, // réinitialisation quotidienne
+  weekly, // réinitialisation le lundi
   monthly, // réinitialisation le 1er du mois
-  yearly,  // réinitialisation le 1er janvier
+  yearly, // réinitialisation le 1er janvier
   oneshot, // quête unique, pas de réinitialisation
 }
 
 /// Type de critère d'une quête.
 enum QuestCriteriaType {
-  attendSession,      // assister à N séances
-  submitAssignment,   // rendre N devoirs
-  earnGrade,          // obtenir une note ≥ seuil
-  postForum,          // poster N messages sur le forum
-  sendMessage,        // envoyer N messages privés
-  loginStreak,        // se connecter N jours d'affilée
-  completeQuiz,       // compléter N quiz
-  perfectQuiz,        // réussir N quiz à 100%
-  earnBadge,          // obtenir N badges
-  reachXp,            // atteindre N XP total
-  rankTop,            // être dans le top N de la promo (semaine/mois)
-  bestOfWeek,         // être le meilleur de la semaine (assiduité, notes…)
-  bestOfMonth,        // meilleur du mois
-  mostActive,         // le plus actif (forum + messages)
-  earlyBird,          // se connecter avant 8h N fois
-  nightOwl,           // se connecter après 22h N fois
+  attendSession, // assister à N séances
+  submitAssignment, // rendre N devoirs
+  earnGrade, // obtenir une note ≥ seuil
+  postForum, // poster N messages sur le forum
+  sendMessage, // envoyer N messages privés
+  loginStreak, // se connecter N jours d'affilée
+  completeQuiz, // compléter N quiz
+  perfectQuiz, // réussir N quiz à 100%
+  earnBadge, // obtenir N badges
+  reachXp, // atteindre N XP total
+  rankTop, // être dans le top N de la promo (semaine/mois)
+  bestOfWeek, // être le meilleur de la semaine (assiduité, notes…)
+  bestOfMonth, // meilleur du mois
+  mostActive, // le plus actif (forum + messages)
+  earlyBird, // se connecter avant 8h N fois
+  nightOwl, // se connecter après 22h N fois
 }
 
 /// Définition d'une quête, lue depuis `quests_catalog`.
@@ -333,9 +336,8 @@ class UserQuestProgress {
       completedAt: d['completedAt'] != null
           ? DateTime.tryParse('${d['completedAt']}')
           : null,
-      resetAt: d['resetAt'] != null
-          ? DateTime.tryParse('${d['resetAt']}')
-          : null,
+      resetAt:
+          d['resetAt'] != null ? DateTime.tryParse('${d['resetAt']}') : null,
     );
   }
 }
@@ -351,9 +353,8 @@ class QuestWithProgress {
   int get currentValue => progress?.currentValue ?? 0;
   int get targetValue => definition.targetValue;
 
-  double get ratio => targetValue == 0
-      ? 0.0
-      : (currentValue / targetValue).clamp(0.0, 1.0);
+  double get ratio =>
+      targetValue == 0 ? 0.0 : (currentValue / targetValue).clamp(0.0, 1.0);
 
   int get progressPercent => (ratio * 100).round();
 
@@ -380,7 +381,8 @@ class XpLevel {
     required this.title,
   });
 
-  double get progress => xpForNextLevel == 0 ? 1.0 : (xpInLevel / xpForNextLevel).clamp(0.0, 1.0);
+  double get progress =>
+      xpForNextLevel == 0 ? 1.0 : (xpInLevel / xpForNextLevel).clamp(0.0, 1.0);
   int get xpForNext => xpForNextLevel;
   double get progressPercent => progress * 100;
 

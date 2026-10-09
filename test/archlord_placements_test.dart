@@ -13,8 +13,6 @@ import 'package:uniflow/screens/login_screen.dart';
 import 'package:uniflow/screens/management_screens.dart';
 import 'package:uniflow/screens/register_screen.dart';
 import 'package:uniflow/widgets/auth_chrome.dart';
-import 'package:uniflow/widgets/uni/archlord_mascot.dart';
-import 'package:uniflow/widgets/uni/uni_mascot.dart';
 
 import 'layout_test_support.dart';
 
@@ -73,7 +71,8 @@ void _expectLegibleBubble(WidgetTester tester) {
 void main() {
   setUpAll(loadTestEnv);
 
-  group('Panneau de connexion : Archlord et Uni discutent', () {
+  group('Panneau de connexion : Archlord et Uni accueillent avec illustration',
+      () {
     for (final screen in <String, Widget>{
       'Connexion': const LoginScreen(),
       'Inscription': const RegisterScreen(),
@@ -82,26 +81,40 @@ void main() {
         for (final scale in const [1.0, 1.3]) {
           testWidgets(
               '${screen.key} en ${size.width.toInt()}×${size.height.toInt()} '
-              '(texte ×$scale) : dialogue présent, lisible, sans débordement',
+              '(texte ×$scale) : illustration du poing présente, sans dialogue, sans débordement',
               (tester) async {
             await _pump(tester, screen.value, size, scale: scale);
             expect(tester.takeException(), isNull);
-            expect(find.byType(MascotDialogue), findsOneWidget);
-            expect(find.byType(ArchlordMascot), findsOneWidget);
-            expect(find.byType(UniMascot), findsOneWidget);
-            // Archlord ouvre : c'est le fondateur qui accueille, Uni guide
-            // ensuite. La première réplique doit donc être la sienne.
-            expect(kAuthMascotDialogue.first.who, MascotSpeaker.archlord);
-            expect(find.text(kAuthMascotDialogue.first.text), findsOneWidget);
-            _expectLegibleBubble(tester);
+            expect(find.byType(MascotDialogue), findsNothing);
+            expect(
+              find.byWidgetPredicate((w) =>
+                  w is Image &&
+                  w.image is AssetImage &&
+                  (w.image as AssetImage)
+                      .assetName
+                      .contains('archlord_uni_fistbump')),
+              findsOneWidget,
+            );
           });
         }
       }
     }
 
-    testWidgets('les répliques tiennent chacune dans une bulle de 260 px',
+    testWidgets(
+        'les répliques de dialogue tiennent chacune dans une bulle de 260 px',
         (tester) async {
-      await _pump(tester, const LoginScreen(), const Size(1280, 800));
+      await tester.pumpWidget(const MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: SizedBox(
+              width: 500,
+              height: 400,
+              child: MascotDialogue(lines: kAuthMascotDialogue),
+            ),
+          ),
+        ),
+      ));
+      await tester.pump();
       for (var i = 0; i < kAuthMascotDialogue.length; i++) {
         expect(find.text(kAuthMascotDialogue[i].text), findsOneWidget);
         expect(tester.getSize(find.byType(UniBubble).first).width,

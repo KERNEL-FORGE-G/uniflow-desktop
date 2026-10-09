@@ -91,8 +91,7 @@ class LiveKitBinaryProvisioner {
 
     final archiveName = url.split('/').last;
     final isZip = archiveName.endsWith('.zip');
-    final archivePath =
-        '${binDir.path}${Platform.pathSeparator}$archiveName';
+    final archivePath = '${binDir.path}${Platform.pathSeparator}$archiveName';
 
     // ── Téléchargement ──────────────────────────────────────────────────────
     onProgress?.call('Téléchargement de livekit-server v$_version…');

@@ -27,8 +27,7 @@ class DashboardBadgesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final unlocked = badges.where((b) => b.unlocked).length;
-    final ordered = [...badges]
-      ..sort((a, b) {
+    final ordered = [...badges]..sort((a, b) {
         if (a.unlocked != b.unlocked) return a.unlocked ? -1 : 1;
         return b.progress.compareTo(a.progress);
       });
@@ -188,7 +187,8 @@ class _BadgeTile extends StatelessWidget {
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: progress.unlocked ? AppColors.textPrimary : AppColors.textMuted,
+            color:
+                progress.unlocked ? AppColors.textPrimary : AppColors.textMuted,
           ),
         ),
         const SizedBox(height: 4),
@@ -234,10 +234,26 @@ class _DesktopBadgeMedalState extends State<_DesktopBadgeMedal>
   late Animation<double> _burstOpacity;
 
   static const ColorFilter _greyscale = ColorFilter.matrix(<double>[
-    0.2126 * 0.75, 0.7152 * 0.75, 0.0722 * 0.75, 0, 70,
-    0.2126 * 0.75, 0.7152 * 0.75, 0.0722 * 0.75, 0, 70,
-    0.2126 * 0.75, 0.7152 * 0.75, 0.0722 * 0.75, 0, 70,
-    0, 0, 0, 1, 0,
+    0.2126 * 0.75,
+    0.7152 * 0.75,
+    0.0722 * 0.75,
+    0,
+    70,
+    0.2126 * 0.75,
+    0.7152 * 0.75,
+    0.0722 * 0.75,
+    0,
+    70,
+    0.2126 * 0.75,
+    0.7152 * 0.75,
+    0.0722 * 0.75,
+    0,
+    70,
+    0,
+    0,
+    0,
+    1,
+    0,
   ]);
 
   @override
@@ -245,10 +261,10 @@ class _DesktopBadgeMedalState extends State<_DesktopBadgeMedal>
     super.initState();
     _burst = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
-    _burstRadius = Tween<double>(begin: 0.3, end: 1.2).animate(
-        CurvedAnimation(parent: _burst, curve: Curves.easeOut));
-    _burstOpacity = Tween<double>(begin: 0.6, end: 0.0).animate(
-        CurvedAnimation(parent: _burst, curve: Curves.easeOut));
+    _burstRadius = Tween<double>(begin: 0.3, end: 1.2)
+        .animate(CurvedAnimation(parent: _burst, curve: Curves.easeOut));
+    _burstOpacity = Tween<double>(begin: 0.6, end: 0.0)
+        .animate(CurvedAnimation(parent: _burst, curve: Curves.easeOut));
   }
 
   @override

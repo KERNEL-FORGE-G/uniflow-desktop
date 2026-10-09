@@ -16,14 +16,14 @@ import '../data/quests_catalog_250.dart';
 
 // ─── Constantes ─────────────────────────────────────────────────────────────
 
-const String _databaseId   = 'uniflow';
+const String _databaseId = 'uniflow';
 const String _badgesCatalog = 'badges_catalog';
-const String _userBadges    = 'user_badges';
+const String _userBadges = 'user_badges';
 const String _questsCatalog = 'quests_catalog';
 const String _userQuestProg = 'user_quest_progress';
-const String _userXp        = 'user_xp';
-const String _leaderboard   = 'leaderboard';
-const String _bucketId      = 'uniflow_assets';
+const String _userXp = 'user_xp';
+const String _leaderboard = 'leaderboard';
+const String _bucketId = 'uniflow_assets';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Service
@@ -93,7 +93,7 @@ class GamificationService {
 
   Future<List<BadgeWithProgress>> fetchBadgesWithProgress(String userId) async {
     try {
-      final catalog  = await fetchBadgeCatalog();
+      final catalog = await fetchBadgeCatalog();
       final unlocked = await fetchUserBadges(userId);
       final unlockedIds = {for (final b in unlocked) b.badgeId: b};
       return catalog.map((def) {
@@ -101,7 +101,9 @@ class GamificationService {
         return BadgeWithProgress(definition: def, userBadge: ub);
       }).toList();
     } catch (_) {
-      return _fallbackBadgeCatalog().map((def) => BadgeWithProgress(definition: def)).toList();
+      return _fallbackBadgeCatalog()
+          .map((def) => BadgeWithProgress(definition: def))
+          .toList();
     }
   }
 
@@ -122,7 +124,8 @@ class GamificationService {
       BadgeDefinition(
         id: 'assidu',
         name: 'Assidu',
-        description: 'Être présent à 90 % des séances relevées (au moins 5 séances).',
+        description:
+            'Être présent à 90 % des séances relevées (au moins 5 séances).',
         unlockedMessage: 'Présence exemplaire confirmée aux cours.',
         category: BadgeCategory.assiduite,
         rarity: BadgeRarity.rare,
@@ -135,7 +138,8 @@ class GamificationService {
         id: 'ponctuel',
         name: 'Ponctuel',
         description: "Rendre 3 devoirs consécutifs avant l'échéance fixée.",
-        unlockedMessage: 'Trois devoirs rendus dans les délais, sans aucun retard.',
+        unlockedMessage:
+            'Trois devoirs rendus dans les délais, sans aucun retard.',
         category: BadgeCategory.assiduite,
         rarity: BadgeRarity.rare,
         level: BadgeLevel.silver,
@@ -146,7 +150,8 @@ class GamificationService {
       BadgeDefinition(
         id: 'major',
         name: 'Major',
-        description: 'Obtenir une moyenne pondérée de 14/20 ou plus sur au moins 3 notes.',
+        description:
+            'Obtenir une moyenne pondérée de 14/20 ou plus sur au moins 3 notes.',
         unlockedMessage: "Moyenne pondérée d'excellence obtenue.",
         category: BadgeCategory.academique,
         rarity: BadgeRarity.epic,
@@ -158,8 +163,10 @@ class GamificationService {
       BadgeDefinition(
         id: 'entraide',
         name: 'Entraide',
-        description: "Publier au moins 3 sujets d'entraide ou réponses sur le forum académique.",
-        unlockedMessage: 'La promotion compte sur votre soutien et esprit de partage.',
+        description:
+            "Publier au moins 3 sujets d'entraide ou réponses sur le forum académique.",
+        unlockedMessage:
+            'La promotion compte sur votre soutien et esprit de partage.',
         category: BadgeCategory.social,
         rarity: BadgeRarity.common,
         level: BadgeLevel.bronze,
@@ -170,7 +177,8 @@ class GamificationService {
       BadgeDefinition(
         id: 'sans_faute',
         name: 'Sans faute',
-        description: "Réussir un quiz d'évaluation avec la note maximale (100 %).",
+        description:
+            "Réussir un quiz d'évaluation avec la note maximale (100 %).",
         unlockedMessage: 'Score parfait obtenu sur une évaluation.',
         category: BadgeCategory.academique,
         rarity: BadgeRarity.epic,
@@ -194,7 +202,8 @@ class GamificationService {
       BadgeDefinition(
         id: 'bibliothecaire',
         name: 'Explorateur Uni Book',
-        description: 'Consulter et explorer au moins 5 ouvrages scientifiques dans Uni Book.',
+        description:
+            'Consulter et explorer au moins 5 ouvrages scientifiques dans Uni Book.',
         unlockedMessage: 'La soif de connaissances scientifiques récompensée !',
         category: BadgeCategory.academique,
         rarity: BadgeRarity.uncommon,
@@ -207,7 +216,8 @@ class GamificationService {
         id: 'vigilant',
         name: 'Sentinelle Active',
         description: 'Participer aux alertes et signalements du campus.',
-        unlockedMessage: 'Engagement pour la sécurité et la sérénité du campus.',
+        unlockedMessage:
+            'Engagement pour la sécurité et la sérénité du campus.',
         category: BadgeCategory.special,
         rarity: BadgeRarity.rare,
         level: BadgeLevel.silver,
@@ -218,8 +228,10 @@ class GamificationService {
       BadgeDefinition(
         id: 'semaine_parfaite',
         name: 'Semaine Parfaite',
-        description: '100 % de présence et aucun retard durant une semaine entière de cours.',
-        unlockedMessage: 'Discipline et assiduité totales sur une semaine complète.',
+        description:
+            '100 % de présence et aucun retard durant une semaine entière de cours.',
+        unlockedMessage:
+            'Discipline et assiduité totales sur une semaine complète.',
         category: BadgeCategory.assiduite,
         rarity: BadgeRarity.epic,
         level: BadgeLevel.platinum,
@@ -242,7 +254,8 @@ class GamificationService {
       BadgeDefinition(
         id: 'ambassadeur',
         name: 'Ambassadeur Campus',
-        description: 'Faire partie du top 10 des étudiants les plus actifs du mois.',
+        description:
+            'Faire partie du top 10 des étudiants les plus actifs du mois.',
         unlockedMessage: 'Votre rayonnement inspire toute la faculté !',
         category: BadgeCategory.communaute,
         rarity: BadgeRarity.legendary,
@@ -416,7 +429,9 @@ class GamificationService {
 
   String _periodKey(String period, DateTime now) {
     if (period == 'annual' || period == 'yearly') return '${now.year}';
-    if (period == 'monthly') return '${now.year}-${now.month.toString().padLeft(2, '0')}';
+    if (period == 'monthly') {
+      return '${now.year}-${now.month.toString().padLeft(2, '0')}';
+    }
     final startOfYear = DateTime(now.year, 1, 1);
     final week = ((now.difference(startOfYear).inDays) / 7).ceil();
     return '${now.year}-W${week.toString().padLeft(2, '0')}';
@@ -467,8 +482,9 @@ class UserXp {
     );
   }
 
-  double get progressPercent =>
-      xpToNextLevel > 0 ? (xpInCurrentLevel / xpToNextLevel).clamp(0.0, 1.0) : 0.0;
+  double get progressPercent => xpToNextLevel > 0
+      ? (xpInCurrentLevel / xpToNextLevel).clamp(0.0, 1.0)
+      : 0.0;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -480,43 +496,58 @@ final gamificationServiceProvider = Provider<GamificationService>((ref) {
   return GamificationService(appwrite);
 });
 
-final badgesWithProgressProvider = FutureProvider<List<BadgeWithProgress>>((ref) async {
+final badgesWithProgressProvider =
+    FutureProvider<List<BadgeWithProgress>>((ref) async {
   final user = ref.watch(currentUserProvider);
   if (user == null) return [];
   return ref.read(gamificationServiceProvider).fetchBadgesWithProgress(user.id);
 });
 
-final activeQuestsProvider = FutureProvider<List<QuestWithProgress>>((ref) async {
+final activeQuestsProvider =
+    FutureProvider<List<QuestWithProgress>>((ref) async {
   final user = ref.watch(currentUserProvider);
   final userId = user?.id ?? 'guest';
   return ref.read(gamificationServiceProvider).fetchActiveQuests(userId);
 });
 
-final dailyQuestsProvider = FutureProvider<List<QuestWithProgress>>((ref) async {
+final dailyQuestsProvider =
+    FutureProvider<List<QuestWithProgress>>((ref) async {
   final user = ref.watch(currentUserProvider);
   final userId = user?.id ?? 'guest';
-  return ref.read(gamificationServiceProvider).fetchActiveQuests(userId, period: QuestPeriod.daily);
+  return ref
+      .read(gamificationServiceProvider)
+      .fetchActiveQuests(userId, period: QuestPeriod.daily);
 });
 
-final weeklyQuestsProvider = FutureProvider<List<QuestWithProgress>>((ref) async {
+final weeklyQuestsProvider =
+    FutureProvider<List<QuestWithProgress>>((ref) async {
   final user = ref.watch(currentUserProvider);
   final userId = user?.id ?? 'guest';
-  return ref.read(gamificationServiceProvider).fetchActiveQuests(userId, period: QuestPeriod.weekly);
+  return ref
+      .read(gamificationServiceProvider)
+      .fetchActiveQuests(userId, period: QuestPeriod.weekly);
 });
 
-final monthlyQuestsProvider = FutureProvider<List<QuestWithProgress>>((ref) async {
+final monthlyQuestsProvider =
+    FutureProvider<List<QuestWithProgress>>((ref) async {
   final user = ref.watch(currentUserProvider);
   final userId = user?.id ?? 'guest';
-  return ref.read(gamificationServiceProvider).fetchActiveQuests(userId, period: QuestPeriod.monthly);
+  return ref
+      .read(gamificationServiceProvider)
+      .fetchActiveQuests(userId, period: QuestPeriod.monthly);
 });
 
-final yearlyQuestsProvider = FutureProvider<List<QuestWithProgress>>((ref) async {
+final yearlyQuestsProvider =
+    FutureProvider<List<QuestWithProgress>>((ref) async {
   final user = ref.watch(currentUserProvider);
   final userId = user?.id ?? 'guest';
-  return ref.read(gamificationServiceProvider).fetchActiveQuests(userId, period: QuestPeriod.yearly);
+  return ref
+      .read(gamificationServiceProvider)
+      .fetchActiveQuests(userId, period: QuestPeriod.yearly);
 });
 
-final all250QuestsProvider = FutureProvider<List<QuestWithProgress>>((ref) async {
+final all250QuestsProvider =
+    FutureProvider<List<QuestWithProgress>>((ref) async {
   final user = ref.watch(currentUserProvider);
   final userId = user?.id ?? 'guest';
   return ref.read(gamificationServiceProvider).fetchAll250Quests(userId);
@@ -533,14 +564,23 @@ final currentXpProvider = FutureProvider<int>((ref) async {
   return xp?.totalXp ?? 0;
 });
 
-final weeklyLeaderboardProvider = FutureProvider<List<LeaderboardEntry>>((ref) async {
-  return ref.read(gamificationServiceProvider).fetchLeaderboard(period: 'weekly', metric: 'xp');
+final weeklyLeaderboardProvider =
+    FutureProvider<List<LeaderboardEntry>>((ref) async {
+  return ref
+      .read(gamificationServiceProvider)
+      .fetchLeaderboard(period: 'weekly', metric: 'xp');
 });
 
-final monthlyLeaderboardProvider = FutureProvider<List<LeaderboardEntry>>((ref) async {
-  return ref.read(gamificationServiceProvider).fetchLeaderboard(period: 'monthly', metric: 'xp');
+final monthlyLeaderboardProvider =
+    FutureProvider<List<LeaderboardEntry>>((ref) async {
+  return ref
+      .read(gamificationServiceProvider)
+      .fetchLeaderboard(period: 'monthly', metric: 'xp');
 });
 
-final annualLeaderboardProvider = FutureProvider<List<LeaderboardEntry>>((ref) async {
-  return ref.read(gamificationServiceProvider).fetchLeaderboard(period: 'annual', metric: 'xp');
+final annualLeaderboardProvider =
+    FutureProvider<List<LeaderboardEntry>>((ref) async {
+  return ref
+      .read(gamificationServiceProvider)
+      .fetchLeaderboard(period: 'annual', metric: 'xp');
 });

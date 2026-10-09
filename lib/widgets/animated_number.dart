@@ -53,10 +53,12 @@ class _AnimatedNumberState extends State<AnimatedNumber>
 
   void _parseValue(String raw) {
     // Retire les séparateurs de milliers et remplace la virgule par un point
-    final cleaned = raw.replaceAll('\u202f', '').replaceAll(' ', '').replaceAll(',', '.');
+    final cleaned =
+        raw.replaceAll('\u202f', '').replaceAll(' ', '').replaceAll(',', '.');
 
     // Cherche une suite de chiffres (avec point éventuel) n'importe où
-    final match = RegExp(r'^([^0-9]*)([0-9]+(?:\.[0-9]+)?)(.*)$').firstMatch(cleaned);
+    final match =
+        RegExp(r'^([^0-9]*)([0-9]+(?:\.[0-9]+)?)(.*)$').firstMatch(cleaned);
     if (match != null) {
       _prefix = match.group(1) ?? '';
       _numericValue = double.tryParse(match.group(2) ?? '');

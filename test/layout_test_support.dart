@@ -162,14 +162,17 @@ List<Override> _overrides(UniFlowUser user) => [
       academicReferenceProvider
           .overrideWith((ref) async => referentielDeTest()),
       studentBadgesProvider.overrideWith((ref) async => <BadgeProgress>[]),
-      badgesWithProgressProvider.overrideWith((ref) async => <BadgeWithProgress>[]),
+      badgesWithProgressProvider
+          .overrideWith((ref) async => <BadgeWithProgress>[]),
       activeQuestsProvider.overrideWith((ref) async => <QuestWithProgress>[]),
       weeklyQuestsProvider.overrideWith((ref) async => <QuestWithProgress>[]),
       monthlyQuestsProvider.overrideWith((ref) async => <QuestWithProgress>[]),
       userXpProvider.overrideWith((ref) async => null),
       currentXpProvider.overrideWith((ref) async => 0),
-      weeklyLeaderboardProvider.overrideWith((ref) async => <LeaderboardEntry>[]),
-      monthlyLeaderboardProvider.overrideWith((ref) async => <LeaderboardEntry>[]),
+      weeklyLeaderboardProvider
+          .overrideWith((ref) async => <LeaderboardEntry>[]),
+      monthlyLeaderboardProvider
+          .overrideWith((ref) async => <LeaderboardEntry>[]),
     ];
 
 AcademicReference referentielDeTest() => const AcademicReference(
