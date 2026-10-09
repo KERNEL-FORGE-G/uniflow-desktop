@@ -43,6 +43,19 @@ class SilhouetteAvatar extends StatelessWidget {
               size: size * 0.5, color: foreground),
         );
 
+    if (avatarFileId != null && avatarFileId!.startsWith('assets/')) {
+      return ClipRRect(
+        borderRadius: radius,
+        child: Image.asset(
+          avatarFileId!,
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => silhouette(),
+        ),
+      );
+    }
+
     final url = avatarUrl(avatarFileId);
     if (url == null) return silhouette();
 

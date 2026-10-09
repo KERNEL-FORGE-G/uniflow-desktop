@@ -31,24 +31,33 @@ const _kPages = [
     subtitle:
         'La plateforme universitaire tout-en-un — cours, présences QR code, '
         'notes et communication en un seul endroit fluide et performant.',
-    bgImage: 'assets/onboarding/onboarding_desk_1.webp',
+    bgImage: 'assets/onboarding/onboarding_1_welcome.jpg',
     buttonLabel: 'Suivant →',
   ),
   _OnboardPage(
-    tagline: 'FONCTIONNALITÉS',
+    tagline: 'COURS & OUTILS',
     title: 'Tout ce dont vous\navez besoin',
     subtitle: 'Étudiants, délégués et enseignants connectés. '
         'Émargement instantané par QR code, suivi des notes en temps réel et organisation globale.',
-    bgImage: 'assets/onboarding/onboarding_desk_2.webp',
+    bgImage: 'assets/onboarding/onboarding_2_courses.jpg',
     buttonLabel: 'Continuer →',
   ),
   _OnboardPage(
-    tagline: 'PRÊT ?',
-    title: 'Transformez\nvotre campus',
+    tagline: 'COMMUNAUTÉ',
+    title: 'Votre campus,\nvotre communauté',
     subtitle:
-        'Connectez-vous avec votre compte académique ou votre espace indépendant. '
-        'UniFlow vous accompagne chaque jour, même hors-ligne.',
-    bgImage: 'assets/onboarding/onboarding_desk_3.webp',
+        'Forum de promo, messages directs et notifications d\'urgence. '
+        'UniFlow vous connecte avec toute votre promotion, en temps réel.',
+    bgImage: 'assets/onboarding/onboarding_3_community.jpg',
+    buttonLabel: 'Continuer →',
+  ),
+  _OnboardPage(
+    tagline: 'KERNEL FORGE · AXORA',
+    title: 'Fait par des\nétudiants, pour vous',
+    subtitle:
+        'UniFlow est né à l\'Université de Yaoundé I. Soutenu technologiquement par Axora, '
+        'il fonctionne même hors connexion. Vos données restent sur vos appareils.',
+    bgImage: 'assets/onboarding/onboarding_4_forge.jpg',
     buttonLabel: 'Commencer !',
   ),
 ];

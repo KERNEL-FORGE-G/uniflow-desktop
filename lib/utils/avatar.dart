@@ -12,10 +12,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 /// 404 sur chaque photo après la migration.
 const String avatarBucketId = 'uniflow_assets';
 
+String? _getEnv(String key) {
+  if (!dotenv.isInitialized) return null;
+  return dotenv.maybeGet(key);
+}
+
 /// Bucket des photos de profil, surchargeable par `.env`.
 String get _avatarBucket =>
-    dotenv.maybeGet('APPWRITE_AVATAR_BUCKET_ID') ??
-    dotenv.maybeGet('APPWRITE_STORAGE_BUCKET_ID') ??
+    _getEnv('APPWRITE_AVATAR_BUCKET_ID') ??
+    _getEnv('APPWRITE_STORAGE_BUCKET_ID') ??
     avatarBucketId;
 
 /// URL publique d'une photo de profil, ou `null` s'il n'y en a pas.
@@ -24,9 +29,9 @@ String get _avatarBucket =>
 /// directement `if (url == null)` et retombent sur les initiales.
 String? avatarUrl(String? fileId) {
   if (fileId == null || fileId.isEmpty) return null;
-  final endpoint = dotenv.maybeGet('APPWRITE_ENDPOINT');
-  final projectId = dotenv.maybeGet('APPWRITE_PROJECT_ID');
-  if (endpoint == null || projectId == null) return null;
+  if (fileId.startsWith('http://') || fileId.startsWith('https://')) return fileId;
+  final endpoint = _getEnv('APPWRITE_ENDPOINT') ?? 'https://fra.cloud.appwrite.io/v1';
+  final projectId = _getEnv('APPWRITE_PROJECT_ID') ?? 'uniflow';
   return '${endpoint.replaceAll(RegExp(r'/+$'), '')}/storage/buckets/$_avatarBucket/files/$fileId/view?project=$projectId';
 }
 

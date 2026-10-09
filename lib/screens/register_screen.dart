@@ -187,7 +187,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             ),
             Expanded(
               child: Text(
-                'Créer un compte',
+                'Rejoindre UniFlow',
                 key: const Key('auth-title'),
                 textAlign: TextAlign.center,
                 maxLines: 1,
