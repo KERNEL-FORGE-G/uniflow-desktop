@@ -47,6 +47,7 @@ import {
   UEManagementScreen,
   RoomsManagementScreen,
 } from './screens/Part1And2Screens';
+import { DesktopScheduleScreen } from './components/DesktopScheduleScreen';
 import { getStoreIdentity, getSystemDiagnostics, StoreIdentity, SystemDiagnostics } from './lib/tauri';
 import { MS_STORE_IDENTITY, APPWRITE_CONFIG } from './lib/appwrite';
 
@@ -316,25 +317,12 @@ export default function App() {
           )}
 
           {/* Écrans complémentaires */}
+          {/* Écran Emploi du Temps Universitaire Réel */}
           {activeScreen === 'schedule' && (
-            <div className="space-y-4 animate-fade-in">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h1 className="text-2xl font-black text-white">Constructeur d’Emploi du Temps Universitaire</h1>
-                  <p className="text-xs text-slate-400">Grille hebdomadaire synchronisée avec l'Université de Yaoundé I</p>
-                </div>
-                <button className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md">
-                  + Nouveau créneau
-                </button>
-              </div>
-              <div className="rounded-2xl border border-[#1E293B] bg-[#101E33] p-6 text-center text-slate-400">
-                <Calendar className="h-12 w-12 mx-auto text-blue-400 mb-2 opacity-80" />
-                <p className="font-bold text-white text-base">Planificateur de cours L1, L2, L3 & Master</p>
-                <p className="text-xs text-slate-400 max-w-md mx-auto mt-1">
-                  Tous les créneaux d'Amphi 500, Amphi 250 et Salles TP Informatique sont synchronisés en direct avec l'Appwrite VPS et sauvegardés hors-ligne.
-                </p>
-              </div>
-            </div>
+            <DesktopScheduleScreen
+              userRole={currentUser.role}
+              userMatricule={currentUser.matricule}
+            />
           )}
 
           {activeScreen === 'attendance' && (
