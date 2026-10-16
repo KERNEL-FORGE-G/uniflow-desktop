@@ -1,0 +1,36 @@
+[package]
+name = "uniflow-work"
+version = "1.0.0"
+description = "Uniflow work — Plateforme Universitaire Numérique Intelligente (KERNEL FORGE)"
+authors = ["KERNEL FORGE <ravelnghomsi@gmail.com>"]
+license = "MIT"
+repository = "https://github.com/KERNEL-FORGE-G/uniflow-desktop"
+edition = "2021"
+rust-version = "1.77.2"
+
+[package.metadata.microsoft_store]
+app_name = "Uniflow work"
+identity_name = "KERNELFORGE.Uniflowwork"
+publisher = "CN=200A91F7-4B15-441F-9332-83F216885B09"
+publisher_display_name = "KERNEL FORGE"
+package_family_name = "KERNELFORGE.Uniflowwork_3wyzhk1x8xr0a"
+package_sid = "S-1-15-2-3173161051-1525954667-3862484852-2055131400-1678586278-65818988-3190942280"
+store_id = "9NGZKFGK98K6"
+store_protocol_url = "ms-windows-store://pdp/?productid=9NGZKFGK98K6"
+store_web_url = "https://apps.microsoft.com/detail/9NGZKFGK98K6"
+
+[lib]
+name = "uniflow_work_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+hex = "0.4"
+chrono = { version = "0.4", features = ["serde"] }
+sysinfo = "0.30"

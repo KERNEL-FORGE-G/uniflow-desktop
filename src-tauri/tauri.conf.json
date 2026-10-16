@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Uniflow work",
+  "version": "1.0.0",
+  "identifier": "KERNELFORGE.Uniflowwork",
+  "build": {
+    "beforeDevCommand": "pnpm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "pnpm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Uniflow work — KERNEL FORGE (UY1 / Campus Numérique)",
+        "width": 1440,
+        "height": 900,
+        "minWidth": 1180,
+        "minHeight": 740,
+        "resizable": true,
+        "fullscreen": false,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["msi", "nsis", "deb", "appimage", "rpm"],
+    "publisher": "KERNEL FORGE",
+    "copyright": "Copyright © 2026 KERNEL FORGE (CN=200A91F7-4B15-441F-9332-83F216885B09). All rights reserved.",
+    "category": "Education",
+    "shortDescription": "Uniflow work — Plateforme Universitaire Numérique Intelligente (Store ID: 9NGZKFGK98K6)",
+    "longDescription": "Uniflow work (KERNELFORGE.Uniflowwork, PFN: KERNELFORGE.Uniflowwork_3wyzhk1x8xr0a, Store ID: 9NGZKFGK98K6) est le poste de commandement académique natif conçu par le collectif KERNEL FORGE pour l'Université de Yaoundé I et l'enseignement supérieur africain.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": ""
+    },
+    "linux": {
+      "deb": {
+        "depends": []
+      }
+    }
+  }
+}
