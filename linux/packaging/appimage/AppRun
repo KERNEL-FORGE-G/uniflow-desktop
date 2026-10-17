@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# Lanceur AppRun officiel pour UniFlow AppImage
+# ==============================================================================
+set -e
+
+SELF=$(readlink -f "$0")
+HERE=${SELF%/*}
+
+export PATH="${HERE}/usr/bin:${PATH}"
+export LD_LIBRARY_PATH="${HERE}/usr/lib:${HERE}/lib:${LD_LIBRARY_PATH:-}"
+export XDG_DATA_DIRS="${HERE}/usr/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+
+cd "${HERE}/usr/bin"
+exec "${HERE}/usr/bin/uniflow_desktop" "$@"

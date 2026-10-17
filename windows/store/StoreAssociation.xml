@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<StoreAssociation xmlns="http://schemas.microsoft.com/appx/2010/storeassociation">
+  <!-- 
+    UniFlow Desktop - Microsoft Partner Center Store Association File
+    Éditeur : KERNEL FORGE
+    Produit : UniFlow — Suite Académique et Campus Connecté
+  -->
+  <Publisher>CN=9E6A6D14-5B8F-4D2A-937C-0C315E4C8821</Publisher>
+  <PublisherDisplayName>KERNEL FORGE</PublisherDisplayName>
+  <ProductReservedInfo>
+    <MainPackageIdentityName>KernelForge.UniFlow</MainPackageIdentityName>
+    <ReservedNames>
+      <ReservedName>UniFlow</ReservedName>
+      <ReservedName>UniFlow Campus</ReservedName>
+      <ReservedName>UniFlow - Campus Connecté</ReservedName>
+    </ReservedNames>
+  </ProductReservedInfo>
+  <AppId>9NBLGGH4N0F1</AppId>
+  <StoreId>9NBLGGH4N0F1</StoreId>
+  <PackageFamilyName>KernelForge.UniFlow_8wekyb3d8bbwe</PackageFamilyName>
+</StoreAssociation>

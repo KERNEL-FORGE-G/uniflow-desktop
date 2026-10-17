@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap uap10 rescap">
+
+  <Identity
+    Name="KernelForge.UniFlow"
+    ProcessorArchitecture="x64"
+    Publisher="CN=9E6A6D14-5B8F-4D2A-937C-0C315E4C8821"
+    Version="1.0.0.0" />
+
+  <Properties>
+    <DisplayName>UniFlow — Campus Connecté</DisplayName>
+    <PublisherDisplayName>KERNEL FORGE</PublisherDisplayName>
+    <Description>Suite Académique Universitaire et Campus Connecté. Gestion intégrale des cours, emplois du temps officiels, bibliothèque Z-Library, visioconférences, devoirs et messagerie officielle.</Description>
+    <Logo>assets\brand\icon_128.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.22621.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="fr-FR" />
+    <Resource Language="en-US" />
+  </Resources>
+
+  <Applications>
+    <Application Id="UniFlow" Executable="uniflow_desktop.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements
+        DisplayName="UniFlow"
+        Description="Suite Académique et Campus Connecté"
+        BackgroundColor="#1E3A8A"
+        Square150x150Logo="assets\brand\icon_256.png"
+        Square44x44Logo="assets\brand\icon_48.png">
+        <uap:DefaultTile Wide310x150Logo="assets\brand\uniflow_store_logo.png" Square310x310Logo="assets\brand\icon_512.png" ShortName="UniFlow">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo" />
+            <uap:ShowOn Tile="wide310x150Logo" />
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile>
+        <uap:SplashScreen Image="assets\brand\uniflow_store_logo.png" BackgroundColor="#1E3A8A" />
+      </uap:VisualElements>
+
+      <Extensions>
+        <!-- Protocole personnalisé uniflow:// pour liens profonds -->
+        <uap:Extension Category="windows.protocol">
+          <uap:Protocol Name="uniflow">
+            <uap:DisplayName>UniFlow Protocol Handler</uap:DisplayName>
+          </uap:Protocol>
+        </uap:Extension>
+
+        <!-- Association de fichiers .uniflow pour supports de cours et packages hors-ligne -->
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="uniflowpackage">
+            <uap:SupportedFileTypes>
+              <uap:FileType>.uniflow</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:DisplayName>Paquet Éducatif UniFlow</uap:DisplayName>
+            <uap:Logo>assets\brand\icon_48.png</Logo>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <Capability Name="internetClient" />
+    <DeviceCapability Name="location" />
+    <DeviceCapability Name="webcam" />
+    <DeviceCapability Name="microphone" />
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>

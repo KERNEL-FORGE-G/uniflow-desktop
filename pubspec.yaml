@@ -1,0 +1,63 @@
+name: uniflow_desktop
+description: "UniFlow Desktop - Suite Académique et Campus Connecté (Flutter Native Linux/Windows/macOS)"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+  flutter: ">=3.19.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  google_fonts: ^6.2.1
+  intl: ^0.19.0
+  http: ^1.2.2
+  url_launcher: ^6.3.2
+  qr_flutter: ^4.1.0
+  flutter_dotenv: ^6.0.1
+  path_provider: ^2.1.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  msix: ^3.16.8
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/brand/
+    - assets/mascot/
+    - assets/mascots/
+    - assets/assistant/
+    - assets/logos/
+    - assets/onboarding/
+    - assets/badges/
+    - assets/illustrations/
+    - assets/emplois_du_temps/
+    - assets/team/
+    - assets/icons/nav/
+
+msix_config:
+  display_name: "UniFlow - Campus Connecté"
+  publisher_display_name: "KERNEL FORGE"
+  identity_name: "KernelForge.UniFlow"
+  publisher: "CN=9E6A6D14-5B8F-4D2A-937C-0C315E4C8821"
+  msix_version: "1.0.0.0"
+  logo_path: assets/brand/icon_512.png
+  start_menu_icon_path: assets/brand/icon_256.png
+  tile_icon_path: assets/brand/icon_256.png
+  architecture: x64
+  capabilities:
+    - internetClient
+    - location
+    - webcam
+    - microphone
+  languages:
+    - fr-FR
+    - en-US
+  protocol_activation: "uniflow"
+  file_extension: ".uniflow"
+

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ======================================================================= -->
+<!-- WiX Toolset XML Script pour UniFlow Windows Installer (.MSI)            -->
+<!-- Génère : UniFlow-1.0.0.msi                                               -->
+<!-- Éditeur : KERNEL FORGE                                                  -->
+<!-- ======================================================================= -->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" 
+           Name="UniFlow — Campus Connecté" 
+           Language="1036" 
+           Version="1.0.0.0" 
+           Manufacturer="KERNEL FORGE" 
+           UpgradeCode="9E6A6D14-5B8F-4D2A-937C-0C315E4C8821">
+           
+    <Package InstallerVersion="500" 
+             Compressed="yes" 
+             InstallScope="perMachine" 
+             Platform="x64" 
+             Description="Package d'installation MSI officiel UniFlow pour Windows" 
+             Comments="Suite Académique et Campus Connecté" />
+
+    <MajorUpgrade DowngradeErrorMessage="Une version plus récente d'UniFlow est déjà installée sur cet ordinateur." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Icon Id="icon.ico" SourceFile="..\runner\resources\app_icon.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+    <Property Id="ARPHELPLINK" Value="https://uniflow.kernelforge.codes/help" />
+    <Property Id="ARPURLINFOABOUT" Value="https://uniflow.kernelforge.codes" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLFOLDER" Name="UniFlow">
+          <Component Id="MainExecutable" Guid="7C52A4A2-9E11-477F-9694-850D5F762B10" Win64="yes">
+            <File Id="UniFlowExe" 
+                  Source="..\..\build\windows\x64\runner\Release\uniflow_desktop.exe" 
+                  KeyPath="yes" />
+            
+            <!-- Raccourci Menu Démarrer -->
+            <Shortcut Id="ApplicationStartMenuShortcut" 
+                      Directory="ProgramMenuDir" 
+                      Name="UniFlow" 
+                      Description="Suite Académique et Campus Connecté" 
+                      WorkingDirectory="INSTALLFOLDER" 
+                      Icon="icon.ico" 
+                      Advertise="yes" />
+                      
+            <!-- Raccourci Bureau -->
+            <Shortcut Id="ApplicationDesktopShortcut" 
+                      Directory="DesktopFolder" 
+                      Name="UniFlow" 
+                      Description="Suite Académique et Campus Connecté" 
+                      WorkingDirectory="INSTALLFOLDER" 
+                      Icon="icon.ico" 
+                      Advertise="yes" />
+          </Component>
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ProgramMenuDir" Name="UniFlow" />
+      </Directory>
+      <Directory Id="DesktopFolder" Name="Desktop" />
+    </Directory>
+
+    <Feature Id="ProductFeature" Title="UniFlow Desktop" Level="1">
+      <ComponentRef Id="MainExecutable" />
+    </Feature>
+  </Product>
+</Wix>
